@@ -29,31 +29,21 @@
 #define STAGE_FLAG_SCORE_REFRESH (1 << 2) //Score text should be refreshed
 
 #define STAGE_LOAD_PLAYER     (1 << 0) //Reload player character
-#define STAGE_LOAD_OPPONENT   (1 << 1) //Reload opponent character
-#define STAGE_LOAD_GIRLFRIEND (1 << 2) //Reload girlfriend character
-#define STAGE_LOAD_STAGE      (1 << 3) //Reload stage
+#define STAGE_LOAD_PLAYER2    (1 << 1) //Reload player 2 character
+#define STAGE_LOAD_OPPONENT   (1 << 2) //Reload opponent character
+#define STAGE_LOAD_OPPONENT2  (1 << 3) //Reload opponent 2 character
+#define STAGE_LOAD_GIRLFRIEND (1 << 4) //Reload girlfriend character
+#define STAGE_LOAD_STAGE      (1 << 5) //Reload stage
 #define STAGE_LOAD_FLAG       (1 << 7)
 
 
 //Stage enums
 typedef enum
 {
-	StageId_1_1, //Bopeebo
-	StageId_1_2, //Fresh
-	StageId_1_3, //Dadbattle
-	StageId_1_4, //Tutorial
-	
-	StageId_2_1, //Spookeez
-	StageId_2_2, //South
-	StageId_2_3, //Monster
-	
-	StageId_3_1, //Pico
-	StageId_3_2, //Philly
-	StageId_3_3, //Blammed
-
-	StageId_Mod1_1, //Where Are You
-	StageId_Mod1_2, //Eruption
-	StageId_Mod1_3, //Kaioken
+	StageId_1_1, //Little Man
+	StageId_1_2, //Little Man Two
+	StageId_1_3, //Big Man
+	StageId_1_4, //Madness
 	
 	StageId_Max
 } StageId;
@@ -70,8 +60,8 @@ typedef enum
 typedef enum
 {
 	StageMode_Normal,
-	StageMode_Swap,
 	StageMode_2P,
+	StageMode_Swap,
 	StageMode_Net1,
 	StageMode_Net2,
 } StageMode;
@@ -79,9 +69,6 @@ typedef enum
 typedef enum
 {
 	StageArrow_Normal,
-	StageArrow_Circle,
-	StageArrow_Bar,
-	StageArrow_Dogs,
 } StageArrow;
 
 typedef enum
@@ -89,7 +76,6 @@ typedef enum
 	StageTrans_Menu,
 	StageTrans_NextSong,
 	StageTrans_Reload,
-	StageTrans_Pause,
 } StageTrans;
 
 //Stage background
@@ -110,7 +96,7 @@ typedef struct
 	{
 		Character* (*new)();
 		fixed_t x, y;
-	} pchar, ochar, gchar;
+	} pchar, pchar2, ochar, ochar2, gchar;
 	
 	//Stage background
 	StageBack* (*back)();
@@ -156,8 +142,8 @@ typedef struct
 	u16 combo;
 	
 	boolean refresh_score;
-	s32 score, max_score;
-	char score_text[13];
+	int score, max_score;
+	char score_text[30];
 
 	boolean refresh_miss;
 	s32 miss;
@@ -177,15 +163,19 @@ typedef struct
 typedef struct
 {
 	//Stage settings
+	int pause_state;
 	struct
 	{
+		s32 mode;
+		s32 arrow;
 		boolean ghost, downscroll, middlescroll, expsync, debug, songtimer, botplay;
-		s32 savescore[StageId_Max][StageDiff_Max];
-	}prefs;
-
-	s32 mode;
-	s32 arrow;	
+		int savescore[StageId_Max][StageDiff_Max];
+	}prefs;	
 	u32 offset;
+
+	fixed_t pause_scroll;
+	u8 pause_select;
+	boolean paused;
 
 	fixed_t note_x[8], note_y[8];
 	
@@ -193,7 +183,7 @@ typedef struct
 	Gfx_Tex tex_hud0, tex_hud1, tex_hude;
 
 	//font
-	FontData font_cdr;
+	FontData font_cdr, font_bold;
 	
 	//Stage data
 	const StageDef *stage_def;
@@ -225,7 +215,9 @@ typedef struct
 	StageBack *back;
 	
 	Character *player;
+	Character *player2;
 	Character *opponent;
+	Character *opponent2;
 	Character *gf;
 	
 	Section *cur_section; //Current section
@@ -235,7 +227,7 @@ typedef struct
 	
 	u16 last_bpm;
 
-	s16 timerlength, timermin, timersec, timepassed;
+	int timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
 	u16 step_base;
@@ -244,15 +236,15 @@ typedef struct
 	s16 noteshakex;
 	s16 noteshakey;
 
-	s32 song_step;
-	s16 song_beat;
+	int song_step;
+	int song_beat;
 
 	boolean freecam;
 	
 	u8 gf_speed; //Typically 4 steps, changes in Fresh
 	
 	PlayerState player_state[2];
-	s32 max_score;
+	int max_score;
 	
 	enum
 	{

@@ -28,25 +28,16 @@
 			</dir>
 			
 			<!-- Fonts -->
-			<dir name = "font">
-				<file name = "boldfont.tim" type = "data" source = "iso/font/boldfont.tim"/>
-				<file name = "arial.tim" type = "data" source = "iso/font/arial.tim"/>
-				<file name = "cdr.tim" type = "data" source = "iso/font/cdr.tim"/>
+			<dir name = "fonts">
+				<file name = "fonts.tim" type = "data" source = "iso/font/fonts.tim"/>
 			</dir>
 			
 			<!-- Stage assets -->
 			<dir name = "stage">
 				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
-				<file name = "hud0cir.tim" type = "data" source = "iso/stage/hud0cir.tim"/>
-				<file name = "hud0bar.tim" type = "data" source = "iso/stage/hud0bar.tim"/>
-				<file name = "hud0dog.tim" type = "data" source = "iso/stage/hud0dog.tim"/>
 				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
 				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
 				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
-				<file name = "hud0w.tim" type = "data" source = "iso/stage/hud0w.tim"/>
-				<file name = "hud0wcir.tim" type = "data" source = "iso/stage/hud0wcir.tim"/>
-				<file name = "hud0wbar.tim" type = "data" source = "iso/stage/hud0wbar.tim"/>
-				<file name = "hud0wdog.tim" type = "data" source = "iso/stage/hud0wdog.tim"/>
 			</dir>
 			
 			<!-- Week 1 assets -->
@@ -71,63 +62,6 @@
 				<file name = "1.4n.cht" type = "data" source = "iso/chart/tutorial.json.cht"/>
 				<file name = "1.4h.cht" type = "data" source = "iso/chart/tutorial-hard.json.cht"/>
 			</dir>
-			
-			<!-- Week 2 assets -->
-			<dir name = "week2">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week2/back.arc"/>
-				
-				<!-- Spookeez charts -->
-				<file name = "2.1e.cht" type = "data" source = "iso/chart/spookeez-easy.json.cht"/>
-				<file name = "2.1n.cht" type = "data" source = "iso/chart/spookeez.json.cht"/>
-				<file name = "2.1h.cht" type = "data" source = "iso/chart/spookeez-hard.json.cht"/>
-				<!-- South charts -->
-				<file name = "2.2e.cht" type = "data" source = "iso/chart/south-easy.json.cht"/>
-				<file name = "2.2n.cht" type = "data" source = "iso/chart/south.json.cht"/>
-				<file name = "2.2h.cht" type = "data" source = "iso/chart/south-hard.json.cht"/>
-				<!-- Monster charts -->
-				<file name = "2.3e.cht" type = "data" source = "iso/chart/monster-easy.json.cht"/>
-				<file name = "2.3n.cht" type = "data" source = "iso/chart/monster.json.cht"/>
-				<file name = "2.3h.cht" type = "data" source = "iso/chart/monster-hard.json.cht"/>
-			</dir>
-			
-			<!-- Week 3 assets -->
-			<dir name = "week3">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
-				
-				<!-- Pico charts -->
-				<file name = "3.1e.cht" type = "data" source = "iso/chart/pico-easy.json.cht"/>
-				<file name = "3.1n.cht" type = "data" source = "iso/chart/pico.json.cht"/>
-				<file name = "3.1h.cht" type = "data" source = "iso/chart/pico-hard.json.cht"/>
-				<!-- Philly charts -->
-				<file name = "3.2e.cht" type = "data" source = "iso/chart/philly-easy.json.cht"/>
-				<file name = "3.2n.cht" type = "data" source = "iso/chart/philly.json.cht"/>
-				<file name = "3.2h.cht" type = "data" source = "iso/chart/philly-hard.json.cht"/>
-				<!-- Blammed charts -->
-				<file name = "3.3e.cht" type = "data" source = "iso/chart/blammed-easy.json.cht"/>
-				<file name = "3.3n.cht" type = "data" source = "iso/chart/blammed.json.cht"/>
-				<file name = "3.3h.cht" type = "data" source = "iso/chart/blammed-hard.json.cht"/>
-			</dir>
-
-			<!-- Mod 1 assets -->
-			<dir name = "mod1">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
-				
-				<!-- Where Are You charts -->
-				<file name = "mod1.1e.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
-				<file name = "mod1.1n.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
-				<file name = "mod1.1h.cht" type = "data" source = "iso/chart/where-are-you-hard.json.cht"/>
-				<!-- Eruption charts -->
-				<file name = "mod1.2e.cht" type = "data" source = "iso/chart/eruption-easy.json.cht"/>
-				<file name = "mod1.2n.cht" type = "data" source = "iso/chart/eruption.json.cht"/>
-				<file name = "mod1.2h.cht" type = "data" source = "iso/chart/eruption-hard.json.cht"/>
-				<!-- Kaio-ken charts -->
-				<file name = "mod1.3e.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
-				<file name = "mod1.3n.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
-				<file name = "mod1.3h.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
-			</dir>
 		
 			<!-- Character assets -->
 			<dir name = "char">
@@ -137,15 +71,6 @@
 				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
-				
-				<!-- Spook assets -->
-				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
-
-				<!-- Monster assets -->
-				<file name = "monster.arc" type = "data" source = "iso/monster/main.arc"/>
-				
-				<!-- Pico assets -->
-				<file name = "pico.arc" type = "data" source = "iso/pico/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
@@ -179,18 +104,6 @@
 				<file name = "week1a.xa" type = "xa" source = "iso/music/week1a.xa"/>
 				<dummy sectors="128"/>
 				<file name = "week1b.xa" type = "xa" source = "iso/music/week1b.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week2a.xa" type = "xa" source = "iso/music/week2a.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week2b.xa" type = "xa" source = "iso/music/week2b.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week3a.xa" type = "xa" source = "iso/music/week3a.xa"/>
-				<dummy sectors="128"/>
-				<file name = "week3b.xa" type = "xa" source = "iso/music/week3b.xa"/>
-				<dummy sectors="128"/>
-				<file name = "mod1a.xa" type = "xa" source = "iso/music/mod1a.xa"/>
-				<dummy sectors="128"/>
-				<file name = "mod1b.xa" type = "xa" source = "iso/music/mod1b.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

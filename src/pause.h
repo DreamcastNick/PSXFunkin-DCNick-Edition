@@ -1,3 +1,4 @@
+
 /*
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +8,7 @@
 #ifndef PSXF_GUARD_PAUSE_H
 #define PSXF_GUARD_PAUSE_H
 
-#include "gfx.h"
-
-typedef struct
-{
-	Gfx_Tex tex_pause;
-} Pause;
-
-extern Pause pause;
-
 void PausedState();
-void Pause_load();
+void OptionsState();
+
 #endif

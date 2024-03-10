@@ -4,100 +4,181 @@
   file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "pause.h"
-#include "pad.h"
 #include "stage.h"
-
-#include "main.h"
 #include "trans.h"
-
-int selection;
-int bfangle;
-int bfcounter;
+#include "audio.h"
 
 void PausedState()
-{	
-	RECT blue_src = {71,  0, 45, 45};
-	RECT yellow_src = {117,   0, 45, 46};
-	RECT cancel_src = {163,   0, 51, 10};
-	RECT replay_src = {163,  11, 55, 11};
-	RECT bf_src = {  1,   0, 69, 46};
-	RECT blue_dst = {96,  166, 45, 45};
-	RECT yellow_dst = {96,  165, 45, 46};
-	RECT cancel_dst = {192, 183, 51, 10};	
-	RECT replay_dst = { 92, 183, 55, 11};
-	RECT bf_dst = {161,  49, 69, 46};
-
-	bfcounter ++;
-	if (pad_state.press & (PAD_LEFT | PAD_RIGHT))
-		selection ++;
-
-	//Reset selection
-	if (selection > 1)
-		selection = 0;
-	else if (selection < 0)
-		selection = 1;
-
-	//Control BF angle
-	if (bfcounter >= 50)
-		bfangle = 23;
-	else 
-		bfangle = 0;
-
-	if (bfcounter >= 100)
-		bfcounter = 0;
-
-	Gfx_DrawTexRotate(&pause.tex_pause, &bf_src, &bf_dst, bfangle); //Draw BF
-	
-	//Highlight selection
-	if (selection == 0) {
-		replay_src.y = 34;
-		Gfx_DrawTex(&pause.tex_pause, &replay_src, &replay_dst); //Replay
-		Gfx_DrawTex(&pause.tex_pause, &yellow_src, &yellow_dst); 
-	}
-	else if (selection == 1)	
-	{
-
-		yellow_dst.x = 195;
-		cancel_src.y = 23;
-		Gfx_DrawTex(&pause.tex_pause, &cancel_src, &cancel_dst); //Cancel
-		Gfx_DrawTex(&pause.tex_pause, &yellow_src, &yellow_dst);
-	}
-	
-	//Draw Black text
-	Gfx_DrawTex(&pause.tex_pause, &cancel_src, &cancel_dst); //Cancel
-	Gfx_DrawTex(&pause.tex_pause, &replay_src, &replay_dst); //Replay
-	//Draw Blue buttons
-	Gfx_DrawTex(&pause.tex_pause, &blue_src, &blue_dst);
-	
-	blue_dst.x = 195;
-	Gfx_DrawTex(&pause.tex_pause, &blue_src, &blue_dst);
-
-	//Draw Bg
-	RECT back_src = {1, 47, 254, 208};
-	RECT back_dst = {0,  0, SCREEN_WIDTH, SCREEN_HEIGHT};
-	Gfx_DrawTex(&pause.tex_pause, &back_src, &back_dst);
-
-	
-
-	if (pad_state.press & (PAD_CROSS | PAD_START) && selection == 1)
-	{
-		stage.trans = StageTrans_Menu;
-		gameloop = GameLoop_Stage;
-		Trans_Start();
-	}
-	if (pad_state.press & (PAD_CROSS | PAD_START) && selection == 0)
-	{
-		stage.trans = StageTrans_Reload;
-		gameloop = GameLoop_Stage;
-		Trans_Start();
-	}
-}
-void Pause_load()
 {
-	bfangle = 0;
-	selection = 0;
-	bfcounter = 0;
-	Gfx_LoadTex(&pause.tex_pause, IO_Read("\\STAGE\\PAUSE.TIM;1"), GFX_LOADTEX_FREE);
-	PausedState();
+	static const char *stage_options[] = {
+		"RESUME",
+		"RESTART SONG",
+		"OPTIONS",
+		"EXIT TO MENU"
+	};
+
+	//Select option if cross or start is pressed
+	if (pad_state.press & (PAD_CROSS | PAD_START))
+	{
+		switch (stage.pause_select)
+		{
+			case 0: //Resume
+				Audio_ResumeXA();
+				stage.paused = false;
+				break;
+			case 1: //Retry
+				stage.trans = StageTrans_Reload;
+				Trans_Start();
+				break;
+			case 2: //Settings
+				stage.pause_scroll = -1;
+				stage.pause_state = 1;
+				break;
+			case 3: //Quit
+				stage.trans = StageTrans_Menu;
+				Trans_Start();
+				break;
+		}
+	}
+
+	//Change option
+	if (pad_state.press & PAD_UP)
+	{
+		if (stage.pause_select > 0)
+			stage.pause_select--;
+		else
+			stage.pause_select = COUNT_OF(stage_options) - 1;
+	}
+	if (pad_state.press & PAD_DOWN)
+	{
+		if (stage.pause_select < COUNT_OF(stage_options) - 1)
+			stage.pause_select++;
+		else
+			stage.pause_select = 0;
+	}
+
+	//draw options
+	if (stage.pause_scroll == -1)
+		stage.pause_scroll = COUNT_OF(stage_options) * FIXED_DEC(33,1);
+
+	s32 next_scroll = stage.pause_select * FIXED_DEC(33,1);
+	stage.pause_scroll += (next_scroll - stage.pause_scroll) >> 3;
+
+	for (u8 i = 0; i < COUNT_OF(stage_options); i++)
+	{
+		//get position on screen
+		s32 y = (i * 33) - 8 - (stage.pause_scroll >> FIXED_SHIFT);
+		if (y <= -SCREEN_HEIGHT2 - 8)
+			continue;
+		if (y >= SCREEN_HEIGHT2 + 8)
+			break;
+
+		//draw text
+		stage.font_bold.draw_col(&stage.font_bold,
+		stage_options[i],
+	  20 + (y >> 2),
+		y + 120,
+		FontAlign_Left,
+		//if the option is the one you are selecting, draw in normal color, else, draw gray
+		(i == stage.pause_select) ? 128 : 100,
+		(i == stage.pause_select) ? 128 : 100,
+		(i == stage.pause_select) ? 128 : 100
+		);
+	}
+	//pog blend
+	RECT scr = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	Gfx_BlendRect(&scr, 0, 0, 0, 0);
+}
+
+void OptionsState()
+{
+	static const char *stage_options[] = {
+		"BACK",
+		"",				
+		"GHOST TAP",
+		"DOWNSCROLL",
+		"SHOW SONG TIME",
+		"BOTPLAY",
+		"DEBUG MODE"
+	};
+
+	//Select option if cross or start is pressed
+	if (pad_state.press & (PAD_CROSS | PAD_START))
+	{
+		if (*stage_options[stage.pause_select] != '\0')
+			stage.pause_scroll = -1;
+
+		switch (stage.pause_select)
+		{
+			case 0: //Back
+				stage.pause_state = 0;
+				break;
+			case 1: 
+				break;
+			case 2: //Ghost tap
+				stage.prefs.ghost = !stage.prefs.ghost;
+				break;
+			case 3: //Downscroll
+				stage.prefs.downscroll = !stage.prefs.downscroll;
+				break;
+			case 4: //Song timer
+				stage.prefs.songtimer = !stage.prefs.songtimer;
+				break;
+			case 5: //Botplay
+				stage.prefs.botplay = !stage.prefs.botplay;
+				break;
+			case 6: //Debug mode
+				stage.prefs.debug = !stage.prefs.debug;
+				break;
+		}
+	}
+
+	//Change option
+	if (pad_state.press & PAD_UP)
+	{
+		if (stage.pause_select > 0)
+			stage.pause_select--;
+		else
+			stage.pause_select = COUNT_OF(stage_options) - 1;
+	}
+	if (pad_state.press & PAD_DOWN)
+	{
+		if (stage.pause_select < COUNT_OF(stage_options) - 1)
+			stage.pause_select++;
+		else
+			stage.pause_select = 0;
+	}
+
+	//draw options
+	if (stage.pause_scroll == -1)
+		stage.pause_scroll = COUNT_OF(stage_options) * FIXED_DEC(33,1);
+
+	s32 next_scroll = stage.pause_select * FIXED_DEC(33,1);
+	stage.pause_scroll += (next_scroll - stage.pause_scroll) >> 3;
+	
+	for (u8 i = 0; i < COUNT_OF(stage_options); i++)
+	{
+		//get position on screen
+		s32 y = (i * 33) - 8 - (stage.pause_scroll >> FIXED_SHIFT);
+		if (y <= -SCREEN_HEIGHT2 - 8)
+			continue;
+		if (y >= SCREEN_HEIGHT2 + 8)
+			break;
+
+		//draw text
+		stage.font_bold.draw_col(&stage.font_bold,
+		stage_options[i],
+	  20 + (y >> 2),
+		y + 120,
+		FontAlign_Left,
+		//if the option is the one you are selecting, draw in normal color, else, draw gray
+		(i == stage.pause_select) ? 128 : 100,
+		(i == stage.pause_select) ? 128 : 100,
+		(i == stage.pause_select) ? 128 : 100
+		);
+	}
+	
+	//pog blend
+	RECT scr = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	Gfx_BlendRect(&scr, 0, 0, 0, 0);
 }

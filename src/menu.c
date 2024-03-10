@@ -30,24 +30,24 @@
 static u32 Sounds[3];
 //Menu messages
 static const char *funny_messages[][2] = {
-	{"PSX PORT BY CUCKYDEV", "YOU KNOW IT"},
-	{"PORTED BY CUCKYDEV", "WHAT YOU GONNA DO"},
+	{"PSX PORT BY DRAMCASTNICK", "YOU KNOW IT"},
+	{"PORTED BY DREAMCASTNICK", "WHAT YOU GONNA DO"},
 	{"FUNKIN", "FOREVER"},
-	{"WHAT THE HELL", "RITZ PSX"},
-	{"LIKE PARAPPA", "BUT COOLER"},
+	{"WHAT THE HELL", "BRUTUS PSX"},
+	{"LIKE LAMMY", "BUT COOLER"},
 	{"THE JAPI", "EL JAPI"},
 	{"PICO FUNNY", "PICO FUNNY"},
 	{"OPENGL BACKEND", "BY CLOWNACY"},
-	{"CUCKYFNF", "SETTING STANDARDS"},
+	{"DCNICK", "SETTING STANDARDS"},
 	{"lool", "inverted colours"},
-	{"NEVER LOOK AT", "THE ISSUE TRACKER"},
+	{"NEVER LOOK AT", "SONIC THE CHRONIC FANART"},
 	{"PSXDEV", "HOMEBREW"},
 	{"ZERO POINT ZERO TWO TWO EIGHT", "ONE FIVE NINE ONE ZERO FIVE"},
 	{"DOPE ASS GAME", "PLAYSTATION MAGAZINE"},
 	{"NEWGROUNDS", "FOREVER"},
 	{"NO FPU", "NO PROBLEM"},
 	{"OK OKAY", "WATCH THIS"},
-	{"ITS MORE MALICIOUS", "THAN ANYTHING"},
+	{"ITS MORE SAFE", "THAN ANYTHING"},
 	{"USE A CONTROLLER", "LOL"},
 	{"SNIPING THE KICKSTARTER", "HAHA"},
 	{"SHITS UNOFFICIAL", "NOT A PROBLEM"},
@@ -55,17 +55,17 @@ static const char *funny_messages[][2] = {
 	{"THEY DIDNT HIT THE GOAL", "STOP"},
 	{"FCEFUWEFUETWHCFUEZDSLVNSP", "PQRYQWENQWKBVZLZSLDNSVPBM"},
 	{"THE FLOORS ARE", "THREE DIMENSIONAL"},
-	{"PSXFUNKIN BY CUCKYDEV", "SUCK IT DOWN"},
+	{"PSXFUNKIN BY CKDEV", "SUCK IT DOWN"},
 	{"PLAYING ON EPSXE HUH", "YOURE THE PROBLEM"},
-	{"NEXT IN LINE", "ATARI"},
-	{"HAXEFLIXEL", "COME ON"},
+	{"NEXT IN LINE", "ATARI JAGUAR"},
+	{"HAXEFLIXEL", "WEAK"},
 	{"HAHAHA", "I DONT CARE"},
 	{"GET ME TO STOP", "TRY"},
 	{"FNF MUKBANG GIF", "THATS UNRULY"},
 	{"OPEN SOURCE", "FOREVER"},
-	{"ITS A PORT", "ITS WORSE"},
+	{"ITS A PORT", "ITS BETTER THAN ANDROID OPTIMIZATIONS"},
 	{"WOW GATO", "WOW GATO"},
-	{"BALLS FISH", "BALLS FISH"},
+	{"PEE PEE BALLS", "POO POO DICK"},
 };
 
 
@@ -153,9 +153,9 @@ static const char *Menu_LowerIf(const char *text, boolean lower)
 	return menu_text_buffer;
 }
 
-static s32 Menu_GetStoryScore(StageId firstscore, StageId lastscore)
+static int Menu_GetStoryScore(StageId firstscore, StageId lastscore)
 {
-	s32 getstoryscore = 0;
+	int getstoryscore = 0;
 			
 	for (StageId i = firstscore; i <= lastscore; i++)
 	{
@@ -190,17 +190,17 @@ static void Menu_DifficultySelector(s32 x, s32 y)
 	{
 		if (pad_state.press & PAD_LEFT)
 		{
-			if (menu.page_param.stage.diff > StageDiff_Easy)
+			if (menu.page_param.stage.diff > StageDiff_Normal)
 				menu.page_param.stage.diff--;
 			else
-				menu.page_param.stage.diff = StageDiff_Hard;
+				menu.page_param.stage.diff = StageDiff_Normal;
 		}
 		if (pad_state.press & PAD_RIGHT)
 		{
-			if (menu.page_param.stage.diff < StageDiff_Hard)
+			if (menu.page_param.stage.diff < StageDiff_Normal)
 				menu.page_param.stage.diff++;
 			else
-				menu.page_param.stage.diff = StageDiff_Easy;
+				menu.page_param.stage.diff = StageDiff_Normal;
 		}
 	}
 	
@@ -384,14 +384,11 @@ void Menu_Tick(void)
 				switch (beat)
 				{
 					case 3:
-						menu.font_bold.draw(&menu.font_bold, "PRESENT", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 32, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "PRESENTS", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 32, FontAlign_Center);
 				//Fallthrough
 					case 2:
 					case 1:
-						menu.font_bold.draw(&menu.font_bold, "NINJAMUFFIN",   SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "PHANTOMARCADE", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 16, FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "KAWAISPRITE",   SCREEN_WIDTH2, SCREEN_HEIGHT2,      FontAlign_Center);
-						menu.font_bold.draw(&menu.font_bold, "EVILSKER",      SCREEN_WIDTH2, SCREEN_HEIGHT2 + 16, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "DREAMCASTNICK",   SCREEN_WIDTH2, SCREEN_HEIGHT2 - 32, FontAlign_Center);
 						break;
 					
 					case 7:
@@ -413,13 +410,13 @@ void Menu_Tick(void)
 						break;
 					
 					case 15:
-						menu.font_bold.draw(&menu.font_bold, "FUNKIN", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "PSX", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
 				//Fallthrough
 					case 14:
-						menu.font_bold.draw(&menu.font_bold, "NIGHT", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "TWO", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
 				//Fallthrough
 					case 13:
-						menu.font_bold.draw(&menu.font_bold, "FRIDAY", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "LITTLE MAN", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
 						break;
 				}
 				break;
@@ -529,7 +526,7 @@ void Menu_Tick(void)
 			
 			//Draw version identification
 			menu.font_bold.draw(&menu.font_bold,
-				"PSXFUNKIN BY CUCKYDEV",
+				"PSXLMTWO BY DCNICK",
 				16,
 				SCREEN_HEIGHT - 32,
 				FontAlign_Left
@@ -644,10 +641,8 @@ void Menu_Tick(void)
 				const char *tracks[3];
 				
 			} menu_options[] = {
-				{NULL, StageId_1_4, StageId_1_4, "TUTORIAL", {"TUTORIAL", NULL, NULL}},
-				{"1", StageId_1_1, StageId_1_3,  "DADDY DEAREST", {"BOPEEBO", "FRESH", "DADBATTLE"}},
-				{"2", StageId_2_1, StageId_2_3,  "SPOOKY MONTH", {"SPOOKEEZ", "SOUTH", "MONSTER"}},
-				{"3", StageId_3_1, StageId_3_3,  "PICO", {"PICO", "PHILLY NICE", "BLAMMED"}},
+				{"1", StageId_1_1, StageId_1_1, "LITTLE MAN", {"LITTLE MAN", NULL, NULL}},
+				{"2", StageId_1_2, StageId_1_3,  "LITTLE MAN TWO", {"LITTLE MAN TWO", "BIG MAN", NULL}},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d", 
@@ -791,19 +786,11 @@ void Menu_Tick(void)
 				u32 col;
 				const char *text;
 			} menu_options[] = {
-				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
-				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
-				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
-				{StageId_2_1, 0xFF223344, "SPOOKEEZ"},
-				{StageId_2_2, 0xFF223344, "SOUTH"},
-				{StageId_2_3, 0xFF223344, "MONSTER"},
-				{StageId_3_1, 0xFF941653, "PICO"},
-				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
-				{StageId_3_3, 0xFF941653, "BLAMMED"},
-				{StageId_Mod1_1, 0xFF941653, "WHERE ARE YOU"},
-				{StageId_Mod1_2, 0xFF941653, "ERUPTION"},
-				{StageId_Mod1_3, 0xFF941653, "KAIOKEN"},
+				
+				{StageId_1_1, 0xFF9271FD, "LITTLE MAN"},
+				{StageId_1_2, 0xFF9271FD, "LITTLE MAN TWO"},
+				//{StageId_1_3, 0xFF9271FD, "BIG MAN"},
+				{StageId_1_4, 0xFF9271FD, "MADNESS"},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
@@ -932,31 +919,97 @@ void Menu_Tick(void)
 				const char *text;
 				boolean difficulty;
 			} menu_options[] = {
-				{StageId_1_1, "FORK DEVS", false},
-				{StageId_1_1, "    UNSTOPABLE", false},
-				{StageId_1_1, "    IGORSOU", false},
-				{StageId_1_1, "    SPICYJPEG", false},
-				{StageId_1_1, "    SPARK", false},
-				{StageId_1_1, "PSXFUNKIN DEVELOPER", false},
-				{StageId_1_1, "    CUCKYDEV", false},
-				{StageId_1_1, "COOL PEOPLE", false},
-				{StageId_1_1, "    IGORSOU", false},
-				{StageId_1_1, "    SPARK", false},
-				{StageId_1_1, "    DREAMCASTNICK", false},
-				{StageId_1_1, "    MAXDEV", false},
-				{StageId_1_1, "    CUCKYDEV", false},
-				{StageId_1_1, "    LUCKY", false},
-				{StageId_1_1, "    MRRUMBLEROSES", false},
-				{StageId_1_1, "    JOHN PAUL", false},
-				{StageId_1_1, "    VICTOR", false},
-				{StageId_1_1, "    GOOMBAKUNGFU", false},
-				{StageId_1_1, "    GTHREEYT", false},
-				{StageId_1_1, "    BILIOUS", false},
-				{StageId_1_1, "    ZERIBEN", false},
-				{StageId_1_1, "    GALAXY YT", false},
-				{StageId_1_1, "    NINTENDOBRO", false},
-				{StageId_1_1, "    LORD SCOUT", false},
-				{StageId_1_1, "    MR P", false},
+				{StageId_1_1, "	PORT DEVS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "DREAMCASTNICK", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	PLAYTESTERS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "ANYONE WHO DOWNLOADED", false},
+				{StageId_1_1, "	THE PUBLIC BETA", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	COOL PEOPLE", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "UNSTOPABLE", false},
+				{StageId_1_1, "IGORSOU", false},
+				{StageId_1_1, "BILIOUSDATA", false},
+				{StageId_1_1, "NINTENDOBRO", false},
+				{StageId_1_1, "LORD SCOUT", false},
+				{StageId_1_1, "MR RUMBLEROSES", false},
+				{StageId_1_1, "CKDEV", false},
+				{StageId_1_1, "PICHUMANTEN", false},
+				{StageId_1_1, "JOHN PAUL", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	OG CREDITS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CREATORS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "PABLO", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CHARTERS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "SQUIDLEEY", false},
+				{StageId_1_1, "POINTY", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1, "RIPHASABRAIN", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CUTSCENES ANIMATOR", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "SALTERINZERO", false},
+				{StageId_1_1, "POINTY", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CODERS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "UNDERNITYGAMING", false},
+				{StageId_1_1, "ASHFIVE", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	BACKGROUND ART", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "PHLOX", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	GAG IDEAS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "SHPEELOCK", false},
+				{StageId_1_1, "SQUIDLEEY", false},
+				{StageId_1_1, "WREACH", false},
+				{StageId_1_1, "RERUNA", false},
+				{StageId_1_1, "PUKINUKE", false},
+				{StageId_1_1, "RIPHASABRAIN", false},
+				{StageId_1_1, "BLOXIMATORJOLT", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	BIG MAN SPRITE", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "POINTY", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	DEAD BF", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "DONNEY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	LITTLE MAN LORE WRITTER", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "RIPHASABRAIN", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	MUSIC", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "WILDY", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CONTRIBUTERS", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "KADEDEV", false},
+				{StageId_1_1, "SARCI", false},
+				{StageId_1_1, "PROJECTBON", false},
+				{StageId_1_1, "ZIFFYCLUMPER", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "	CREDITS CODE", false},
+				{StageId_1_1,    "", false},
+				{StageId_1_1, "ZERIBEN", false},
 			};
 			    
 			//Initialize page
@@ -1045,8 +1098,8 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Options:
 		{
-			static const char *gamemode_strs[] = {"NORMAL", "SWAP", "TWO PLAYER"};
-			static const char *arrow_strs[] = {"NORMAL", "CIRCLE", "BAR", "DOGS"};
+			static const char *gamemode_strs[] = {"NORMAL", "TWO PLAYER"};
+			static const char *arrow_strs[] = {"NORMAL"};
 			static const struct
 			{
 				enum
@@ -1069,8 +1122,7 @@ void Menu_Tick(void)
 					} spec_enum;
 				} spec;
 			} menu_options[] = {
-				{OptType_Enum,    "GAMEMODE", &stage.mode, {.spec_enum = {COUNT_OF(gamemode_strs), gamemode_strs}}},
-				{OptType_Enum,    "NOTESKIN", &stage.arrow, {.spec_enum = {COUNT_OF(arrow_strs), arrow_strs}}},
+				{OptType_Enum,    "GAMEMODE", &stage.prefs.mode, {.spec_enum = {COUNT_OF(gamemode_strs), gamemode_strs}}},
 				{OptType_Boolean, "INTERPOLATION", &stage.prefs.expsync, {.spec_boolean = {0}}},
 				{OptType_Boolean, "GHOST TAP", &stage.prefs.ghost, {.spec_boolean = {0}}},
 				{OptType_Boolean, "DOWNSCROLL", &stage.prefs.downscroll, {.spec_boolean = {0}}},
@@ -1080,7 +1132,7 @@ void Menu_Tick(void)
 				{OptType_Boolean, "DEBUG MODE", &stage.prefs.debug, {.spec_boolean = {0}}},
 			};
 
-			if (stage.mode == StageMode_2P)
+			if (stage.prefs.mode == StageMode_2P)
 				stage.prefs.middlescroll = false;
 			
 			//Initialize page

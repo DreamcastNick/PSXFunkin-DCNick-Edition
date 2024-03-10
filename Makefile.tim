@@ -2,19 +2,10 @@ all: \
 	iso/menu/menu.arc \
 	iso/menu/loading.tim \
 	iso/icon16.tim \
-	iso/font/boldfont.tim \
-	iso/font/arial.tim \
-	iso/font/cdr.tim \
+	iso/font/fonts.tim \
 	iso/stage/hud0.tim \
-	iso/stage/hud0cir.tim \
-	iso/stage/hud0bar.tim \
-	iso/stage/hud0dog.tim \
 	iso/stage/hud1.tim \
 	iso/stage/hudextra.tim \
-	iso/stage/hud0w.tim \
-	iso/stage/hud0wcir.tim \
-	iso/stage/hud0wbar.tim \
-	iso/stage/hud0wdog.tim \
 	iso/stage/pause.tim \
 	iso/bf/main.arc \
 	iso/bf/dead.arc \

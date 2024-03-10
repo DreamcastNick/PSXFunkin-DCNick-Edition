@@ -1,11 +1,6 @@
-/*
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
-
 #include "font.h"
 
+#include "main.h"
 #include "timer.h"
 #include "stage.h"
 
@@ -100,7 +95,7 @@ void Font_Arial_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, F
 			continue;
 		
 		//Draw character
-		RECT src = {font_arialmap[c].ix, font_arialmap[c].iy, font_arialmap[c].iw, font_arialmap[c].ih};
+		RECT src = {font_arialmap[c].ix, 173 + font_arialmap[c].iy, font_arialmap[c].iw, font_arialmap[c].ih};
 		Gfx_BlitTexCol(&this->tex, &src, x + font_arialmap[c].gx, y + font_arialmap[c].gy, r, g, b);
 		
 		//Increment X
@@ -132,18 +127,21 @@ s32 Font_CDR_GetWidth(struct FontData *this, const char *text)
 	return width;
 }
 
-void Font_CDR_DrawCol(struct FontData *this, const char *text, fixed_t x, fixed_t y, FontAlign align, u8 r, u8 g, u8 b)
+void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, FontAlign align, u8 r, u8 g, u8 b)
 {
 	//Offset position based off alignment
+	s32 alignoffset = Font_CDR_GetWidth(this, text);
+	
 	switch (align)
 	{
 		case FontAlign_Left:
+			alignoffset = 0;
 			break;
 		case FontAlign_Center:
-			x -= Font_CDR_GetWidth(this, text) >> 1;
+			alignoffset = alignoffset / 2;
 			break;
 		case FontAlign_Right:
-			x -= Font_CDR_GetWidth(this, text);
+			alignoffset = alignoffset;
 			break;
 	}
 	
@@ -162,8 +160,8 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, fixed_t x, fixed_
 			continue;
 		
 		//Draw character
-		RECT src = {font_cdrmap[c].charX, font_cdrmap[c].charY, font_cdrmap[c].charW, font_cdrmap[c].charL};
-		RECT_FIXED dst = {x, y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
+		RECT src = {font_cdrmap[c].charX, 129 + font_cdrmap[c].charY, font_cdrmap[c].charW, font_cdrmap[c].charL};
+		RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
 
 		Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, r, g, b);
 		
@@ -186,19 +184,19 @@ void FontData_Load(FontData *this, Font font)
 	{
 		case Font_Bold:
 			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONT\\BOLDFONT.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
 			this->get_width = Font_Bold_GetWidth;
 			this->draw_col = Font_Bold_DrawCol;
 			break;
 		case Font_Arial:
 			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONT\\ARIAL.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
 			this->get_width = Font_Arial_GetWidth;
 			this->draw_col = Font_Arial_DrawCol;
 			break;
 		case Font_CDR:
 			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONT\\CDR.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
 			this->get_width = Font_CDR_GetWidth;
 			this->draw_col = Font_CDR_DrawCol;
 			break;

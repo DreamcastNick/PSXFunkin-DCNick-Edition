@@ -1,4 +1,0 @@
-1 xa where-are-you/Vocals.xa 1 0
-1 xa where-are-you/Inst.xa 1 1
-1 xa eruption/Vocals.xa 1 2
-1 xa eruption/Inst.xa 1 3
