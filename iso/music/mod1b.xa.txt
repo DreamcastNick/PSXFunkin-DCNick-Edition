@@ -1,0 +1,4 @@
+1 xa kaioken/Vocals.xa 1 0
+1 xa kaioken/Inst.xa 1 1
+1 xa ferocious/Vocals.xa 1 2
+1 xa ferocious/Inst.xa 1 3

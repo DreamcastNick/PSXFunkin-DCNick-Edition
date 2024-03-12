@@ -99,23 +99,23 @@ void Back_Week3_DrawBG(StageBack *back)
 	for (size_t i = 0; i < COUNT_OF(roof_piece); i++, roof_p++)
 	{
 		roof_dst.w = roof_p->src.w ? (roof_p->src.w * roof_p->scale) : roof_p->scale;
-		Stage_DrawTex(&this->tex_back2, &roof_p->src, &roof_dst, stage.camera.bzoom);
+		Stage_DrawTex(&this->tex_back2, &roof_p->src, &roof_dst, stage.camera.bzoom, stage.camera.hudangle);
 		roof_dst.x += roof_dst.w;
 	}
 	
 	RECT roof_fillsrc = {66, 164, 7, 92};
 	RECT_FIXED roof_fill = {FIXED_DEC(-303,1) - fx, FIXED_DEC(35,1) - fy, FIXED_DEC(574,1), FIXED_DEC(79,1)};
-	Stage_DrawTex(&this->tex_back2, &roof_fillsrc, &roof_fill, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back2, &roof_fillsrc, &roof_fill, stage.camera.bzoom, stage.camera.hudangle);
 	roof_fill.y = FIXED_DEC(77,1) - fy;
-	Stage_DrawTex(&this->tex_back2, &roof_fillsrc, &roof_fill, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back2, &roof_fillsrc, &roof_fill, stage.camera.bzoom, stage.camera.hudangle);
 	
 	RECT thing_src = {67, 58, 138, 36};
 	RECT_FIXED thing_dst = {FIXED_DEC(-171,1) - fx, FIXED_DEC(-68,1) - fy, FIXED_DEC(-145,1), FIXED_DEC(31,1)};
 		
 	Debug_StageMoveDebug(&thing_dst, 4, fx, fy);
-	Stage_DrawTex(&this->tex_back2, &thing_src, &thing_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back2, &thing_src, &thing_dst, stage.camera.bzoom, stage.camera.hudangle);
 	RECT_FIXED thing2_dst = {FIXED_DEC(154,1) - fx, FIXED_DEC(-72,1) - fy, FIXED_DEC(115,1), FIXED_DEC(31,1)};
-	Stage_DrawTex(&this->tex_back2, &thing_src, &thing2_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back2, &thing_src, &thing2_dst, stage.camera.bzoom, stage.camera.hudangle);
 
 	//Move train
 	if (this->train_x <= TRAIN_END_X)
@@ -150,7 +150,7 @@ void Back_Week3_DrawBG(StageBack *back)
 		{
 			if (train_dst.x >= (SCREEN_WIDTH2 << FIXED_SHIFT) || train_dst.x <= -(train_dst.w + (SCREEN_WIDTH2 << FIXED_SHIFT)))
 				continue;
-			Stage_DrawTex(&this->tex_back4, &train_src, &train_dst, stage.camera.bzoom);
+			Stage_DrawTex(&this->tex_back4, &train_src, &train_dst, stage.camera.bzoom, stage.camera.hudangle);
 		}
 	}
 	
@@ -172,8 +172,8 @@ void Back_Week3_DrawBG(StageBack *back)
 	};
 	Debug_StageMoveDebug(&arcl_dst, 6, fx, fy);
 	Debug_StageMoveDebug(&arcr_dst, 7, fx, fy);
-	Stage_DrawTex(&this->tex_back4, &arcl_src, &arcl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back4, &arcr_src, &arcr_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back4, &arcl_src, &arcl_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back4, &arcr_src, &arcr_dst, stage.camera.bzoom, stage.camera.hudangle);
 	
 	//Draw lights
 	fx = stage.camera.x >> 1;
@@ -202,8 +202,8 @@ void Back_Week3_DrawBG(StageBack *back)
 		u8 win_b = (((fixed_t)this->win_b * this->win_time) >> FIXED_SHIFT) / 6;
 		Debug_StageMoveDebug(&lightl_dst, 8, fx, fy);
 		Debug_StageMoveDebug(&lightr_dst, 9, fx, fy);
-		Stage_DrawTexCol(&this->tex_back1, &lightl_src, &lightl_dst, stage.camera.bzoom, win_r, win_g, win_b);
-		Stage_DrawTexCol(&this->tex_back1, &lightr_src, &lightr_dst, stage.camera.bzoom, win_r, win_g, win_b);
+		Stage_DrawTexCol(&this->tex_back1, &lightl_src, &lightl_dst, stage.camera.bzoom, stage.camera.hudangle, win_r, win_g, win_b);
+		Stage_DrawTexCol(&this->tex_back1, &lightr_src, &lightr_dst, stage.camera.bzoom, stage.camera.hudangle, win_r, win_g, win_b);
 	}
 	
 	//Draw buildings
@@ -216,10 +216,10 @@ void Back_Week3_DrawBG(StageBack *back)
 	};
 	Debug_StageMoveDebug(&building_dst, 10, fx, fy);
 
-	Stage_DrawTex(&this->tex_back0, &building_src, &building_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back0, &building_src, &building_dst, stage.camera.bzoom, stage.camera.hudangle);
 	building_dst.x += building_dst.w;
 	building_src.y += building_src.h;
-	Stage_DrawTex(&this->tex_back0, &building_src, &building_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back0, &building_src, &building_dst, stage.camera.bzoom, stage.camera.hudangle);
 	
 	RECT building_fillsrc = {0, 255, 1, 0};
 	RECT building_fill = {0, SCREEN_HEIGHT * 3 / 7, SCREEN_WIDTH, SCREEN_HEIGHT * 4 / 7};
@@ -238,10 +238,10 @@ void Back_Week3_DrawBG(StageBack *back)
 	};
 	Debug_StageMoveDebug(&sky_dst, 11, fx, fy);
 
-	Stage_DrawTex(&this->tex_back3, &sky_src, &sky_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back3, &sky_src, &sky_dst, stage.camera.bzoom, stage.camera.hudangle);
 	sky_dst.x += sky_dst.w;
 	sky_src.y += sky_src.h;
-	Stage_DrawTex(&this->tex_back3, &sky_src, &sky_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back3, &sky_src, &sky_dst, stage.camera.bzoom, stage.camera.hudangle);
 }
 
 void Back_Week3_Free(StageBack *back)

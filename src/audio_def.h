@@ -11,17 +11,39 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Menu, XA_LENGTH(11300)}, //XA_GettinFreaky
 	{XA_Menu, XA_LENGTH(3800)},  //XA_GameOver
 	//WEEK1A.XA
-	{XA_Week1A, XA_LENGTH(67600)}, //XA_LittleMan
-	{XA_Week1A, XA_LENGTH(123800)}, //XA_LittleManTwo
+	{XA_Week1A, XA_LENGTH(7700)}, //XA_Bopeebo
+	{XA_Week1A, XA_LENGTH(8000)}, //XA_Fresh
 	//WEEK1B.XA
-	{XA_Week1B, XA_LENGTH(900)}, //XA_BigMan
-	{XA_Week1B, XA_LENGTH(45400)}, //XA_Madness
+	{XA_Week1B, XA_LENGTH(8700)}, //XA_Dadbattle
+	{XA_Week1B, XA_LENGTH(6800)}, //XA_Tutorial
+	//WEEK2A.XA
+	{XA_Week2A, XA_LENGTH(9900)}, //XA_Spookeez
+	{XA_Week2A, XA_LENGTH(8900)}, //XA_South
+	//WEEK2B.XA
+	{XA_Week2B, XA_LENGTH(17800)}, //XA_Monster
+	//WEEK3A.XA
+	{XA_Week3A, XA_LENGTH(8400)},  //XA_Pico
+	{XA_Week3A, XA_LENGTH(10000)}, //XA_Philly
+	//WEEK3B.XA
+	{XA_Week3B, XA_LENGTH(10700)}, //XA_Blammed
+	//MOD1A.XA
+	{XA_MOD1A, XA_LENGTH(11500)},  //XA_Where_Are_You
+	{XA_MOD1A, XA_LENGTH(15100)}, //XA_Eruption
+	//MOD1B.XA
+	{XA_MOD1B, XA_LENGTH(14800)}, //XA_Kaioken
+	{XA_MOD1B, XA_LENGTH(92300)}, //XA_Ferocious
 };
 
 static const char *xa_paths[] = {
 	"\\MUSIC\\MENU.XA;1",   //XA_Menu
 	"\\MUSIC\\WEEK1A.XA;1", //XA_Week1A
 	"\\MUSIC\\WEEK1B.XA;1", //XA_Week1B
+	"\\MUSIC\\WEEK2A.XA;1", //XA_Week2A
+	"\\MUSIC\\WEEK2B.XA;1", //XA_Week2B
+	"\\MUSIC\\WEEK3A.XA;1", //XA_Week3A
+	"\\MUSIC\\WEEK3B.XA;1", //XA_Week3B
+	"\\MUSIC\\MOD1A.XA;1", //XA_Mod1A
+	"\\MUSIC\\MOD1B.XA;1", //XA_Mod1B
 	NULL,
 };
 
@@ -33,14 +55,30 @@ typedef struct
 
 static const XA_Mp3 xa_mp3s[] = {
 	//MENU.XA
-	{"freaky", false},  		//XA_GettinFreaky
-	{"gameover", false}, 		//XA_GameOver
+	{"freaky", false},   //XA_GettinFreaky
+	{"gameover", false}, //XA_GameOver
 	//WEEK1A.XA
-	{"little-man", true}, 		//XA_Bopeebo
-	{"little-man-two", true},   //XA_Fresh
+	{"bopeebo", true}, //XA_Bopeebo
+	{"fresh", true},   //XA_Fresh
 	//WEEK1B.XA
-	{"big-man", true}, //XA_BigMan
-	{"madness", true}, //XA_Madness
+	{"dadbattle", true}, //XA_Dadbattle
+	{"tutorial", false}, //XA_Tutorial
+	//WEEK2A.XA
+	{"spookeez", true}, //XA_Spookeez
+	{"south", true},    //XA_South
+	//WEEK2B.XA
+	{"monster", true}, //XA_Monster
+	//WEEK3A.XA
+	{"pico", true},   //XA_Pico
+	{"philly", true}, //XA_Philly
+	//WEEK3B.XA
+	{"blammed", true}, //XA_Blammed
+	//MOD1A.XA
+	{"where-are-you", true},   //XA_Where_Are_You
+	{"eruption", true}, //XA_Eruption
+	//MOD1B.XA
+	{"kaioken", true}, //XA_Kaioken
+	{"ferocious", true}, //XA_Ferocious
 	
 	{NULL, false}
 };

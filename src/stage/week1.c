@@ -49,8 +49,8 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	Debug_StageMoveDebug(&curtainl_dst, 4, fx, fy);
 	Debug_StageMoveDebug(&curtainr_dst, 5, fx, fy);
-	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom, stage.camera.hudangle);
 	
 	//Draw stage
 	fx = stage.camera.x * 3 / 2;
@@ -79,7 +79,7 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	RECT stage_src = {0, 0, 255, 59};
 
-	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom);
+	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom, stage.camera.hudangle);
 	
 	//Draw back
 	//fx = stage.camera.x * 2 / 3;
@@ -109,8 +109,8 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	Debug_StageMoveDebug(&backl_dst, 6, fx, fy);
 	Debug_StageMoveDebug(&backr_dst, 7, fx, fy);
-	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom);
+	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom, stage.camera.hudangle);
 	Gfx_DrawTex(&this->tex_back0, &backf_src, &backf_dst);
 }
 

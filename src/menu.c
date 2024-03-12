@@ -190,17 +190,17 @@ static void Menu_DifficultySelector(s32 x, s32 y)
 	{
 		if (pad_state.press & PAD_LEFT)
 		{
-			if (menu.page_param.stage.diff > StageDiff_Normal)
+			if (menu.page_param.stage.diff > StageDiff_Easy)
 				menu.page_param.stage.diff--;
 			else
-				menu.page_param.stage.diff = StageDiff_Normal;
+				menu.page_param.stage.diff = StageDiff_Hard;
 		}
 		if (pad_state.press & PAD_RIGHT)
 		{
-			if (menu.page_param.stage.diff < StageDiff_Normal)
+			if (menu.page_param.stage.diff < StageDiff_Hard)
 				menu.page_param.stage.diff++;
 			else
-				menu.page_param.stage.diff = StageDiff_Normal;
+				menu.page_param.stage.diff = StageDiff_Easy;
 		}
 	}
 	
@@ -410,13 +410,13 @@ void Menu_Tick(void)
 						break;
 					
 					case 15:
-						menu.font_bold.draw(&menu.font_bold, "PSX", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "FUNKIN", SCREEN_WIDTH2, SCREEN_HEIGHT2 + 8, FontAlign_Center);
 				//Fallthrough
 					case 14:
-						menu.font_bold.draw(&menu.font_bold, "TWO", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "NIGHT", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 8, FontAlign_Center);
 				//Fallthrough
 					case 13:
-						menu.font_bold.draw(&menu.font_bold, "LITTLE MAN", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
+						menu.font_bold.draw(&menu.font_bold, "FRIDAY", SCREEN_WIDTH2, SCREEN_HEIGHT2 - 24, FontAlign_Center);
 						break;
 				}
 				break;
@@ -641,8 +641,10 @@ void Menu_Tick(void)
 				const char *tracks[3];
 				
 			} menu_options[] = {
-				{"1", StageId_1_1, StageId_1_1, "LITTLE MAN", {"LITTLE MAN", NULL, NULL}},
-				{"2", StageId_1_2, StageId_1_3,  "LITTLE MAN TWO", {"LITTLE MAN TWO", "BIG MAN", NULL}},
+				{NULL, StageId_1_4, StageId_1_4, "TUTORIAL", {"TUTORIAL", NULL, NULL}},
+				{"1", StageId_1_1, StageId_1_3,  "DADDY DEAREST", {"BOPEEBO", "FRESH", "DADBATTLE"}},
+				{"2", StageId_2_1, StageId_2_3,  "SPOOKY MONTH", {"SPOOKEEZ", "SOUTH", "MONSTER"}},
+				{"3", StageId_3_1, StageId_3_3,  "PICO", {"PICO", "PHILLY NICE", "BLAMMED"}},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d", 
@@ -786,11 +788,20 @@ void Menu_Tick(void)
 				u32 col;
 				const char *text;
 			} menu_options[] = {
-				
-				{StageId_1_1, 0xFF9271FD, "LITTLE MAN"},
-				{StageId_1_2, 0xFF9271FD, "LITTLE MAN TWO"},
-				//{StageId_1_3, 0xFF9271FD, "BIG MAN"},
-				{StageId_1_4, 0xFF9271FD, "MADNESS"},
+				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
+				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
+				{StageId_1_2, 0xFF9271FD, "FRESH"},
+				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
+				{StageId_2_1, 0xFF223344, "SPOOKEEZ"},
+				{StageId_2_2, 0xFF223344, "SOUTH"},
+				{StageId_2_3, 0xFF223344, "MONSTER"},
+				{StageId_3_1, 0xFF941653, "PICO"},
+				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
+				{StageId_3_3, 0xFF941653, "BLAMMED"},
+				{StageId_Mod1_1, 0xFF941653, "WHERE ARE YOU"},
+				{StageId_Mod1_2, 0xFF941653, "ERUPTION"},
+				{StageId_Mod1_3, 0xFF941653, "KAIO KEN"},
+				{StageId_Mod1_4, 0xFF941653, "FEROCIOUS"},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
@@ -926,7 +937,7 @@ void Menu_Tick(void)
 				{StageId_1_1, "	PLAYTESTERS", false},
 				{StageId_1_1,    "", false},
 				{StageId_1_1, "ANYONE WHO DOWNLOADED", false},
-				{StageId_1_1, "	THE PUBLIC BETA", false},
+				{StageId_1_1, "	THIS ROM", false},
 				{StageId_1_1,    "", false},
 				{StageId_1_1, "	COOL PEOPLE", false},
 				{StageId_1_1,    "", false},
@@ -939,73 +950,6 @@ void Menu_Tick(void)
 				{StageId_1_1, "CKDEV", false},
 				{StageId_1_1, "PICHUMANTEN", false},
 				{StageId_1_1, "JOHN PAUL", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	OG CREDITS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	CREATORS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "PABLO", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	CHARTERS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "SQUIDLEEY", false},
-				{StageId_1_1, "POINTY", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1, "RIPHASABRAIN", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	CUTSCENES ANIMATOR", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "SALTERINZERO", false},
-				{StageId_1_1, "POINTY", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	CODERS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "UNDERNITYGAMING", false},
-				{StageId_1_1, "ASHFIVE", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	BACKGROUND ART", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "PHLOX", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	GAG IDEAS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "SHPEELOCK", false},
-				{StageId_1_1, "SQUIDLEEY", false},
-				{StageId_1_1, "WREACH", false},
-				{StageId_1_1, "RERUNA", false},
-				{StageId_1_1, "PUKINUKE", false},
-				{StageId_1_1, "RIPHASABRAIN", false},
-				{StageId_1_1, "BLOXIMATORJOLT", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	BIG MAN SPRITE", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "POINTY", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	DEAD BF", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "DONNEY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	LITTLE MAN LORE WRITTER", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "RIPHASABRAIN", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	MUSIC", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "WILDY", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "	CONTRIBUTERS", false},
-				{StageId_1_1,    "", false},
-				{StageId_1_1, "KADEDEV", false},
-				{StageId_1_1, "SARCI", false},
-				{StageId_1_1, "PROJECTBON", false},
-				{StageId_1_1, "ZIFFYCLUMPER", false},
 				{StageId_1_1,    "", false},
 				{StageId_1_1, "	CREDITS CODE", false},
 				{StageId_1_1,    "", false},
@@ -1099,7 +1043,6 @@ void Menu_Tick(void)
 		case MenuPage_Options:
 		{
 			static const char *gamemode_strs[] = {"NORMAL", "TWO PLAYER"};
-			static const char *arrow_strs[] = {"NORMAL"};
 			static const struct
 			{
 				enum
@@ -1126,7 +1069,6 @@ void Menu_Tick(void)
 				{OptType_Boolean, "INTERPOLATION", &stage.prefs.expsync, {.spec_boolean = {0}}},
 				{OptType_Boolean, "GHOST TAP", &stage.prefs.ghost, {.spec_boolean = {0}}},
 				{OptType_Boolean, "DOWNSCROLL", &stage.prefs.downscroll, {.spec_boolean = {0}}},
-				{OptType_Boolean, "MIDDLESCROLL", &stage.prefs.middlescroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "BOTPLAY", &stage.prefs.botplay, {.spec_boolean = {0}}},
 				{OptType_Boolean, "SHOW SONG TIME", &stage.prefs.songtimer, {.spec_boolean = {0}}},
 				{OptType_Boolean, "DEBUG MODE", &stage.prefs.debug, {.spec_boolean = {0}}},

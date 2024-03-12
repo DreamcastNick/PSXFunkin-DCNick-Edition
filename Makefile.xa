@@ -2,6 +2,12 @@ all: \
   iso/music/menu.xa \
   iso/music/week1a.xa \
   iso/music/week1b.xa \
+  iso/music/week2a.xa \
+  iso/music/week2b.xa \
+  iso/music/week3a.xa \
+  iso/music/week3b.xa \
+  iso/music/mod1a.xa \
+  iso/music/mod1b.xa \
 
 # XA converts
 iso/music/%.xa: iso/music/%.ogg
@@ -13,3 +19,9 @@ iso/music/%.xa:
 iso/music/menu.xa: iso/music/freaky.xa iso/music/gameover.xa
 iso/music/week1a.xa: iso/music/bopeebo/Inst.xa iso/music/bopeebo/Vocals.xa iso/music/fresh/Inst.xa iso/music/fresh/Vocals.xa
 iso/music/week1b.xa: iso/music/dadbattle/Inst.xa iso/music/dadbattle/Vocals.xa iso/music/tutorial/Inst.xa
+iso/music/week2a.xa: iso/music/spookeez/Inst.xa iso/music/spookeez/Vocals.xa iso/music/south/Inst.xa iso/music/south/Vocals.xa
+iso/music/week2b.xa: iso/music/monster/Inst.xa iso/music/monster/Vocals.xa
+iso/music/week3a.xa: iso/music/pico/Inst.xa iso/music/pico/Vocals.xa iso/music/philly/Inst.xa iso/music/philly/Vocals.xa
+iso/music/week3b.xa: iso/music/blammed/Inst.xa iso/music/blammed/Vocals.xa
+iso/music/mod1a.xa: iso/music/where-are-you/Inst.xa iso/music/where-are-you/Vocals.xa iso/music/eruption/Inst.xa iso/music/eruption/Vocals.xa
+iso/music/mod1b.xa: iso/music/kaioken/Inst.xa iso/music/kaioken/Vocals.xa iso/music/ferocious/Inst.xa iso/music/ferocious/Vocals.xa

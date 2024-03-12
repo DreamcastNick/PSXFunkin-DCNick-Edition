@@ -19,10 +19,11 @@
 #include "debug.h"
 
 //Stage constants
-#define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE | PAD_L2)
-#define INPUT_DOWN  (PAD_DOWN  | PAD_CROSS | PAD_L1)
-#define INPUT_UP    (PAD_UP    | PAD_TRIANGLE | PAD_R1)
-#define INPUT_RIGHT (PAD_RIGHT | PAD_CIRCLE | PAD_R2)
+#define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE)
+#define INPUT_DOWN  (PAD_DOWN  | PAD_CROSS)
+#define INPUT_MIDDLE (PAD_L1 | PAD_L2 | PAD_R1 | PAD_R2)
+#define INPUT_UP    (PAD_UP    | PAD_TRIANGLE)
+#define INPUT_RIGHT (PAD_RIGHT | PAD_CIRCLE)
 
 #define STAGE_FLAG_JUST_STEP     (1 << 0) //Song just stepped this frame
 #define STAGE_FLAG_VOCAL_ACTIVE  (1 << 1) //Song's vocal track is currently active
@@ -40,10 +41,23 @@
 //Stage enums
 typedef enum
 {
-	StageId_1_1, //Little Man
-	StageId_1_2, //Little Man Two
-	StageId_1_3, //Big Man
-	StageId_1_4, //Madness
+	StageId_1_1, //Bopeebo
+	StageId_1_2, //Fresh
+	StageId_1_3, //Dadbattle
+	StageId_1_4, //Tutorial
+	
+	StageId_2_1, //Spookeez
+	StageId_2_2, //South
+	StageId_2_3, //Monster
+	
+	StageId_3_1, //Pico
+	StageId_3_2, //Philly
+	StageId_3_3, //Blammed
+
+	StageId_Mod1_1, //Where Are You
+	StageId_Mod1_2, //Eruption
+	StageId_Mod1_3, //Kaioken
+	StageId_Mod1_4, //Ferocious
 	
 	StageId_Max
 } StageId;
@@ -65,11 +79,6 @@ typedef enum
 	StageMode_Net1,
 	StageMode_Net2,
 } StageMode;
-
-typedef enum
-{
-	StageArrow_Normal,
-} StageArrow;
 
 typedef enum
 {
@@ -101,7 +110,12 @@ typedef struct
 	//Stage background
 	StageBack* (*back)();
 	
+	//Camera Offsets
+	fixed_t offset_x, offset_y, offset_zoom;
+	
 	//Song info
+	fixed_t speed[3];
+	
 	u8 week, week_song;
 	u8 music_track, music_channel;
 	
@@ -110,7 +124,7 @@ typedef struct
 } StageDef;
 
 //Stage state
-#define SECTION_FLAG_OPPFOCUS (1 << 15) //Focus on opponent
+#define SECTION_FLAG_OPPFOCUS (1ULL << 15) //Focus on opponent
 #define SECTION_FLAG_BPM_MASK 0x7FFF //1/24
 
 typedef struct
@@ -119,24 +133,29 @@ typedef struct
 	u16 flag;
 } Section;
 
-#define NOTE_FLAG_OPPONENT    (1 << 2) //Note is opponent's
-#define NOTE_FLAG_SUSTAIN     (1 << 3) //Note is a sustain note
-#define NOTE_FLAG_SUSTAIN_END (1 << 4) //Is either end of sustain
-#define NOTE_FLAG_ALT_ANIM    (1 << 5) //Note plays alt animation
-#define NOTE_FLAG_MINE        (1 << 6) //Note is a mine
-#define NOTE_FLAG_HIT         (1 << 7) //Note has been hit
+#define NOTE_FLAG_SUSTAIN     (1 << 5) //Note is a sustain note
+#define NOTE_FLAG_SUSTAIN_END (1 << 6) //Is either end of sustain
+#define NOTE_FLAG_ALT_ANIM    (1 << 7) //Note plays alt animation
+#define NOTE_FLAG_MINE        (1 << 8) //Note is a mine
+#define NOTE_FLAG_DANGER      (1 << 9) //Note is a danger
+#define NOTE_FLAG_STATIC      (1 << 11) //Note is a static
+#define NOTE_FLAG_PHANTOM     (1 << 12) //Note is a phantom
+#define NOTE_FLAG_POLICE      (1 << 13) //Note is a police
+#define NOTE_FLAG_MAGIC       (1 << 14) //Note is a magic
+#define NOTE_FLAG_HIT         (1 << 15) //Note has been hit
 
 typedef struct
 {
 	u16 pos; //1/12 steps
 	u16 type;
+	u16 is_opponent;
 } Note;
 
 typedef struct
 {
 	Character *character;
 	
-	fixed_t arrow_hitan[4]; //Arrow hit animation for presses
+	fixed_t arrow_hitan[9]; //Arrow hit animation for presses
 
 	s16 health;
 	u16 combo;
@@ -162,12 +181,13 @@ typedef struct
 
 typedef struct
 {
+	DISPENV disp[2];
+	DRAWENV draw[2];
 	//Stage settings
 	int pause_state;
 	struct
 	{
 		s32 mode;
-		s32 arrow;
 		boolean ghost, downscroll, middlescroll, expsync, debug, songtimer, botplay;
 		int savescore[StageId_Max][StageDiff_Max];
 	}prefs;	
@@ -177,10 +197,8 @@ typedef struct
 	u8 pause_select;
 	boolean paused;
 
-	fixed_t note_x[8], note_y[8];
-	
 	//HUD textures
-	Gfx_Tex tex_hud0, tex_hud1, tex_hude;
+	Gfx_Tex tex_note, tex_hud0, tex_hud1, tex_hude;
 
 	//font
 	FontData font_cdr, font_bold;
@@ -194,6 +212,8 @@ typedef struct
 	Section *sections;
 	Note *notes;
 	size_t num_notes;
+	u16 keys;
+	u16 max_keys;
 	
 	fixed_t speed;
 	fixed_t step_crochet, step_time;
@@ -206,9 +226,21 @@ typedef struct
 	
 	struct
 	{
-		fixed_t x, y, zoom;
-		fixed_t tx, ty, tz, td;
-		fixed_t bzoom;
+		// Specs
+		boolean force;
+		fixed_t speed;
+		
+		// Positions
+		fixed_t x, y, zoom, bzoom, angle, hudangle;
+		
+		struct
+		{
+			fixed_t x, y, zoom;
+		} offset;
+		
+		// Targets
+		fixed_t tx, ty, tz;
+		s16 ta, hudta;
 	} camera;
 	fixed_t bump, sbump;
 	
@@ -224,6 +256,13 @@ typedef struct
 	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
 	
 	fixed_t note_scroll, song_time, interp_time, interp_ms, interp_speed;
+
+	struct
+	{
+		fixed_t* x;
+		fixed_t y;
+		u16 size;
+	} note;
 	
 	u16 last_bpm;
 
@@ -265,12 +304,17 @@ typedef struct
 extern Stage stage;
 
 //Stage drawing functions
-void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 r, u8 g, u8 b);
-void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom);
-void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 angle);
-void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 opacity, u8 mode);
-void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom);
-void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, u8 mode);
+void Stage_DrawRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb);
+void Stage_BlendRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb, int mode);
+void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
+void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom, fixed_t rotation);
+void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
+void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
+void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
+void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation);
+void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode);
+void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 mode);
+void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
 
 
 //Stage functions

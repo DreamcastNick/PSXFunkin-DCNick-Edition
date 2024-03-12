@@ -6,6 +6,15 @@
 
 #include <string.h>
 
+Fonts fonts;
+
+void Initalize_Fonts(void)
+{
+	FontData_Load(&fonts.font_cdr, Font_CDR);
+	FontData_Load(&fonts.font_bold, Font_Bold);
+	FontData_Load(&fonts.font_arial, Font_Arial);
+}
+
 //Font_Bold
 s32 Font_Bold_GetWidth(struct FontData *this, const char *text)
 {
@@ -152,8 +161,8 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 	{
 		if (c == '\n')
 		{
-		x = xhold;
-		y += 11;
+			x = xhold;
+			y += (gameloop == GameLoop_Stage) ? FIXED_DEC(11,1) : 11;
 		}
 		//Shift and validate character
 		if ((c -= 0x20) >= 0x60)
@@ -161,12 +170,20 @@ void Font_CDR_DrawCol(struct FontData *this, const char *text, s32 x, s32 y, Fon
 		
 		//Draw character
 		RECT src = {font_cdrmap[c].charX, 129 + font_cdrmap[c].charY, font_cdrmap[c].charW, font_cdrmap[c].charL};
-		RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
-
-		Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, r, g, b);
 		
-		//Increment X
-		x += (font_cdrmap[c].charW - 1) << FIXED_SHIFT;
+		if (gameloop == GameLoop_Stage)
+		{
+			RECT_FIXED dst = {x - FIXED_DEC(alignoffset,1), y, src.w << FIXED_SHIFT, src.h << FIXED_SHIFT};
+			Stage_DrawTexCol(&this->tex, &src, &dst, stage.bump, stage.camera.hudangle, r, g, b);
+			x += (font_cdrmap[c].charW - 1) << FIXED_SHIFT;
+		}
+		else
+		{
+			RECT dst_f = {x - alignoffset, y, src.w, src.h};
+			Gfx_DrawTexCol(&this->tex, &src, &dst_f, r, g, b);
+			x += (font_cdrmap[c].charW - 1);
+		}
+		
 	}
 }
 
@@ -176,30 +193,34 @@ void Font_Draw(struct FontData *this, const char *text, s32 x, s32 y, FontAlign 
 	this->draw_col(this, text, x, y, align, 0x80, 0x80, 0x80);
 }
 
+// Load font texture
+static void FontData_LoadTex(FontData *this)
+{
+    static const char *filename = "\\FONTS\\FONTS.TIM;1";
+    Gfx_LoadTex(&this->tex, IO_Read(filename), GFX_LOADTEX_FREE);
+}
+
 //Font functions
 void FontData_Load(FontData *this, Font font)
 {
-	//Load the given font
-	switch (font)
-	{
-		case Font_Bold:
-			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
-			this->get_width = Font_Bold_GetWidth;
-			this->draw_col = Font_Bold_DrawCol;
-			break;
-		case Font_Arial:
-			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
-			this->get_width = Font_Arial_GetWidth;
-			this->draw_col = Font_Arial_DrawCol;
-			break;
-		case Font_CDR:
-			//Load texture and set functions
-			Gfx_LoadTex(&this->tex, IO_Read("\\FONTS\\FONTS.TIM;1"), GFX_LOADTEX_FREE);
-			this->get_width = Font_CDR_GetWidth;
-			this->draw_col = Font_CDR_DrawCol;
-			break;
-	}
-	this->draw = Font_Draw;
+    //Load texture and set functions
+    FontData_LoadTex(this);
+
+    switch (font)
+    {
+        case Font_Bold:
+            this->get_width = Font_Bold_GetWidth;
+            this->draw_col = Font_Bold_DrawCol;
+            break;
+        case Font_Arial:
+            this->get_width = Font_Arial_GetWidth;
+            this->draw_col = Font_Arial_DrawCol;
+            break;
+        case Font_CDR:
+            this->get_width = Font_CDR_GetWidth;
+            this->draw_col = Font_CDR_DrawCol;
+            break;
+    }
+
+    this->draw = Font_Draw;
 }
