@@ -35,10 +35,6 @@ void Gfx_Init(void)
 	setRGB0(&stage.draw[0], 0, 0, 0);
 	setRGB0(&stage.draw[1], 0, 0, 0);
 	
-	//Load font
-	FntLoad(960, 0);
-	FntOpen(0, 8, 320, 224, 0, 100);
-	
 	//Initialize drawing state
 	nextpri = pribuff[0];
 	db = 0;

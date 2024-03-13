@@ -51,9 +51,10 @@ uint16_t ChartKey(json &j)
             return 6;
         case 2:
             return 7;
-        break;
         case 3:
             return 9;
+		case 4:
+            return 5;
         break;
     }
 

@@ -51,6 +51,32 @@ static u8 note_anims4k[4][3] = {
 	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
 };
 
+static fixed_t note_x5k[10] = {
+	//BF
+	 FIXED_DEC(16 - 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(50 - 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(84 - 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(118 - 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(150 - 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	//Opponent
+	 FIXED_DEC(-128 - 10,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-94 - 10,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(-512,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	 FIXED_DEC(-60 - 10,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	 FIXED_DEC(-26 - 10,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+};
+
+static u16 note_key5k[] = {INPUT_LEFT, INPUT_DOWN, INPUT_MIDDLE, INPUT_UP, INPUT_RIGHT};
+
+
+static u8 note_anims5k[5][3] = {
+	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
+	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
+	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
+	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
+	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
+};
+
 //6K
 static fixed_t note_x6k[12] = {
 	//BF
@@ -157,6 +183,7 @@ static u8 (*note_anims)[3];
 
 //Stage definitions
 boolean noteshake;
+int bgx = 256;
 
 static u32 Sounds[7];
 
@@ -270,6 +297,55 @@ static void Stage_ScrollCamera(void)
 	
 	//Update other camera stuff
 	stage.camera.bzoom = FIXED_MUL(stage.camera.zoom, stage.bump);
+}
+
+static void Stage_DrawStartScreen(void)
+{
+	fixed_t fx, fy;
+
+	fx = stage.camera.x;
+	fy = stage.camera.y;
+
+	RECT text_src = {0, 0, 127, 47};
+	RECT_FIXED text_dst = {
+		FIXED_DEC(bgx,1) - fx,
+		FIXED_DEC(-64,1) - fy,
+		FIXED_DEC(256,1) + FIXED_DEC(SCREEN_WIDEOADD,1),
+		FIXED_DEC(94,1)
+	};
+
+	Stage_DrawTex(&stage.tex_strscr, &text_src, &text_dst, stage.camera.bzoom, stage.camera.hudangle);
+
+	fx = stage.camera.x;
+	fy = stage.camera.y;
+
+	RECT logo_src = {0, 48, 128, 94};
+	RECT_FIXED logo_dst = {
+		FIXED_DEC(-64,1) - FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
+		FIXED_DEC(-64,1) - fy,
+		FIXED_DEC(128,1) + FIXED_DEC(SCREEN_WIDEOADD,1),
+		FIXED_DEC(94,1)
+	};
+	Stage_DrawTex(&stage.tex_strscr, &logo_src, &logo_dst, stage.camera.bzoom, stage.camera.hudangle);
+
+	u8 st_col = 255;
+	static const RECT st = {0, 0, 500, 500};
+	stage.startscreen -= 2;
+	if(stage.startscreen < 256)
+		st_col = stage.startscreen;
+	Gfx_BlendRect(&st, st_col, st_col, st_col, 2);
+
+	if (stage.song_step == -30)
+	{
+		bgx = 192;
+	}
+	if (stage.song_step >= -22)
+	{
+		bgx -= 16;
+
+		if (bgx <= -192)
+			bgx = -192;
+	}
 }
 
 //Stage section functions
@@ -1094,35 +1170,18 @@ static void Stage_DrawNotes(void)
 					continue;
 				
 				//Draw note body
-				note_src.x = 192 + ((note->type & 0x1) << 5);
-				note_src.y = (note->type & 0x2) << 4;
-				note_src.w = 32;
-				note_src.h = 32;
+				note_src.x = ((Stage_GetNoteType(note) % stage.keys) * stage.note.size);
+				note_src.y = stage.note.size;
+				note_src.w = stage.note.size;
+				note_src.h = stage.note.size;
 				
-				note_dst.x = stage.note.x[(note->type % stage.max_keys)] - FIXED_DEC(16,1);
-				note_dst.y = y - FIXED_DEC(16,1);
+				note_dst.x = stage.note.x[(Stage_GetNoteType(note) % stage.max_keys)] - FIXED_DEC(stage.note.size / 2,1);
+				note_dst.y = y - FIXED_DEC(stage.note.size / 2,1);
 				note_dst.w = note_src.w << FIXED_SHIFT;
 				note_dst.h = note_src.h << FIXED_SHIFT;
 				
 				if (stage.prefs.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				Stage_DrawTex(&stage.tex_note, &note_src, &note_dst, stage.bump, stage.camera.hudangle);
-				
-				//Draw note fire
-				note_src.x = 192 + ((animf_count & 0x1) << 5);
-				note_src.y = 64 + ((animf_count & 0x2) * 24);
-				note_src.w = 32;
-				note_src.h = 48;
-				
-				if (stage.prefs.downscroll)
-				{
-					note_dst.y += note_dst.h;
-					note_dst.h = note_dst.h * -3 / 2;
-				}
-				else
-				{
-					note_dst.h = note_dst.h * 3 / 2;
-				}
 				Stage_DrawTex(&stage.tex_note, &note_src, &note_dst, stage.bump, stage.camera.hudangle);
 			}
 			else
@@ -1474,6 +1533,7 @@ static void Stage_LoadMusic(void)
 	Audio_SeekXA_Track(stage.stage_def->music_track);
 	
 	//Initialize music state
+	stage.intro = true;
 	stage.note_scroll = FIXED_DEC(-5 * 6 * 12,1);
 	stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet);
 	stage.interp_time = 0;
@@ -1547,6 +1607,14 @@ static void Stage_LoadState(void)
 			note_key = note_key4k;
 			stage.note.size = 32;
 		break;
+		//5 Key
+		case 5:
+			stage.note.x = note_x5k;
+			stage.note.y = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
+			note_anims = note_anims5k;
+			note_key = note_key5k;
+			stage.note.size = 32;
+		break;
 		//6 Key
 		case 6:
 			stage.note.x = note_x6k;
@@ -1598,7 +1666,13 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
 	Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
 	Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
-
+	
+	if (stage.stage_def->tim)
+	{
+		stage.startscreen = 512;
+		Gfx_LoadTex(&stage.tex_strscr, IO_Read("\\STAGE\\PHASE3.TIM;1"), GFX_LOADTEX_FREE);
+	}
+	
 	//Load stage background
 	Stage_LoadStage();
 
@@ -1623,9 +1697,15 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Stage_LoadChart();
 	
 	char note_text[32];
+	char type_text[32];
+	char type2_text[32];
 	
 	sprintf(note_text, "\\STAGE\\NOTE%dK.TIM;1", stage.keys);
 	Gfx_LoadTex(&stage.tex_note, IO_Read(note_text), GFX_LOADTEX_FREE);
+	sprintf(type_text, "\\STAGE\\TYPE%dK0.TIM;1", stage.keys);
+	Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
+	sprintf(type2_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
+	Gfx_LoadTex(&stage.tex_type2, IO_Read(type2_text), GFX_LOADTEX_FREE);
 	
 	//Initialize stage state
 	stage.story = story;
@@ -1861,7 +1941,10 @@ void Stage_Tick(void)
 	switch (stage.state)
 	{
 		case StageState_Play:
-		{ 
+		{
+			if (stage.startscreen > 0)
+				Stage_DrawStartScreen();
+			
 			if (stage.song_step >= 0)
 			{
 				if (stage.paused == false && pad_state.press & PAD_START)
@@ -2048,10 +2131,82 @@ void Stage_Tick(void)
 					}
 				}
 			}
-
+			
 			//Play CountDown
 			if (stage.song_step < 0)
-				Stage_CountDown();
+			{
+				if (stage.intro)
+				{
+					Stage_CountDown();
+				}
+			}
+			
+			switch (stage.stage_id)
+			{
+				case StageId_1_1:
+					stage.intro = true;
+				break;
+
+				case StageId_1_2:
+					stage.intro = true;
+				break;
+
+				case StageId_1_3:
+					stage.intro = true;
+				break;
+
+				case StageId_1_4:
+					stage.intro = true;
+				break;
+
+				case StageId_2_1:
+					stage.intro = true;
+				break;
+
+				case StageId_2_2:
+					stage.intro = true;
+				break;
+
+				case StageId_2_3:
+					stage.intro = true;
+				break;
+
+				case StageId_3_1:
+					stage.intro = true;
+				break;
+
+				case StageId_3_2:
+					stage.intro = true;
+				break;
+
+				case StageId_3_3:
+					stage.intro = true;
+				break;
+
+				case StageId_Mod1_1:
+					stage.intro = true;
+				break;
+
+				case StageId_Mod1_2:
+					stage.intro = true;
+				break;
+
+				case StageId_Mod1_3:
+					stage.intro = true;
+				break;
+
+				case StageId_Mod1_4:
+					stage.intro = true;					
+				break;
+
+				case StageId_Mod1_5:
+					stage.intro = true;
+				break;
+
+				case StageId_Mod1_6:
+					stage.intro = false;					
+				break;
+			}
 			
 			Events();
 			

@@ -32,6 +32,9 @@ static const XA_TrackDef xa_tracks[] = {
 	//MOD1B.XA
 	{XA_MOD1B, XA_LENGTH(14800)}, //XA_Kaioken
 	{XA_MOD1B, XA_LENGTH(92300)}, //XA_Ferocious
+	//MOD1C.XA
+	{XA_MOD1C, XA_LENGTH(25800)}, //XA_Monochrome
+	{XA_MOD1C, XA_LENGTH(50700)}, //XA_TripleTrouble
 };
 
 static const char *xa_paths[] = {
@@ -44,6 +47,7 @@ static const char *xa_paths[] = {
 	"\\MUSIC\\WEEK3B.XA;1", //XA_Week3B
 	"\\MUSIC\\MOD1A.XA;1", //XA_Mod1A
 	"\\MUSIC\\MOD1B.XA;1", //XA_Mod1B
+	"\\MUSIC\\MOD1C.XA;1", //XA_Mod1C
 	NULL,
 };
 
@@ -79,6 +83,9 @@ static const XA_Mp3 xa_mp3s[] = {
 	//MOD1B.XA
 	{"kaioken", true}, //XA_Kaioken
 	{"ferocious", true}, //XA_Ferocious
+	//MOD1C.XA
+	{"monochrome", true}, //XA_Monochrome
+	{"triple-trouble", true}, //XA_TripleTrouble
 	
 	{NULL, false}
 };

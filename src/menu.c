@@ -798,10 +798,12 @@ void Menu_Tick(void)
 				{StageId_3_1, 0xFF941653, "PICO"},
 				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
 				{StageId_3_3, 0xFF941653, "BLAMMED"},
-				{StageId_Mod1_1, 0xFF941653, "WHERE ARE YOU"},
-				{StageId_Mod1_2, 0xFF941653, "ERUPTION"},
-				{StageId_Mod1_3, 0xFF941653, "KAIO KEN"},
-				{StageId_Mod1_4, 0xFF941653, "FEROCIOUS"},
+				{StageId_Mod1_1, 0xFFCFCFCF, "WHERE ARE YOU"},
+				{StageId_Mod1_2, 0xFFF9BB00, "ERUPTION"},
+				{StageId_Mod1_3, 0xFFEA4747, "KAIO KEN"},
+				{StageId_Mod1_4, 0xFF00FF00, "FEROCIOUS"},
+				{StageId_Mod1_5, 0xFF000000, "MONOCHROME"},
+				{StageId_Mod1_6, 0xFF800000, "TRIPLE TROUBLE"},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(

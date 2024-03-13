@@ -35,12 +35,24 @@
 			<!-- Stage assets -->
 			<dir name = "stage">
 				<file name = "note4k.tim" type = "data" source = "iso/stage/note4k.tim"/>
+				<file name = "note5k.tim" type = "data" source = "iso/stage/note5k.tim"/>
 				<file name = "note6k.tim" type = "data" source = "iso/stage/note6k.tim"/>
 				<file name = "note7k.tim" type = "data" source = "iso/stage/note7k.tim"/>
 				<file name = "note9k.tim" type = "data" source = "iso/stage/note9k.tim"/>
+				<file name = "type4k0.tim" type = "data" source = "iso/stage/type4k0.tim"/>
+				<file name = "type5k0.tim" type = "data" source = "iso/stage/type5k0.tim"/>
+				<file name = "type6k0.tim" type = "data" source = "iso/stage/type6k0.tim"/>
+				<file name = "type7k0.tim" type = "data" source = "iso/stage/type7k0.tim"/>
+				<file name = "type9k0.tim" type = "data" source = "iso/stage/type9k0.tim"/>
+				<file name = "type4k1.tim" type = "data" source = "iso/stage/type4k1.tim"/>
+				<file name = "type5k1.tim" type = "data" source = "iso/stage/type5k1.tim"/>
+				<file name = "type6k1.tim" type = "data" source = "iso/stage/type6k1.tim"/>
+				<file name = "type7k1.tim" type = "data" source = "iso/stage/type7k1.tim"/>
+				<file name = "type9k1.tim" type = "data" source = "iso/stage/type9k1.tim"/>
 				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
 				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
 				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
+				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
 				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
 			</dir>
 			
@@ -118,7 +130,7 @@
 				<file name = "mod1.2e.cht" type = "data" source = "iso/chart/eruption-easy.json.cht"/>
 				<file name = "mod1.2n.cht" type = "data" source = "iso/chart/eruption.json.cht"/>
 				<file name = "mod1.2h.cht" type = "data" source = "iso/chart/eruption-hard.json.cht"/>
-				<!-- Kaio-ken charts -->
+				<!-- Kaio-Ken charts -->
 				<file name = "mod1.3e.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
 				<file name = "mod1.3n.cht" type = "data" source = "iso/chart/kaio-ken.json.cht"/>
 				<file name = "mod1.3h.cht" type = "data" source = "iso/chart/kaio-ken-hard.json.cht"/>
@@ -126,6 +138,14 @@
 				<file name = "mod1.4e.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
 				<file name = "mod1.4n.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
 				<file name = "mod1.4h.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
+				<!-- Monochrome charts -->
+				<file name = "mod1.5e.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<file name = "mod1.5n.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<file name = "mod1.5h.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<!-- Triple Trouble charts -->
+				<file name = "mod1.6e.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<file name = "mod1.6n.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<file name = "mod1.6h.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
 			</dir>
 		
 			<!-- Character assets -->
@@ -190,6 +210,8 @@
 				<file name = "mod1a.xa" type = "xa" source = "iso/music/mod1a.xa"/>
 				<dummy sectors="128"/>
 				<file name = "mod1b.xa" type = "xa" source = "iso/music/mod1b.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1c.xa" type = "xa" source = "iso/music/mod1c.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

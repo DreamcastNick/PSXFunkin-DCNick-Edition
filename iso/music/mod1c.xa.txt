@@ -1,0 +1,4 @@
+1 xa monochrome/Vocals.xa 1 0
+1 xa monochrome/Inst.xa 1 1
+1 xa triple-trouble/Vocals.xa 1 2
+1 xa triple-trouble/Inst.xa 1 3

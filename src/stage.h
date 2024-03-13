@@ -56,8 +56,10 @@ typedef enum
 
 	StageId_Mod1_1, //Where Are You
 	StageId_Mod1_2, //Eruption
-	StageId_Mod1_3, //Kaioken
+	StageId_Mod1_3, //Kaio-Ken
 	StageId_Mod1_4, //Ferocious
+	StageId_Mod1_5, //Monochrome
+	StageId_Mod1_6, //Triple Trouble
 	
 	StageId_Max
 } StageId;
@@ -118,6 +120,7 @@ typedef struct
 	
 	u8 week, week_song;
 	u8 music_track, music_channel;
+	boolean tim;
 	
 	StageId next_stage;
 	u8 next_load;
@@ -198,7 +201,9 @@ typedef struct
 	boolean paused;
 
 	//HUD textures
-	Gfx_Tex tex_note, tex_hud0, tex_hud1, tex_hude;
+	u8 hitstatic;
+	Gfx_Tex tex_static;
+	Gfx_Tex tex_note, tex_type, tex_type2, tex_hud0, tex_hud1, tex_hude, tex_strscr;
 
 	//font
 	FontData font_cdr, font_bold;
@@ -218,6 +223,9 @@ typedef struct
 	fixed_t speed;
 	fixed_t step_crochet, step_time;
 	fixed_t early_safe, late_safe, early_sus_safe, late_sus_safe;
+
+	//if stage have intro or no
+	boolean intro;
 	
 	//Stage state
 	boolean story;
@@ -299,6 +307,9 @@ typedef struct
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
+	
+	//Animations
+	u16 startscreen;
 } Stage;
 
 extern Stage stage;

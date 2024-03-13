@@ -107,7 +107,6 @@ int main(int argc, char **argv)
 					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 20,1) : 20,
 					FontAlign_Left
 				);
-				FntPrint("mem: %08X/%08X (max %08X)\n", mem_used, mem_size, mem_max);
 			#endif
 		#endif
 		

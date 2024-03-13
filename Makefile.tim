@@ -4,12 +4,24 @@ all: \
 	iso/icon16.tim \
 	iso/font/fonts.tim \
 	iso/stage/note4k.tim \
+	iso/stage/note5k.tim \
 	iso/stage/note6k.tim \
 	iso/stage/note7k.tim \
 	iso/stage/note9k.tim \
+	iso/stage/type4k0.tim \
+	iso/stage/type5k0.tim \
+	iso/stage/type6k0.tim \
+	iso/stage/type7k0.tim \
+	iso/stage/type9k0.tim \
+	iso/stage/type4k1.tim \
+	iso/stage/type5k1.tim \
+	iso/stage/type6k1.tim \
+	iso/stage/type7k1.tim \
+	iso/stage/type9k1.tim \
 	iso/stage/hud0.tim \
 	iso/stage/hud1.tim \
 	iso/stage/hudextra.tim \
+	iso/stage/phase3.tim \
 	iso/stage/pause.tim \
 	iso/bf/main.arc \
 	iso/bf/dead.arc \

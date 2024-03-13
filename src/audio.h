@@ -19,8 +19,9 @@ typedef enum
 	XA_Week2B, //WEEK2B.XA
 	XA_Week3A, //WEEK3A.XA
 	XA_Week3B, //WEEK3B.XA
-	XA_MOD1A, //MOD1B.XA
-	XA_MOD1B, //MOD1A.XA
+	XA_MOD1A, //MOD1A.XA
+	XA_MOD1B, //MOD1B.XA
+	XA_MOD1C, //MOD1C.XA
 	
 	XA_Max,
 } XA_File;
@@ -52,6 +53,9 @@ typedef enum
 	//MOD1B.XA
 	XA_Kaioken, //Kaioken
 	XA_Ferocious, //Ferocious
+	//MOD1B.XA
+	XA_Monochrome, //Monochrome
+	XA_TripleTrouble, //Triple Trouble
 	
 	XA_TrackMax,
 } XA_Track;
