@@ -34,6 +34,11 @@ typedef struct
 	u8 frame, tex_id;
 } Char_Pico;
 
+static const u16 char_pico_icons[2][4] = {
+	{144,36,36,36},
+	{180,36,36,36}
+};
+
 //Pico character definitions
 static const CharFrame char_pico_frame[] = {
 	{Pico_ArcMain_Idle, {  0,   0, 110, 116}, { 64, 104}}, //0 idle 1
@@ -131,14 +136,16 @@ Character *Char_Pico_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i = 5;
+	memcpy(this->character.health_i, char_pico_icons, sizeof(char_pico_icons));
 
 	//health bar color
 	this->character.health_bar = 0xFFB5D652;
 	
 	this->character.focus_x = FIXED_DEC(65,1);
 	this->character.focus_y = FIXED_DEC(-65,1);
-	this->character.focus_zoom = FIXED_DEC(1,1);
+	this->character.focus_zoom = FIXED_DEC(100,100);
+	
+	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\PICO.ARC;1");

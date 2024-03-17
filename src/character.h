@@ -49,9 +49,11 @@ typedef struct Character
 	
 	//Character information
 	CharSpec spec;
-	u8 health_i; //hud1.tim
+	u16 health_i[2][4];
 	u32 health_bar; //hud1.tim
 	fixed_t focus_x, focus_y, focus_zoom;
+	
+	fixed_t size;
 	
 	//Animation state
 	Animatable animatable;

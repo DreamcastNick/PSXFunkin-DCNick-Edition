@@ -38,6 +38,11 @@ typedef struct
 	u8 frame, tex_id;
 } Char_Spook;
 
+static const u16 char_spook_icons[2][4] = {
+	{0,36,36,36},
+	{36,36,36,36}
+};
+
 //Spook character definitions
 static const CharFrame char_spook_frame[] = {
 	{Spook_ArcMain_Idle0, {  0,   0,  97, 137}, { 61, 132}}, //0 idle 1
@@ -160,14 +165,16 @@ Character *Char_Spook_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i = 3;
+	memcpy(this->character.health_i, char_spook_icons, sizeof(char_spook_icons));
 
 	//health bar color
 	this->character.health_bar = 0xFFD67B00;
 	
 	this->character.focus_x =  FIXED_DEC(65,1);
 	this->character.focus_y = FIXED_DEC(-80,1);
-	this->character.focus_zoom = FIXED_DEC(1,1);
+	this->character.focus_zoom = FIXED_DEC(100,100);
+	
+	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\SPOOK.ARC;1");

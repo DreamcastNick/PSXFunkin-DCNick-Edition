@@ -23,6 +23,7 @@ SRCS = src/main.c \
        src/stage/week1.c \
        src/stage/week2.c \
        src/stage/week3.c \
+	   src/stage/trio.c \
        src/animation.c \
        src/character.c \
        src/character/bf.c \
@@ -31,7 +32,11 @@ SRCS = src/main.c \
        src/character/spook.c \
        src/character/pico.c \
        src/character/monster.c \
+	   src/character/exep3.c \
        src/character/gf.c \
+	   src/character/menuo.c \
+	   src/character/menup.c \
+	   src/character/menugf.c \
        src/object.c \
        src/object/combo.c \
        src/object/splash.c \

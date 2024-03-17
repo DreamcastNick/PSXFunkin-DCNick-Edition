@@ -34,6 +34,9 @@ void Gfx_Init(void)
 	stage.draw[0].isbg = stage.draw[1].isbg = 1;
 	setRGB0(&stage.draw[0], 0, 0, 0);
 	setRGB0(&stage.draw[1], 0, 0, 0);
+
+	FntLoad(960, 0);
+	FntOpen(0, 8, 320, 224, 0, 100);
 	
 	//Initialize drawing state
 	nextpri = pribuff[0];
@@ -204,6 +207,47 @@ void Gfx_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 mode)
 	nextpri += sizeof(POLY_FT4);
 }
 
+void Gfx_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 mode, u8 opacity)
+{
+	//Manipulate rects to comply with GPU restrictions
+	RECT csrc, cdst;
+	csrc = *src;
+	cdst = *dst;
+
+	//math to convert "opacity" in colors
+	opacity = (opacity * 10 * 254 / 1000) + 1;
+	//printf("opacity is %d \n", opacity);
+	
+	if (dst->w < 0)
+		csrc.x--;
+	if (dst->h < 0)
+		csrc.y--;
+	
+	if ((csrc.x + csrc.w) >= 0x100)
+	{
+		csrc.w = 0xFF - csrc.x;
+		cdst.w = cdst.w * csrc.w / src->w;
+	}
+	if ((csrc.y + csrc.h) >= 0x100)
+	{
+		csrc.h = 0xFF - csrc.y;
+		cdst.h = cdst.h * csrc.h / src->h;
+	}
+	
+	//Add quad
+	POLY_FT4 *quad = (POLY_FT4*)nextpri;
+	setPolyFT4(quad);
+	setUVWH(quad, csrc.x, csrc.y, csrc.w, csrc.h);
+	setXYWH(quad, cdst.x, cdst.y, cdst.w, cdst.h);
+	setRGB0(quad, opacity, opacity, opacity);
+	setSemiTrans(quad, 1);
+	quad->tpage = tex->tpage | getTPage(0, mode, 0, 0);
+	quad->clut = tex->clut;
+	
+	addPrim(ot[db], quad);
+	nextpri += sizeof(POLY_FT4);
+}
+
 void Gfx_BlitTexCol(Gfx_Tex *tex, const RECT *src, s32 x, s32 y, u8 r, u8 g, u8 b)
 {
 	//Add sprite
@@ -278,6 +322,62 @@ void Gfx_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 ang
 	POLY_FT4 *quad = (POLY_FT4*)nextpri;
 	setPolyFT4(quad);
 	setUVWH(quad, src->x, csrc.y, csrc.w, csrc.h);
+    setXY4(quad, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y);
+	setRGB0(quad, r, g, b);
+	quad->tpage = tex->tpage;
+	quad->clut = tex->clut;
+	
+	addPrim(ot[db], quad);
+	nextpri += sizeof(POLY_FT4);
+}
+
+void Gfx_DrawTexRotateColFlipped(Gfx_Tex *tex, const RECT *src, const RECT *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b)
+{	
+	//Manipulate rects to comply with GPU restrictions
+    RECT csrc = *src;
+    RECT cdst = *dst;
+
+    if (dst->w < 0)
+        csrc.x--;
+    if (dst->h < 0)
+        csrc.y--;
+
+    if ((csrc.x + csrc.w) >= 0x100)
+    {
+        csrc.w = 0xFF - csrc.x;
+        cdst.w = cdst.w * csrc.w / src->w;
+    }
+    if ((csrc.y + csrc.h) >= 0x100)
+    {
+        csrc.h = 0xFF - csrc.y;
+        cdst.h = cdst.h * csrc.h / src->h;
+    }
+
+    s16 sinVal = MUtil_Sin(angle);
+    s16 cosVal = MUtil_Cos(angle);
+
+    hx = hx * (cdst.w / csrc.w);
+    hy = hy * (cdst.h / csrc.h);
+
+    // Get rotated points
+    POINT points[4] = {
+        {0 - hx, 0 - hy},
+        {cdst.w - hx, 0 - hy},
+        {0 - hx, cdst.h - hy},
+        {cdst.w - hx, cdst.h - hy}
+    };
+
+    for (int i = 0; i < 4; i++)
+    {
+        MUtil_RotatePoint(&points[i], sinVal, cosVal);
+        points[i].x += cdst.x;
+        points[i].y += cdst.y;
+    }
+	
+	//Add quad
+	POLY_FT4 *quad = (POLY_FT4*)nextpri;
+	setPolyFT4(quad);
+	setUVWH(quad, -csrc.x, csrc.y, -csrc.w, csrc.h);
     setXY4(quad, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y);
 	setRGB0(quad, r, g, b);
 	quad->tpage = tex->tpage;

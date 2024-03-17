@@ -35,6 +35,8 @@ static const XA_TrackDef xa_tracks[] = {
 	//MOD1C.XA
 	{XA_MOD1C, XA_LENGTH(25800)}, //XA_Monochrome
 	{XA_MOD1C, XA_LENGTH(50700)}, //XA_TripleTrouble
+	//MOD1D.XA
+	{XA_MOD1D, XA_LENGTH(63600)}, //XA_Unbeatable
 };
 
 static const char *xa_paths[] = {
@@ -48,6 +50,7 @@ static const char *xa_paths[] = {
 	"\\MUSIC\\MOD1A.XA;1", //XA_Mod1A
 	"\\MUSIC\\MOD1B.XA;1", //XA_Mod1B
 	"\\MUSIC\\MOD1C.XA;1", //XA_Mod1C
+	"\\MUSIC\\MOD1D.XA;1", //XA_Mod1D
 	NULL,
 };
 
@@ -86,6 +89,8 @@ static const XA_Mp3 xa_mp3s[] = {
 	//MOD1C.XA
 	{"monochrome", true}, //XA_Monochrome
 	{"triple-trouble", true}, //XA_TripleTrouble
+	//MOD1D.XA
+	{"unbeatable", true}, //XA_Unbeatable
 	
 	{NULL, false}
 };

@@ -25,6 +25,7 @@
 			<dir name = "menu">
 				<file name = "loading.tim" type = "data" source = "iso/menu/loading.tim"/>
 				<file name = "menu.arc" type = "data" source = "iso/menu/menu.arc"/>
+				<file name = "week.arc" type = "data" source = "iso/menu/backgrounds/week.arc"/>
 			</dir>
 			
 			<!-- Fonts -->
@@ -53,6 +54,7 @@
 				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
 				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
 				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
+				<file name = "static.tim" type = "data" source = "iso/stage/static.tim"/>
 				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
 			</dir>
 			
@@ -116,7 +118,12 @@
 				<file name = "3.3n.cht" type = "data" source = "iso/chart/blammed.json.cht"/>
 				<file name = "3.3h.cht" type = "data" source = "iso/chart/blammed-hard.json.cht"/>
 			</dir>
-
+			
+			<dir name = "trio">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/trio/back.arc"/>
+			</dir>				
+				
 			<!-- Mod 1 assets -->
 			<dir name = "mod1">
 				<!-- Background art -->
@@ -146,6 +153,10 @@
 				<file name = "mod1.6e.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
 				<file name = "mod1.6n.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
 				<file name = "mod1.6h.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<!-- Unbeatable charts -->
+				<file name = "mod1.7e.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+				<file name = "mod1.7n.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+				<file name = "mod1.7h.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
 			</dir>
 		
 			<!-- Character assets -->
@@ -170,6 +181,14 @@
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
+
+				<!-- Triple Trouble assets -->
+				<file name = "exep3.arc" type = "data" source = "iso/exep3/main.arc"/>
+				
+				<!-- Menu Characters assets -->
+				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
+				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
+				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
 			</dir>
 		    
 			<!-- Sound effects -->
@@ -183,12 +202,7 @@
 				<file name = "intro1.vag" type = "data" source = "iso/sounds/stage/intro1.VAG"/>
 				<file name = "intro2.vag" type = "data" source = "iso/sounds/stage/intro2.VAG"/>
 				<file name = "intro3.vag" type = "data" source = "iso/sounds/stage/intro3.VAG"/>
-				<!-- Weeb Sounds -->
-				<file name = "intro0p.vag" type = "data" source = "iso/sounds/stage/weeb/intro0p.VAG"/>
-				<file name = "intro1p.vag" type = "data" source = "iso/sounds/stage/weeb/intro1p.VAG"/>
-				<file name = "intro2p.vag" type = "data" source = "iso/sounds/stage/weeb/intro2p.VAG"/>
-				<file name = "intro3p.vag" type = "data" source = "iso/sounds/stage/weeb/intro3p.VAG"/>
-
+				<file name = "hitstat.vag" type = "data" source = "iso/sounds/stage/hitstat.VAG"/>
 			</dir>
 			
 			<!-- Music -->
@@ -212,6 +226,8 @@
 				<file name = "mod1b.xa" type = "xa" source = "iso/music/mod1b.xa"/>
 				<dummy sectors="128"/>
 				<file name = "mod1c.xa" type = "xa" source = "iso/music/mod1c.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1d.xa" type = "xa" source = "iso/music/mod1d.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

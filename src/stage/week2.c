@@ -40,7 +40,7 @@ void Back_Week2_DrawBG(StageBack *back)
 	};
 
 	Debug_StageMoveDebug(&window_dst, 4, fx, fy);
-	Stage_DrawTex(&this->tex_back1, &window_src, &window_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back1, &window_src, &window_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw window light
 	RECT windowl_src = {0, 128, 256, 128};
@@ -52,7 +52,7 @@ void Back_Week2_DrawBG(StageBack *back)
 	};
 
 	Debug_StageMoveDebug(&windowl_dst, 5, fx, fy);	
-	Stage_DrawTex(&this->tex_back1, &windowl_src, &windowl_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back1, &windowl_src, &windowl_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw background
 	RECT back_src = {0, 0, 256, 256};
@@ -64,7 +64,7 @@ void Back_Week2_DrawBG(StageBack *back)
 	};
 	
 	Debug_StageMoveDebug(&back_dst, 6, fx, fy);
-	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom, stage.camera.hudangle);
+	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom, stage.camera.angle);
 }
 
 void Back_Week2_Free(StageBack *back)
@@ -83,6 +83,7 @@ StageBack *Back_Week2_New(void)
 		return NULL;
 	
 	//Set background functions
+	this->back.draw_hud = NULL;
 	this->back.draw_fg = NULL;
 	this->back.draw_md = NULL;
 	this->back.draw_bg = Back_Week2_DrawBG;

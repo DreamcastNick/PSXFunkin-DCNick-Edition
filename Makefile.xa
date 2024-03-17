@@ -9,6 +9,7 @@ all: \
   iso/music/mod1a.xa \
   iso/music/mod1b.xa \
   iso/music/mod1c.xa \
+  iso/music/mod1d.xa \
 
 # XA converts
 iso/music/%.xa: iso/music/%.ogg
@@ -27,3 +28,4 @@ iso/music/week3b.xa: iso/music/blammed/Inst.xa iso/music/blammed/Vocals.xa
 iso/music/mod1a.xa: iso/music/where-are-you/Inst.xa iso/music/where-are-you/Vocals.xa iso/music/eruption/Inst.xa iso/music/eruption/Vocals.xa
 iso/music/mod1b.xa: iso/music/kaioken/Inst.xa iso/music/kaioken/Vocals.xa iso/music/ferocious/Inst.xa iso/music/ferocious/Vocals.xa
 iso/music/mod1c.xa: iso/music/monochrome/Inst.xa iso/music/monochrome/Vocals.xa iso/music/triple-trouble/Inst.xa iso/music/triple-trouble/Vocals.xa
+iso/music/mod1d.xa: iso/music/unbeatable/Inst.xa iso/music/unbeatable/Vocals.xa

@@ -73,19 +73,3 @@ void FollowCharCamera()
 		stage.camera.y += char_dy;
 	}
 }
-
-void NoteHitEvent(u8 type)
-{
-
-}
-
-void NoteHitEnemyEvent(u8 type)
-{
-	
-}
-
-void NoteMissEvent(u8 type, u8 state)
-{
-
-}
-

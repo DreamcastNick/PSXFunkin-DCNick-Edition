@@ -43,6 +43,11 @@ typedef struct
 	
 } Char_GF;
 
+static const u16 char_gf_icons[2][4] = {
+	{144,0,36,36},
+	{180,0,36,36}
+};
+
 //GF character definitions
 static const CharFrame char_gf_frame[] = {
 	{GF_ArcMain_GF0, {  0,   0,  74, 103}, { 37,  72}}, //0 bop left 1
@@ -215,7 +220,7 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	//Set character information
 	this->character.spec = 0;
 	
-	this->character.health_i = 2;
+	memcpy(this->character.health_i, char_gf_icons, sizeof(char_gf_icons));
 
 	//health bar color
 	this->character.health_bar = 0xFFA5004A;
@@ -223,6 +228,8 @@ Character *Char_GF_New(fixed_t x, fixed_t y)
 	this->character.focus_x = FIXED_DEC(2,1);
 	this->character.focus_y = FIXED_DEC(-40,1);
 	this->character.focus_zoom = FIXED_DEC(200,100);
+	
+	this->character.size = FIXED_DEC(100,100);
 	
 		//Load art
 		this->arc_main = IO_Read("\\CHAR\\GF.ARC;1");

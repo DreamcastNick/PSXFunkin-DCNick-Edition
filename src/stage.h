@@ -60,6 +60,7 @@ typedef enum
 	StageId_Mod1_4, //Ferocious
 	StageId_Mod1_5, //Monochrome
 	StageId_Mod1_6, //Triple Trouble
+	StageId_Mod1_7, //Unbeatable
 	
 	StageId_Max
 } StageId;
@@ -93,6 +94,7 @@ typedef enum
 typedef struct StageBack
 {
 	//Stage background functions
+	void (*draw_hud)(struct StageBack*);
 	void (*draw_fg)(struct StageBack*);
 	void (*draw_md)(struct StageBack*);
 	void (*draw_bg)(struct StageBack*);
@@ -141,11 +143,11 @@ typedef struct
 #define NOTE_FLAG_ALT_ANIM    (1 << 7) //Note plays alt animation
 #define NOTE_FLAG_MINE        (1 << 8) //Note is a mine
 #define NOTE_FLAG_DANGER      (1 << 9) //Note is a danger
-#define NOTE_FLAG_STATIC      (1 << 11) //Note is a static
-#define NOTE_FLAG_PHANTOM     (1 << 12) //Note is a phantom
-#define NOTE_FLAG_POLICE      (1 << 13) //Note is a police
-#define NOTE_FLAG_MAGIC       (1 << 14) //Note is a magic
-#define NOTE_FLAG_HIT         (1 << 15) //Note has been hit
+#define NOTE_FLAG_STATIC      (1 << 10) //Note is a static
+#define NOTE_FLAG_PHANTOM     (1 << 11) //Note is a phantom
+#define NOTE_FLAG_POLICE      (1 << 12) //Note is a police
+#define NOTE_FLAG_MAGIC       (1 << 13) //Note is a magic
+#define NOTE_FLAG_HIT         (1 << 14) //Note has been hit
 
 typedef struct
 {
@@ -202,8 +204,7 @@ typedef struct
 
 	//HUD textures
 	u8 hitstatic;
-	Gfx_Tex tex_static;
-	Gfx_Tex tex_note, tex_type, tex_type2, tex_hud0, tex_hud1, tex_hude, tex_strscr;
+	Gfx_Tex tex_note, tex_type, tex_type2, tex_hud0, tex_hud1, tex_hude, tex_static, tex_strscr;
 
 	//font
 	FontData font_cdr, font_bold;
@@ -267,8 +268,8 @@ typedef struct
 
 	struct
 	{
-		fixed_t* x;
-		fixed_t y;
+		int* x;
+		int y;
 		u16 size;
 	} note;
 	
@@ -283,8 +284,8 @@ typedef struct
 	s16 noteshakex;
 	s16 noteshakey;
 
-	int song_step;
-	int song_beat;
+	s32 song_step;
+	s32 song_beat;
 
 	boolean freecam;
 	
@@ -320,12 +321,15 @@ void Stage_BlendRect(const RECT_FIXED *dst, fixed_t zoom, u8 cr, u8 cg, u8 cb, i
 void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
+void Stage_DrawTexCol_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
+void Stage_DrawTex_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation);
 void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode);
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 mode);
 void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
+void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 mode, u8 opacity);
 
 
 //Stage functions

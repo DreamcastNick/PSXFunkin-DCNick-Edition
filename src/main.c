@@ -11,6 +11,7 @@
 #include "gfx.h"
 #include "audio.h"
 #include "pad.h"
+#include "font.h"
 
 #include "menu.h"
 #include "save.h"
@@ -45,7 +46,7 @@ void ErrorLock(void)
 #undef MEM_IMPLEMENTATION
 
 #ifndef PSXF_STDMEM
-static u8 malloc_heap[0x1B0000];
+static u8 malloc_heap[0x1A0000];
 #endif
 
 //Entry point
@@ -93,13 +94,6 @@ int main(int argc, char **argv)
 			Mem_GetStat(&mem_used, &mem_size, &mem_max);
 			#ifndef MEM_BAR
 				char text[80];
-				sprintf(text, "FPS: %d", frame_rate);
-				fonts.font_cdr.draw(&fonts.font_cdr,
-					text,
-					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
-					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 10,1) : 10,
-					FontAlign_Left
-				);
 				sprintf(text, "Memory: %08X/%08X (max %08X)", mem_used, mem_size, mem_max);
 				fonts.font_cdr.draw(&fonts.font_cdr,
 					text,

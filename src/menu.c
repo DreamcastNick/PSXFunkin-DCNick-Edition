@@ -27,6 +27,10 @@
 
 #include "stdlib.h"
 
+#include "character/menup.h"
+#include "character/menuo.h"
+#include "character/menugf.h"
+
 static u32 Sounds[3];
 //Menu messages
 static const char *funny_messages[][2] = {
@@ -114,11 +118,28 @@ static struct
 	} page_param;
 	
 	//Menu assets
-	Gfx_Tex tex_back, tex_ng, tex_story, tex_title;
+	Gfx_Tex tex_back, tex_ng, tex_story, tex_title, tex_icon, tex_week;
+	IO_Data weeks, weeks_ptrs[128];
+    int curweek;
 	FontData font_bold, font_arial;
 	
 	Character *gf; //Title Girlfriend
+	Character *mbf; //Menu Bf
+    Character *mgf; //Menu Gf
+    Character *mdad;
 } menu;
+
+static void CheckAndLoadWeek(int week)
+{
+    if (menu.curweek != week)
+    {
+        char weektxt[20];
+        sprintf(weektxt, "week%d.tim", week);
+        Gfx_LoadTex(&menu.tex_week, Archive_Find(menu.weeks, weektxt), 0);
+        menu.curweek = week;
+    }
+
+}
 
 //Internal menu functions
 char menu_text_buffer[0x100];
@@ -252,6 +273,43 @@ static void Menu_DrawWeek(const char *week, s32 x, s32 y)
 		}
 	}
 }
+static void Menu_DrawBG(s32 x, s32 y)
+{
+    //Draw Track
+    RECT week1_src = {0, 0, 256, 136};
+    RECT week1_dst = { x, y, 320, 136};
+    Gfx_DrawTex(&menu.tex_week, &week1_src, &week1_dst);
+}
+static void Menu_DrawTrack(s32 x, s32 y)
+{
+    //Draw Track
+    RECT track_src = {0, 64, 80, 16};
+    Gfx_BlitTex(&menu.tex_story, &track_src, x, y);
+}
+static void Menu_DrawHealth(u8 i, s16 x, s16 y, boolean is_selected)
+{
+    //Icon Size
+    u8 icon_size = 36;
+
+    u8 col = (is_selected) ? 128 : 64;
+
+    //Get src and dst
+    RECT src = {
+        (i % 6) * icon_size,
+        (i / 6) * icon_size,
+        icon_size,
+        icon_size
+    };
+    RECT dst = {
+        x,
+        y,
+        36,
+        36
+    };
+    
+    //Draw health icon
+    Gfx_DrawTexCol(&menu.tex_icon, &src, &dst, col, col, col);
+}
 
 //Menu functions
 void Menu_Load(MenuPage page)
@@ -263,12 +321,19 @@ void Menu_Load(MenuPage page)
 	Gfx_LoadTex(&menu.tex_ng,    Archive_Find(menu_arc, "ng.tim"),    0);
 	Gfx_LoadTex(&menu.tex_story, Archive_Find(menu_arc, "story.tim"), 0);
 	Gfx_LoadTex(&menu.tex_title, Archive_Find(menu_arc, "title.tim"), 0);
+	Gfx_LoadTex(&menu.tex_icon,  Archive_Find(menu_arc, "icon.tim"),  0);
 	Mem_Free(menu_arc);
+
+    menu.weeks = IO_Read("\\MENU\\WEEK.ARC;1");
+    Gfx_LoadTex(&menu.tex_week, Archive_Find(menu.weeks, "week0.tim"), 0);
 	
 	FontData_Load(&menu.font_bold, Font_Bold);
 	FontData_Load(&menu.font_arial, Font_Arial);
 	
 	menu.gf = Char_GF_New(FIXED_DEC(62,1), FIXED_DEC(-12,1));
+	menu.mbf = Char_MenuP_New(FIXED_DEC(11,1), FIXED_DEC(40,1));
+    menu.mgf = Char_MenuGF_New(FIXED_DEC(91,1), FIXED_DEC(13,1));
+    menu.mdad = Char_MenuO_New(FIXED_DEC(-78,1), FIXED_DEC(116,1));
 	stage.camera.x = stage.camera.y = FIXED_DEC(0,1);
 	stage.camera.bzoom = FIXED_UNIT;
 	stage.gf_speed = 4;
@@ -322,6 +387,10 @@ void Menu_Unload(void)
 {
 	//Free title Girlfriend
 	Character_Free(menu.gf);
+	Character_Free(menu.mgf);
+    Character_Free(menu.mbf);
+    Character_Free(menu.mdad);
+    Mem_Free(menu.weeks);
 }
 
 void Menu_ToStage(StageId id, StageDiff diff, boolean story)
@@ -526,7 +595,7 @@ void Menu_Tick(void)
 			
 			//Draw version identification
 			menu.font_bold.draw(&menu.font_bold,
-				"PSXLMTWO BY DCNICK",
+				"PSXFUNKIN DCNICK EDITION",
 				16,
 				SCREEN_HEIGHT - 32,
 				FontAlign_Left
@@ -632,7 +701,7 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Story:
 		{
-			static const struct
+			struct
 			{
 				const char *week;
 				StageId stage;
@@ -645,59 +714,126 @@ void Menu_Tick(void)
 				{"1", StageId_1_1, StageId_1_3,  "DADDY DEAREST", {"BOPEEBO", "FRESH", "DADBATTLE"}},
 				{"2", StageId_2_1, StageId_2_3,  "SPOOKY MONTH", {"SPOOKEEZ", "SOUTH", "MONSTER"}},
 				{"3", StageId_3_1, StageId_3_3,  "PICO", {"PICO", "PHILLY NICE", "BLAMMED"}},
+				{"4", StageId_Mod1_1, StageId_Mod1_3,  "FIRST ENCOUNTER", {"WHERE ARE YOU", "ERUPTION", "KAIO KEN"}},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d", 
 			Menu_GetStoryScore(menu_options[menu.select].stage, 
 			menu_options[menu.select].laststage)
 		);
-	
-			//Initialize page
-			if (menu.page_swap)
-			{
-				menu.scroll = 0;
-				menu.page_param.stage.diff = StageDiff_Normal;
-				menu.page_state.title.fade = FIXED_DEC(0,1);
-				menu.page_state.title.fadespd = FIXED_DEC(0,1);
-			}
-			
-			//Draw white fade
-			if (menu.page_state.title.fade > 0)
-			{
-				RECT flash2 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-				u8 flash_col = menu.page_state.title.fade >> FIXED_SHIFT;
-				Gfx_BlendRect(&flash2, flash_col, flash_col, flash_col, 1);
-				menu.page_state.title.fade -= FIXED_MUL(menu.page_state.title.fadespd, timer_dt);
-			}
-			
-			//Draw difficulty selector
-			Menu_DifficultySelector(SCREEN_WIDTH - 75, 80);
-			
-			//Handle option and selection
-			if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
-				Trans_Start();
-			
-			if (menu.next_page == menu.page && Trans_Idle())
-			{
-				//Change option
-				if (pad_state.press & PAD_UP)
-				{
-					//play scroll sound
-                    Audio_PlaySound(Sounds[0], 0x3fff);
-					if (menu.select > 0)
-						menu.select--;
-					else
-						menu.select = COUNT_OF(menu_options) - 1;
-				}
-				if (pad_state.press & PAD_DOWN)
-				{
-					//play scroll sound
-                    Audio_PlaySound(Sounds[0], 0x3fff);
-					if (menu.select < COUNT_OF(menu_options) - 1)
-						menu.select++;
-					else
-						menu.select = 0;
-				}
+		
+            //Initialize page
+            if (menu.page_swap)
+            {
+                menu.scroll = 0;
+                menu.page_param.stage.diff = StageDiff_Normal;
+                menu.page_state.title.fade = FIXED_DEC(0,1);
+                menu.page_state.title.fadespd = FIXED_DEC(0,1);
+            }
+            
+            //Draw white fade
+            if (menu.page_state.title.fade > 0)
+            {
+                static const RECT flash = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+                u8 flash_col = menu.page_state.title.fade >> FIXED_SHIFT;
+                Gfx_BlendRect(&flash, flash_col, flash_col, flash_col, 1);
+                menu.page_state.title.fade -= FIXED_MUL(menu.page_state.title.fadespd, timer_dt);
+            }
+            
+            //Draw difficulty selector
+            Menu_DifficultySelector(SCREEN_WIDTH - 55, 176);
+            
+            //Handle option and selection
+            if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
+                Trans_Start();
+            
+            if (menu.next_page == menu.page && Trans_Idle())
+            {
+                //Change option
+                if (pad_state.press & PAD_UP)
+                {
+					Audio_PlaySound(Sounds[0], 0x3fff);
+                    if (menu.select > 0)
+                        menu.select--;
+                    else
+                        menu.select = COUNT_OF(menu_options) - 1;
+                    CheckAndLoadWeek(menu.select);
+					switch (menu.select)
+					{
+						case 0: //NULL
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Idle);
+						}
+						break;
+						case 1: //Dad
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Left);
+						}
+						break;
+						case 2: //Spook
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_LeftAlt);
+						}
+						break;
+						case 3: //Pico
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Down);
+						}
+						break;
+						case 4: //Shaggy
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_DownAlt);
+						}
+						break;
+						default: //NULL
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Idle);
+						}
+						break;
+					}
+                }
+                if (pad_state.press & PAD_DOWN)
+                {
+					Audio_PlaySound(Sounds[0], 0x3fff);
+                    if (menu.select < COUNT_OF(menu_options) - 1)
+                        menu.select++;
+                    else
+                        menu.select = 0;
+                    CheckAndLoadWeek(menu.select);
+					switch (menu.select)
+					{
+						case 0: //NULL
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Idle);
+						}
+						break;
+						case 1: //Dad
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Left);
+						}
+						break;
+						case 2: //Spook
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_LeftAlt);
+						}
+						break;
+						case 3: //Pico
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Down);
+						}
+						break;
+						case 4: //Shaggy
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_DownAlt);
+						}
+						break;
+						default: //NULL
+						{
+							menu.mdad->set_anim(menu.mdad, CharAnim_Idle);
+						}
+						break;
+					}
+                }
 				
 				//Select option if cross is pressed
 				if (pad_state.press & (PAD_START | PAD_CROSS))
@@ -710,8 +846,8 @@ void Menu_Tick(void)
 					menu.trans_time = FIXED_UNIT;
 					menu.page_state.title.fade = FIXED_DEC(255,1);
 					menu.page_state.title.fadespd = FIXED_DEC(510,1);
+					menu.mbf->set_anim(menu.mbf, CharAnim_Left);
 				}
-				
 				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
@@ -721,7 +857,7 @@ void Menu_Tick(void)
 					menu.next_select = 0; //Story Mode
 					Trans_Start();
 				}
-			}	
+			}
 
 			//Draw Score
 			menu.font_arial.draw(&menu.font_arial,
@@ -731,52 +867,71 @@ void Menu_Tick(void)
 				FontAlign_Left
 			);
 			
-			//Draw week name and tracks
-			menu.font_bold.draw(&menu.font_bold,
-				menu_options[menu.select].name,
-				SCREEN_WIDTH - 16,
-				24,
-				FontAlign_Right
-			);
+            //Draw week name and tracks
+            menu.font_bold.draw(&menu.font_bold,
+                menu_options[menu.select].name,
+                SCREEN_WIDTH - 6,
+                6,
+                FontAlign_Right
+            );
 			
-			const char * const *trackp = menu_options[menu.select].tracks;
-			for (size_t i = 0; i < COUNT_OF(menu_options[menu.select].tracks); i++, trackp++)
-			{
-				if (*trackp != NULL)
-					menu.font_bold.draw(&menu.font_bold,
-						*trackp,
-						SCREEN_WIDTH - 16,
-						SCREEN_HEIGHT - (4 * 24) + (i * 24),
-						FontAlign_Right
-					);
-			}
+            const char * const *trackp = menu_options[menu.select].tracks;
+            for (size_t i = 0; i < COUNT_OF(menu_options[menu.select].tracks); i++, trackp++)
+            {
+                if (*trackp != NULL)
+                    menu.font_arial.draw_col(&menu.font_arial,
+                        *trackp,
+                        40,
+                        SCREEN_HEIGHT - (4 * 14) + (i * 10),
+                        FontAlign_Center,
+                        229 >> 1,
+                        87 >> 1,
+                        119 >> 1
+                    );
+            }
 			
-			//Draw upper strip
-			RECT name_bar = {0, 16, SCREEN_WIDTH, 32};
-			Gfx_DrawRect(&name_bar, 249, 207, 81);
+			//Draw menu characters
+            menu.mbf->tick(menu.mbf);
+            
+            //Draw menu characters
+            menu.mgf->tick(menu.mgf);
+            
+            //Draw menu characters
+            menu.mdad->tick(menu.mdad);
+            
+            Menu_DrawBG( 1, 24);
+            
+            char weektext[30];
+            sprintf(weektext, "\\MENU\\WEEK%d.TIM;1", menu.select);
 			
-			//Draw options
-			s32 next_scroll = menu.select * FIXED_DEC(48,1);
-			menu.scroll += (next_scroll - menu.scroll) >> 3;
-			
-			if (menu.next_page == menu.page || menu.next_page == MenuPage_Main)
-			{
-				//Draw all options
-				for (u8 i = 0; i < COUNT_OF(menu_options); i++)
-				{
-					s32 y = 64 + (i * 48) - (menu.scroll >> FIXED_SHIFT);
-					if (y <= 16)
-						continue;
-					if (y >= SCREEN_HEIGHT)
-						break;
-					Menu_DrawWeek(menu_options[i].week, 48, y);
-				}
-			}
-			else if (animf_count & 2)
-			{
-				//Draw selected option
-				Menu_DrawWeek(menu_options[menu.select].week, 48, 64 + (menu.select * 48) - (menu.scroll >> FIXED_SHIFT));
-			}
+            //Draw behind week name strip
+            RECT coverup_bar = {0, 0, SCREEN_WIDTH, 24};
+            Gfx_DrawRect(&coverup_bar, 0, 0, 0);
+            
+            //Draw options
+            s32 next_scroll = menu.select * FIXED_DEC(42,1);
+            menu.scroll += (next_scroll - menu.scroll) >> 3;
+            
+            Menu_DrawTrack( 0, 165);
+            
+            if (menu.next_page == menu.page || menu.next_page == MenuPage_Main)
+            {
+                //Draw all options
+                for (u8 i = 0; i < COUNT_OF(menu_options); i++)
+                {
+                    s32 y = 161 + (i * 42) - (menu.scroll >> FIXED_SHIFT);
+                    if (y <= 16)
+                        continue;
+                    if (y >= SCREEN_HEIGHT)
+                        break;
+                    Menu_DrawWeek(menu_options[i].week, SCREEN_WIDTH - 230, y);
+                }
+            }
+            else if (animf_count & 2)
+            {
+                //Draw selected option
+                Menu_DrawWeek(menu_options[menu.select].week, SCREEN_WIDTH - 230, 161 + (menu.select * 42) - (menu.scroll >> FIXED_SHIFT));
+            }
 			
 			break;
 		}
@@ -787,23 +942,25 @@ void Menu_Tick(void)
 				StageId stage;
 				u32 col;
 				const char *text;
+				u8 icon;
 			} menu_options[] = {
-				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
-				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
-				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
-				{StageId_2_1, 0xFF223344, "SPOOKEEZ"},
-				{StageId_2_2, 0xFF223344, "SOUTH"},
-				{StageId_2_3, 0xFF223344, "MONSTER"},
-				{StageId_3_1, 0xFF941653, "PICO"},
-				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
-				{StageId_3_3, 0xFF941653, "BLAMMED"},
-				{StageId_Mod1_1, 0xFFCFCFCF, "WHERE ARE YOU"},
-				{StageId_Mod1_2, 0xFFF9BB00, "ERUPTION"},
-				{StageId_Mod1_3, 0xFFEA4747, "KAIO KEN"},
-				{StageId_Mod1_4, 0xFF00FF00, "FEROCIOUS"},
-				{StageId_Mod1_5, 0xFF000000, "MONOCHROME"},
-				{StageId_Mod1_6, 0xFF800000, "TRIPLE TROUBLE"},
+				{StageId_1_4, 0xFF9271FD, "TUTORIAL", 2},
+				{StageId_1_1, 0xFF9271FD, "BOPEEBO", 0},
+				{StageId_1_2, 0xFF9271FD, "FRESH", 0},
+				{StageId_1_3, 0xFF9271FD, "DADBATTLE", 0},
+				{StageId_2_1, 0xFF223344, "SPOOKEEZ", 4},
+				{StageId_2_2, 0xFF223344, "SOUTH", 4},
+				{StageId_2_3, 0xFF223344, "MONSTER", 6},
+				{StageId_3_1, 0xFF941653, "PICO", 8},
+				{StageId_3_2, 0xFF941653, "PHILLY NICE", 8},
+				{StageId_3_3, 0xFF941653, "BLAMMED", 8},
+				{StageId_Mod1_1, 0xFFCFCFCF, "WHERE ARE YOU", 10},
+				{StageId_Mod1_2, 0xFFF9BB00, "ERUPTION", 10},
+				{StageId_Mod1_3, 0xFFEA4747, "KAIO KEN", 12},
+				{StageId_Mod1_4, 0xFF00FF00, "FEROCIOUS", 14},
+				{StageId_Mod1_5, 0xFF000000, "MONOCHROME", 18},
+				{StageId_Mod1_6, 0xFF800000, "TRIPLE TROUBLE", 16},
+				{StageId_Mod1_7, 0xFFACDEFF, "UNBEATABLE", 20},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
@@ -895,6 +1052,9 @@ void Menu_Tick(void)
 					continue;
 				if (y >= SCREEN_HEIGHT2 + 8)
 					break;
+				
+				//Draw Icon
+				Menu_DrawHealth(menu_options[i].icon, strlen(menu_options[i].text) * 14 + 36 + (y >> 2), SCREEN_HEIGHT2 + y - 20, menu.select == i);
 				
 				//Draw text
 				menu.font_bold.draw(&menu.font_bold,

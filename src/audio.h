@@ -22,6 +22,7 @@ typedef enum
 	XA_MOD1A, //MOD1A.XA
 	XA_MOD1B, //MOD1B.XA
 	XA_MOD1C, //MOD1C.XA
+	XA_MOD1D, //MOD1D.XA
 	
 	XA_Max,
 } XA_File;
@@ -53,9 +54,11 @@ typedef enum
 	//MOD1B.XA
 	XA_Kaioken, //Kaioken
 	XA_Ferocious, //Ferocious
-	//MOD1B.XA
+	//MOD1C.XA
 	XA_Monochrome, //Monochrome
 	XA_TripleTrouble, //Triple Trouble
+	//MOD1D.XA
+	XA_Unbeatable, //Unbeatable
 	
 	XA_TrackMax,
 } XA_Track;

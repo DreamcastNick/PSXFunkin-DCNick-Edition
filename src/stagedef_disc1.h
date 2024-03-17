@@ -330,14 +330,14 @@
 	},
 	{ //StageId_Mod1_6 (Triple Trouble)
 		//Characters
-		{Char_BF_New,     FIXED_DEC(56,1),   FIXED_DEC(85,1)},
+		{Char_BF_New,     FIXED_DEC(60,1),   FIXED_DEC(100,1)},
 		{NULL},
-		{Char_Pico_New, FIXED_DEC(-105,1),   FIXED_DEC(85,1)},
+		{Char_ExeP3_New, FIXED_DEC(-120,1),   FIXED_DEC(100,1)},
 		{NULL},
 		{NULL},
 		
 		//Stage background
-		Back_Week3_New,
+		Back_Trio_New,
 		
 		//Camera Offset (X, Y, Scale)
 		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
@@ -349,4 +349,25 @@
 		true,
 		
 		StageId_Mod1_6, 0
+	},
+	{ //StageId_Mod1_7 (Unbeatable)
+		{Char_BF_New,     FIXED_DEC(56,1),   FIXED_DEC(85,1)},
+		{NULL},
+		{Char_Pico_New, FIXED_DEC(-105,1),   FIXED_DEC(85,1)},
+		{NULL},
+		{Char_GF_New,      FIXED_DEC(0,1),  FIXED_DEC(-15,1)},
+		
+		//Stage background
+		Back_Week3_New,
+		
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
+		
+		//Song info
+		{FIXED_DEC(3,1),FIXED_DEC(3,1),FIXED_DEC(3,1)},
+		0x80, 7,
+		XA_Unbeatable, 0,
+		false,
+		
+		StageId_Mod1_7, 0
 	},

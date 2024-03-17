@@ -232,6 +232,10 @@ void Debug_ScrollCamera(void)
 			stage.camera.zoom -= FIXED_DEC(1,100);
 		if (pad_state.held & PAD_CROSS)
 			stage.camera.zoom += FIXED_DEC(1,100);
+		if (pad_state.held & PAD_SQUARE)
+			stage.camera.angle -= FIXED_DEC(1,100);
+		if (pad_state.held & PAD_CIRCLE)
+			stage.camera.angle += FIXED_DEC(1,100);
 	}
 	else if (pad_state.held & PAD_SELECT)
 	{
