@@ -3,7 +3,6 @@
 #include "main.h"
 #include "mem.h"
 #include "mutil.h"
-#include "stage.h"
 
 //Gfx constants
 #define OTLEN 8
@@ -24,16 +23,16 @@ void Gfx_Init(void)
 	ResetGraph(0);
 	
 	//Initialize display environment
-	SetDefDispEnv(&stage.disp[0], 0, 0, 320, 240);
-	SetDefDispEnv(&stage.disp[1], 0, 240, 320, 240);
+	SetDefDispEnv(&disp[0], 0, 0, 320, 240);
+	SetDefDispEnv(&disp[1], 0, 240, 320, 240);
 	//Initialize draw environment
-	SetDefDrawEnv(&stage.draw[0], 0, 240, 320, 240);
-	SetDefDrawEnv(&stage.draw[1], 0, 0, 320, 240);
+	SetDefDrawEnv(&draw[0], 0, 240, 320, 240);
+	SetDefDrawEnv(&draw[1], 0, 0, 320, 240);
 	
 	//Set draw background
-	stage.draw[0].isbg = stage.draw[1].isbg = 1;
-	setRGB0(&stage.draw[0], 0, 0, 0);
-	setRGB0(&stage.draw[1], 0, 0, 0);
+	draw[0].isbg = draw[1].isbg = 1;
+	setRGB0(&draw[0], 0, 0, 0);
+	setRGB0(&draw[1], 0, 0, 0);
 
 	FntLoad(960, 0);
 	FntOpen(0, 8, 320, 224, 0, 100);
@@ -57,8 +56,8 @@ void Gfx_Flip(void)
 	VSync(0);
 	
 	//Apply environments
-	PutDispEnv(&stage.disp[db]);
-	PutDrawEnv(&stage.draw[db]);
+	PutDispEnv(&disp[db]);
+	PutDrawEnv(&draw[db]);
 	
 	//Enable display
 	SetDispMask(1);

@@ -81,7 +81,7 @@ int note_x5kflip[10] = {
 	 FIXED_DEC(128 + 10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
-static u16 note_key5k[] = {INPUT_LEFT, INPUT_DOWN, INPUT_MIDDLE, INPUT_UP, INPUT_RIGHT};
+static u16 note_key5k[] = {INPUT_LEFT5K, INPUT_DOWN5K, INPUT_MIDDLE, INPUT_UP5K, INPUT_RIGHT5K};
 
 
 static u8 note_anims5k[5][3] = {
@@ -2270,13 +2270,23 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	char note_text[32];
 	char type_text[32];
 	char type2_text[32];
-	
-	sprintf(note_text, "\\STAGE\\NOTE%dK.TIM;1", stage.keys);
-	Gfx_LoadTex(&stage.tex_note, IO_Read(note_text), GFX_LOADTEX_FREE);
-	sprintf(type_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
-	Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
-	sprintf(type2_text, "\\STAGE\\TYPE%dK0.TIM;1", stage.keys);
-	Gfx_LoadTex(&stage.tex_type2, IO_Read(type2_text), GFX_LOADTEX_FREE);
+
+	if (stage.stage_id == StageId_Mod1_4)
+	{
+		sprintf(note_text, "\\STAGE\\NOTE%dK.TIM;1", stage.keys);
+		Gfx_LoadTex(&stage.tex_note, IO_Read(note_text), GFX_LOADTEX_FREE);
+		sprintf(type_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
+		Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
+		sprintf(type2_text, "\\STAGE\\TYPE%dK0.TIM;1", stage.keys);
+		Gfx_LoadTex(&stage.tex_type2, IO_Read(type2_text), GFX_LOADTEX_FREE);
+	}
+	else
+	{
+		sprintf(note_text, "\\STAGE\\NOTE%dK.TIM;1", stage.keys);
+		Gfx_LoadTex(&stage.tex_note, IO_Read(note_text), GFX_LOADTEX_FREE);
+		sprintf(type_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
+		Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
+	}
 	
 	//Initialize stage state
 	stage.story = story;
@@ -2513,6 +2523,7 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{
+			//Draw stage hud elements
 			if (stage.back->draw_hud != NULL)
 				stage.back->draw_hud(stage.back);
 			

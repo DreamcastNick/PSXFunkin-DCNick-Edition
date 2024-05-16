@@ -19,11 +19,16 @@
 #include "debug.h"
 
 //Stage constants
-#define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE)
-#define INPUT_DOWN  (PAD_DOWN  | PAD_CROSS)
+#define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE | PAD_L2)
+#define INPUT_DOWN  (PAD_DOWN  | PAD_CROSS | PAD_L1)
+#define INPUT_UP    (PAD_UP    | PAD_TRIANGLE | PAD_R1)
+#define INPUT_RIGHT (PAD_RIGHT | PAD_CIRCLE | PAD_R2)
+
+#define INPUT_LEFT5K  (PAD_LEFT  | PAD_SQUARE)
+#define INPUT_DOWN5K  (PAD_DOWN  | PAD_CROSS)
 #define INPUT_MIDDLE (PAD_L1 | PAD_L2 | PAD_R1 | PAD_R2)
-#define INPUT_UP    (PAD_UP    | PAD_TRIANGLE)
-#define INPUT_RIGHT (PAD_RIGHT | PAD_CIRCLE)
+#define INPUT_UP5K    (PAD_UP    | PAD_TRIANGLE)
+#define INPUT_RIGHT5K (PAD_RIGHT | PAD_CIRCLE)
 
 #define STAGE_FLAG_JUST_STEP     (1 << 0) //Song just stepped this frame
 #define STAGE_FLAG_VOCAL_ACTIVE  (1 << 1) //Song's vocal track is currently active
@@ -36,7 +41,6 @@
 #define STAGE_LOAD_GIRLFRIEND (1 << 4) //Reload girlfriend character
 #define STAGE_LOAD_STAGE      (1 << 5) //Reload stage
 #define STAGE_LOAD_FLAG       (1 << 7)
-
 
 //Stage enums
 typedef enum

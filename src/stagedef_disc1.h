@@ -358,7 +358,7 @@
 		{Char_GF_New,      FIXED_DEC(0,1),  FIXED_DEC(-15,1)},
 		
 		//Stage background
-		Back_Week3_New,
+		Back_Dummy_New,
 		
 		//Camera Offset (X, Y, Scale)
 		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),

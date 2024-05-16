@@ -11,7 +11,6 @@
 #include "gfx.h"
 #include "audio.h"
 #include "pad.h"
-#include "font.h"
 
 #include "menu.h"
 #include "save.h"
@@ -28,13 +27,13 @@ void ErrorLock(void)
 {
 	while (1)
 	{
-		fonts.font_cdr.draw(&fonts.font_cdr,
-			error_msg,
-			(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
-			(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 10,1) : 10,
-			FontAlign_Left
-		);
-		Gfx_Flip();
+		#ifdef PSXF_PC
+			MsgPrint(error_msg);
+			exit(1);
+		#else
+			FntPrint("A fatal error has occured\n~c700%s\n", error_msg);
+			Gfx_Flip();
+		#endif
 	}
 }
 
@@ -89,18 +88,11 @@ int main(int argc, char **argv)
 		Pad_Update();
 		
 		#ifdef MEM_STAT
-			// Memory stats
+			//Memory stats
 			size_t mem_used, mem_size, mem_max;
 			Mem_GetStat(&mem_used, &mem_size, &mem_max);
 			#ifndef MEM_BAR
-				char text[80];
-				sprintf(text, "Memory: %08X/%08X (max %08X)", mem_used, mem_size, mem_max);
-				fonts.font_cdr.draw(&fonts.font_cdr,
-					text,
-					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_WIDTH2 + 10,1) : 10,
-					(gameloop == GameLoop_Stage) ? FIXED_DEC(-SCREEN_HEIGHT2 + 20,1) : 20,
-					FontAlign_Left
-				);
+				FntPrint("mem: %08X/%08X (max %08X)\n", mem_used, mem_size, mem_max);
 			#endif
 		#endif
 		
