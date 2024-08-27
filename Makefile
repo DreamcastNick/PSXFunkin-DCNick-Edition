@@ -55,6 +55,7 @@ LDFLAGS += -lcd
 LDFLAGS += -lds
 LDFLAGS += -letc
 LDFLAGS += -lgpu
+LDFLAGS += -lgcc
 #LDFLAGS += -lgs
 #LDFLAGS += -lgte
 #LDFLAGS += -lgun

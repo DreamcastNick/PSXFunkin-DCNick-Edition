@@ -142,6 +142,11 @@ int main(int argc, char *argv[])
         {
             // Push main note
             Note new_note;
+			
+			// invalid type
+			if (j[1] < 0)
+				continue;
+			
             int sustain = static_cast<int>(PosRound(j[2], step_crochet)) - 1;
             new_note.pos = (step_base * 12) + PosRound(((uint64_t)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;

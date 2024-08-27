@@ -1976,83 +1976,83 @@ static void Stage_LoadChart(void)
 				break;
 		}
 		
-		if (notes)
-			stage.num_notes = notes - 1;
-		else
-			stage.num_notes = 0;
-		
-		//Realloc for separate structs
-		size_t sections_size = sections * sizeof(Section);
-		size_t notes_size = notes * sizeof(Note);
-		size_t notes_off = MEM_ALIGN(sections_size);
-		
-		u8 *nchart = Mem_Alloc(notes_off + notes_size);
-		
-		Section *nsection_p = stage.sections = (Section*)nchart;
-		section_pp = section_p;
-		for (size_t i = 0; i < sections; i++, section_pp += 4, nsection_p++)
-		{
-			nsection_p->end = section_pp[0] | (section_pp[1] << 8);
-			nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
-		}
-		
-		Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
-		note_pp = note_p;
-		for (size_t i = 0; i < notes; i++, note_pp += 4, nnote_p++)
-		{
-			nnote_p->pos = note_pp[0] | (note_pp[1] << 8);
-			nnote_p->type = note_pp[2] | (note_pp[3] << 8);
-		}
-		
-		//Use reformatted chart
-		Mem_Free(stage.chart_data);
-		stage.chart_data = (IO_Data)nchart;
-	#else
-		//Directly use section and notes pointers
-		stage.sections = (Section*)(chart_byte + 4);
-		stage.notes = (Note*)(chart_byte + ((u16*)stage.chart_data)[1]);
-		
-		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
-			stage.num_notes++;
-	#endif
-	
-	//Swap chart
-	if (stage.prefs.mode == StageMode_Swap)
-	{
-		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
-			note->is_opponent = !note->is_opponent;
-	}
-	
-	//Count max scores
-	stage.player_state[0].max_score = 0;
-	stage.player_state[1].max_score = 0;
-	for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
-	{
-		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
-			continue;
-		if (note->is_opponent)
-			stage.player_state[1].max_score += 35;
-		else
-			stage.player_state[0].max_score += 35;
-	}
-	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
-		stage.max_score = stage.player_state[1].max_score;
-	else
-		stage.max_score = stage.player_state[0].max_score;
-	
-	stage.cur_section = stage.sections;
-	stage.cur_note = stage.notes;
-	
-	stage.speed = stage.stage_def->speed[stage.stage_diff];
-	stage.keys = *((u16*)stage.chart_data);
-	stage.max_keys = stage.keys * 2;
-	
-	stage.step_crochet = 0;
-	stage.time_base = 0;
-	stage.step_base = 0;
-	stage.section_base = stage.cur_section;
-	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, 0);
-}
+ 		if (notes)
+ 			stage.num_notes = (notes - 1) * 2; // Double the number of notes
+ 		else
+ 			stage.num_notes = 0;
+ 		
+ 		//Realloc for separate structs
+ 		size_t sections_size = sections * sizeof(Section);
+ 		size_t notes_size = stage.num_notes * sizeof(Note); // Adjusted for double notes
+ 		size_t notes_off = MEM_ALIGN(sections_size);
+ 		
+ 		u8 *nchart = Mem_Alloc(notes_off + notes_size);
+ 		
+ 		Section *nsection_p = stage.sections = (Section*)nchart;
+ 		section_pp = section_p;
+ 		for (size_t i = 0; i < sections; i++, section_pp += 4, nsection_p++)
+ 		{
+ 			nsection_p->end = section_pp[0] | (section_pp[1] << 8);
+ 			nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
+ 		}
+ 		
+ 		Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
+ 		note_pp = note_p;
+ 		for (size_t i = 0; i < notes; i++, note_pp += 4, nnote_p++)
+ 		{
+ 			nnote_p->pos = note_pp[0] | (note_pp[1] << 8);
+ 			nnote_p->type = note_pp[2] | (note_pp[3] << 8);
+ 		}
+ 		
+ 		// Use reformatted chart
+ 		Mem_Free(stage.chart_data);
+ 		stage.chart_data = (IO_Data)nchart;
+ 	#else
+ 		// Directly use section and notes pointers
+ 		stage.sections = (Section*)(chart_byte + 4);
+ 		stage.notes = (Note*)(chart_byte + ((u16*)stage.chart_data)[1]);
+ 		
+ 		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
+ 			stage.num_notes++;
+ 	#endif
+ 	
+ 	// Swap chart
+ 	if (stage.prefs.mode == StageMode_Swap)
+ 	{
+ 		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
+ 			note->is_opponent = !note->is_opponent;
+ 	}
+ 	
+ 	// Count max scores
+ 	stage.player_state[0].max_score = 0;
+ 	stage.player_state[1].max_score = 0;
+ 	for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
+ 	{
+ 		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
+ 			continue;
+ 		if (note->is_opponent)
+ 			stage.player_state[1].max_score += 35;
+ 		else
+ 			stage.player_state[0].max_score += 35;
+ 	}
+ 	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
+ 		stage.max_score = stage.player_state[1].max_score;
+ 	else
+ 		stage.max_score = stage.player_state[0].max_score;
+ 	
+ 	stage.cur_section = stage.sections;
+ 	stage.cur_note = stage.notes;
+ 	
+ 	stage.speed = stage.stage_def->speed[stage.stage_diff];
+ 	stage.keys = *((u16*)stage.chart_data);
+ 	stage.max_keys = stage.keys * 2;
+ 	
+ 	stage.step_crochet = 0;
+ 	stage.time_base = 0;
+ 	stage.step_base = 0;
+ 	stage.section_base = stage.cur_section;
+ 	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, 0);
+ }
 
 static void Stage_LoadSFX(void)
 {
@@ -2095,7 +2095,7 @@ static void Stage_LoadMusic(void)
 	//Initialize music state
 	stage.intro = true;
 	stage.note_scroll = FIXED_DEC(-5 * 6 * 12,1);
-	stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet);
+    stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet);
 	stage.interp_time = 0;
 	stage.interp_ms = 0;
 	stage.interp_speed = 0;
@@ -2652,82 +2652,67 @@ void Stage_Tick(void)
 			//Clear per-frame flags
 			stage.flag &= ~(STAGE_FLAG_JUST_STEP | STAGE_FLAG_SCORE_REFRESH);
 			
-			//Get song position
+			// Get song position
 			boolean playing;
 			fixed_t next_scroll;
-			
+
 			const fixed_t interp_int = FIXED_UNIT * 8 / 75;
 
-			if (!stage.paused)
-			{
-				if (stage.note_scroll < 0)
-				{
+			if (!stage.paused) {
+				if (stage.note_scroll < 0) {
 					stage.song_time += timer_dt;
-						
-					//Update song
-					if (stage.song_time >= 0)
-					{
-						//Song has started
+					
+					// Update song
+					if (stage.song_time >= 0) {
+						// Song has started
 						playing = true;
 
 						Audio_PlayXA_Track(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, 0);
-							
-						//Update song time
+						
+						// Update song time
 						fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
 						if (audio_time < 0)
 							audio_time = 0;
 						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
 						stage.interp_time = 0;
 						stage.song_time = stage.interp_ms;
-					}
-					else
-					{
-						//Still scrolling
+					} else {
+						// Still scrolling
 						playing = false;
 					}
 					
-					//Update scroll
+					// Update scroll
 					next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
-				}
-				else if (Audio_PlayingXA())
-				{
+				} else if (Audio_PlayingXA()) {
 					fixed_t audio_time_pof = (fixed_t)Audio_TellXA_Milli();
 					fixed_t audio_time = (audio_time_pof > 0) ? (audio_time_pof - stage.offset) : 0;
 					
-					if (stage.prefs.expsync)
-					{
-						//Get playing song position
-						if (audio_time_pof > 0)
-						{
+					if (stage.prefs.expsync) {
+						// Get playing song position
+						if (audio_time_pof > 0) {
 							stage.song_time += timer_dt;
 							stage.interp_time += timer_dt;
 						}
 						
-						if (stage.interp_time >= interp_int)
-						{
-							//Update interp state
+						if (stage.interp_time >= interp_int) {
+							// Update interp state
 							while (stage.interp_time >= interp_int)
 								stage.interp_time -= interp_int;
 							stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
 						}
 						
-						//Resync
+						// Resync
 						fixed_t next_time = stage.interp_ms + stage.interp_time;
-						if (stage.song_time >= next_time + FIXED_DEC(25,1000) || stage.song_time <= next_time - FIXED_DEC(25,1000))
-						{
+						if (stage.song_time >= next_time + FIXED_DEC(25,1000) || stage.song_time <= next_time - FIXED_DEC(25,1000)) {
 							stage.song_time = next_time;
-						}
-						else
-						{
+						} else {
 							if (stage.song_time < next_time - FIXED_DEC(1,1000))
 								stage.song_time += FIXED_DEC(1,1000);
 							if (stage.song_time > next_time + FIXED_DEC(1,1000))
 								stage.song_time -= FIXED_DEC(1,1000);
 						}
-					}
-					else
-					{
-						//Old sync
+					} else {
+						// Old sync
 						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
 						stage.interp_time = 0;
 						stage.song_time = stage.interp_ms;
@@ -2735,35 +2720,30 @@ void Stage_Tick(void)
 					
 					playing = true;
 					
-					//Update scroll
+					// Update scroll
 					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
-				}
-				else
-				{
-					//Song has ended
+				} else {
+					// Song has ended
 					playing = false;
 					stage.song_time += timer_dt;
-						
-					//Update scroll
+					
+					// Update scroll
 					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
 					
-					//Transition to menu or next song
-					if (stage.story && stage.stage_def->next_stage != stage.stage_id)
-					{
+					// Transition to menu or next song
+					if (stage.story && stage.stage_def->next_stage != stage.stage_id) {
 						if (Stage_NextLoad())
 							goto SeamLoad;
-					}
-					else
-					{
+					} else {
 						CheckNewScore();
 						stage.trans = StageTrans_Menu;
 						Trans_Start();
 					}
-				}	
+				}
+				
 				RecalcScroll:;
-				//Update song scroll and step
-				if (next_scroll > stage.note_scroll)
-				{
+				// Update song scroll and step
+				if (next_scroll > stage.note_scroll) {
 					if (((stage.note_scroll / 12) & FIXED_UAND) != ((next_scroll / 12) & FIXED_UAND))
 						stage.flag |= STAGE_FLAG_JUST_STEP;
 					stage.note_scroll = next_scroll;
@@ -2774,27 +2754,26 @@ void Stage_Tick(void)
 					stage.song_beat = stage.song_step / 4;
 				}
 				
-				//Update section
-				if (stage.note_scroll >= 0)
-				{
-					//Check if current section has ended
+				// Update section
+				if (stage.note_scroll >= 0) {
+					// Check if current section has ended
 					u16 end = stage.cur_section->end;
-					if ((stage.note_scroll >> FIXED_SHIFT) >= end)
-					{
-						//Increment section pointer
+					if ((stage.note_scroll >> FIXED_SHIFT) >= end) {
+						// Increment section pointer
 						stage.cur_section++;
 						
-						//Update BPM
+						// Update BPM
 						u16 next_bpm = stage.cur_section->flag & SECTION_FLAG_BPM_MASK;
 						Stage_ChangeBPM(next_bpm, end);
 						stage.section_base = stage.cur_section;
 						
-						//Recalculate scroll based off new BPM
+						// Recalculate scroll based off new BPM
 						next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
 						goto RecalcScroll;
 					}
 				}
 			}
+
 			
 			//Play CountDown
 			if (stage.song_step < 0)

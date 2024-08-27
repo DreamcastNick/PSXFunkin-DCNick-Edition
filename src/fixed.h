@@ -24,6 +24,7 @@ typedef struct
 } POINT_FIXED;
 
 #define FIXED_SHIFT (10)
+#define FIXED_SHIFT_2 (20)
 #define FIXED_UNIT  (1 << FIXED_SHIFT)
 #define FIXED_LAND  (FIXED_UNIT - 1)
 #define FIXED_UAND  (~FIXED_LAND)
