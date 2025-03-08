@@ -313,7 +313,7 @@ void Char_ExeP3_Tick(Character *character)
 {
 	Char_ExeP3 *this = (Char_ExeP3*)character;
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		//Camera stuff
 		if ((stage.flag & STAGE_FLAG_JUST_STEP) && stage.song_step >= 0)
@@ -358,7 +358,7 @@ void Char_ExeP3_Tick(Character *character)
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
 		Character_PerformIdle(character);
 	
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		if (stage.song_step == 1040)
 		{
@@ -382,22 +382,22 @@ void Char_ExeP3_Tick(Character *character)
 		}
 	}
 
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040)
 	memcpy(this->character.health_i, char_xeno_icons, sizeof(char_xeno_icons));
 
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296)
 	memcpy(this->character.health_i, char_knux_icons, sizeof(char_knux_icons));
 
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320)
 	memcpy(this->character.health_i, char_xeno_icons, sizeof(char_xeno_icons));
 
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832)
 	memcpy(this->character.health_i, char_eggman_icons, sizeof(char_eggman_icons));
 
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111)
 	memcpy(this->character.health_i, char_xeno_icons, sizeof(char_xeno_icons));
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch(stage.song_step)
 		{
@@ -422,7 +422,7 @@ void Char_ExeP3_Tick(Character *character)
 		}
 	}
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch (stage.song_step)
 		{
@@ -449,11 +449,11 @@ void Char_ExeP3_Tick(Character *character)
 	
 	//Animate and draw
 	Animatable_Animate(&character->animatable, (void*)this, Char_ExeP3_SetFrame);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= -100 && stage.song_step <= 1296)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= -100 && stage.song_step <= 1296)
 	Character_Draw(character, &this->tex, &char_exep3_frame[this->frame]);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296 && stage.song_step <= 2832)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296 && stage.song_step <= 2832)
 	Character_DrawFlipped(character, &this->tex, &char_exep3_frame[this->frame]);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832 && stage.song_step <= 5250)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832 && stage.song_step <= 5250)
 	Character_Draw(character, &this->tex, &char_exep3_frame[this->frame]);
 }
 
@@ -488,7 +488,7 @@ Character *Char_ExeP3_New(fixed_t x, fixed_t y)
 	this->character.set_anim = Char_ExeP3_SetAnim;
 	this->character.free = Char_ExeP3_Free;
 	
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch(stage.song_step)
 		{

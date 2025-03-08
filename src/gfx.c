@@ -72,6 +72,30 @@ void Gfx_Flip(void)
 	ClearOTagR(ot[db], OTLEN);
 }
 
+void Gfx_FlipWithoutOT(void)
+{
+	VSync(0);
+  DecDCTinSync(0);
+  DecDCToutSync(0);
+
+  DrawOTag(ot[db] + OTLEN - 1);
+  FntFlush(-1);
+  db ^= 1;
+
+  nextpri = pribuff[db];
+	ClearOTagR(ot[db], OTLEN);
+
+  PutDrawEnv(&draw[db]);
+  PutDispEnv(&disp[db]);
+  //Enable display
+	SetDispMask(1);
+}
+
+RECT* Gfx_GetDrawClip(void)
+{
+	return &draw[db].clip;
+}
+
 void Gfx_SetClear(u8 r, u8 g, u8 b)
 {
 	setRGB0(&draw[0], r, g, b);

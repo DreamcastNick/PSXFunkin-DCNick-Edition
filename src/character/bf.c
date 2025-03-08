@@ -314,7 +314,7 @@ void Char_BF_Tick(Character *character)
 {
 	Char_BF *this = (Char_BF*)character;
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		//Camera stuff
 		if ((stage.flag & STAGE_FLAG_JUST_STEP) && stage.song_step >= 0)
@@ -358,7 +358,7 @@ void Char_BF_Tick(Character *character)
 	//Secret icon
 	memcpy(this->character.health_i, char_bf_icons, sizeof(char_bf_icons));
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch(stage.song_step)
 		{
@@ -383,7 +383,7 @@ void Char_BF_Tick(Character *character)
 		}
 	}
 
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch (stage.song_step)
 		{
@@ -560,17 +560,17 @@ void Char_BF_Tick(Character *character)
 	
 	//Animate and draw character
 	Animatable_Animate(&character->animatable, (void*)this, Char_BF_SetFrame);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= -100 && stage.song_step <= 1040)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= -100 && stage.song_step <= 1040)
 	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
-	else if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+	else if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 	Character_DrawFlipped(character, &this->tex, &char_bf_frame[this->frame]);
-	else if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
+	else if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
 	Character_DrawFlipped(character, &this->tex, &char_bf_frame[this->frame]);
-	else if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+	else if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
-	else if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
+	else if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
 	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
-	else if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+	else if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 	Character_DrawFlipped(character, &this->tex, &char_bf_frame[this->frame]);
 	else
 	Character_Draw(character, &this->tex, &char_bf_frame[this->frame]);
@@ -642,7 +642,7 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	this->character.set_anim = Char_BF_SetAnim;
 	this->character.free = Char_BF_Free;
 	
-	if (stage.stage_id == StageId_Mod1_6)
+	if (stage.stage_id == StageId_4_6)
 	{
 		switch(stage.song_step)
 		{

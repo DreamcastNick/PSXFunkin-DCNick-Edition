@@ -1,7 +1,11 @@
 all:
-	@ $(MAKE)
+	@ $(MAKE) -f Makefile
+	@ $(MAKE) -f Makefile_disc2
+	@ $(MAKE) -f Makefile_disc3
 	@ $(MAKE) -f Makefile.tools
 	@ $(MAKE) -f Makefile.tim 
 	@ $(MAKE) -f Makefile.cht 
 	@ $(MAKE) -f Makefile.xa 
-	@ mkpsxiso -y funkin.xml
+	@ mkpsxiso -y funkin_disc1.xml
+	@ mkpsxiso -y funkin_disc2.xml
+	@ mkpsxiso -y funkin_disc3.xml

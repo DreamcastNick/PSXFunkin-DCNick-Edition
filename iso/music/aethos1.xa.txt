@@ -1,0 +1,4 @@
+1 xa aethos/Voices.xa 1 0
+1 xa aethos/Inst.xa 1 1
+1 xa rotten-smoothie/Voices.xa 1 2
+1 xa rotten-smoothie/Inst.xa 1 3

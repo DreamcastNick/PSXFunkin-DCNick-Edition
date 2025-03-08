@@ -142,11 +142,6 @@ int main(int argc, char *argv[])
         {
             // Push main note
             Note new_note;
-			
-			// invalid type
-			if (j[1] < 0)
-				continue;
-			
             int sustain = static_cast<int>(PosRound(j[2], step_crochet)) - 1;
             new_note.pos = (step_base * 12) + PosRound(((uint64_t)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;
@@ -159,7 +154,7 @@ int main(int argc, char *argv[])
             if (is_opponent)
                 new_note.type = (new_note.type + keys) % max_keys;
 
-            if (j[3] == "Alt Animation")
+            if (j[3] == "Alt Animation" || j[3] == "alt")
                 new_note.type |= NOTE_FLAG_ALT_ANIM;
 
             else if ((new_note.is_opponent) && is_alt)

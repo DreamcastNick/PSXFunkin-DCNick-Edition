@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="exepap.png">
+	<!-- Made using Maru Aseprite JSON to XML converter -->
+	<SubTexture name="idle00000" x="0" y="0" width="257" height="246"/>
+	<SubTexture name="idle00001" x="257" y="0" width="257" height="246"/>
+	<SubTexture name="idle00002" x="514" y="0" width="257" height="246"/>
+	<SubTexture name="idle00003" x="771" y="0" width="257" height="246"/>
+	<SubTexture name="left00000" x="0" y="246" width="257" height="246"/>
+	<SubTexture name="left00001" x="257" y="246" width="257" height="246"/>
+	<SubTexture name="down00000" x="514" y="246" width="257" height="246"/>
+	<SubTexture name="down00001" x="771" y="246" width="257" height="246"/>
+	<SubTexture name="up00000" x="0" y="492" width="257" height="246"/>
+	<SubTexture name="up00001" x="257" y="492" width="257" height="246"/>
+	<SubTexture name="right00000" x="514" y="492" width="257" height="246"/>
+	<SubTexture name="right00001" x="771" y="492" width="257" height="246"/>
+</TextureAtlas>

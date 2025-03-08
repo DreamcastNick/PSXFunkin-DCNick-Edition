@@ -2,14 +2,26 @@
 
 typedef struct
 {
-	XA_File file;
+	XA_File1 file;
 	u32 length;
-} XA_TrackDef;
+} XA_TrackDef1;
 
-static const XA_TrackDef xa_tracks[] = {
+typedef struct
+{
+	XA_File2 file;
+	u32 length;
+} XA_TrackDef2;
+
+typedef struct
+{
+	XA_File3 file;
+	u32 length;
+} XA_TrackDef3;
+
+static const XA_TrackDef1 xa_tracks_disc1[] = {
 	//MENU.XA
-	{XA_Menu, XA_LENGTH(11300)}, //XA_GettinFreaky
-	{XA_Menu, XA_LENGTH(3800)},  //XA_GameOver
+	{XA_Menu1, XA_LENGTH(11300)}, //XA_GettinFreaky_Disc1
+	{XA_Menu1, XA_LENGTH(3800)},  //XA_GameOver_Disc1
 	//WEEK1A.XA
 	{XA_Week1A, XA_LENGTH(7700)}, //XA_Bopeebo
 	{XA_Week1A, XA_LENGTH(8000)}, //XA_Fresh
@@ -26,6 +38,12 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_Week3A, XA_LENGTH(10000)}, //XA_Philly
 	//WEEK3B.XA
 	{XA_Week3B, XA_LENGTH(10700)}, //XA_Blammed
+};
+
+static const XA_TrackDef2 xa_tracks_disc2[] = {
+	//MENU.XA
+	{XA_Menu2, XA_LENGTH(11300)}, //XA_GettinFreaky_Disc2
+	{XA_Menu2, XA_LENGTH(3800)},  //XA_GameOver_Disc2
 	//MOD1A.XA
 	{XA_MOD1A, XA_LENGTH(11500)},  //XA_Where_Are_You
 	{XA_MOD1A, XA_LENGTH(15100)}, //XA_Eruption
@@ -39,14 +57,34 @@ static const XA_TrackDef xa_tracks[] = {
 	{XA_MOD1D, XA_LENGTH(63600)}, //XA_Unbeatable
 };
 
-static const char *xa_paths[] = {
-	"\\MUSIC\\MENU.XA;1",   //XA_Menu
+static const XA_TrackDef3 xa_tracks_disc3[] = {
+	//MENU.XA
+	{XA_Menu3, XA_LENGTH(11300)}, //XA_GettinFreaky_Disc3
+	{XA_Menu3, XA_LENGTH(3800)},  //XA_GameOver_Disc3
+	//1.XA
+	{XA_Aethos1, XA_LENGTH(32200)}, //XA_Aethos
+	{XA_Aethos1, XA_LENGTH(21600)}, //XA_RottenSmoothie
+	//2.XA
+	{XA_Aethos2, XA_LENGTH(22500)}, //XA_TwiddleFinger
+	{XA_Aethos2, XA_LENGTH(35600)}, //XA_CrimsonAwakening
+	//3.XA
+	{XA_Aethos3, XA_LENGTH(33000)}, //XA_WellDone
+	{XA_Aethos3, XA_LENGTH(27900)}, //XA_HateBoner
+};
+
+static const char *xa_paths_disc1[] = {
+	"\\MUSIC\\MENU1.XA;1",   //XA_Menu1
 	"\\MUSIC\\WEEK1A.XA;1", //XA_Week1A
 	"\\MUSIC\\WEEK1B.XA;1", //XA_Week1B
 	"\\MUSIC\\WEEK2A.XA;1", //XA_Week2A
 	"\\MUSIC\\WEEK2B.XA;1", //XA_Week2B
 	"\\MUSIC\\WEEK3A.XA;1", //XA_Week3A
 	"\\MUSIC\\WEEK3B.XA;1", //XA_Week3B
+	NULL,
+};
+
+static const char *xa_paths_disc2[] = {
+	"\\MUSIC\\MENU2.XA;1",   //XA_Menu2
 	"\\MUSIC\\MOD1A.XA;1", //XA_Mod1A
 	"\\MUSIC\\MOD1B.XA;1", //XA_Mod1B
 	"\\MUSIC\\MOD1C.XA;1", //XA_Mod1C
@@ -54,16 +92,36 @@ static const char *xa_paths[] = {
 	NULL,
 };
 
+static const char *xa_paths_disc3[] = {
+	"\\MUSIC\\MENU3.XA;1",   //XA_Menu3
+	"\\MUSIC\\AETHOS1.XA;1", //XA_Aethos1
+	"\\MUSIC\\AETHOS2.XA;1", //XA_Aethos2
+	"\\MUSIC\\AETHOS3.XA;1", //XA_Aethos3
+	NULL,
+};
+
 typedef struct
 {
 	const char *name;
 	boolean vocal;
-} XA_Mp3;
+} XA_Mp3_1;
 
-static const XA_Mp3 xa_mp3s[] = {
-	//MENU.XA
-	{"freaky", false},   //XA_GettinFreaky
-	{"gameover", false}, //XA_GameOver
+typedef struct
+{
+	const char *name;
+	boolean vocal;
+} XA_Mp3_2;
+
+typedef struct
+{
+	const char *name;
+	boolean vocal;
+} XA_Mp3_3;
+
+static const XA_Mp3_1 xa_mp3s1[] = {
+	//MENU1.XA
+	{"freaky", false},   //XA_GettinFreaky_Disc1
+	{"gameover", false}, //XA_GameOver_Disc1
 	//WEEK1A.XA
 	{"bopeebo", true}, //XA_Bopeebo
 	{"fresh", true},   //XA_Fresh
@@ -80,6 +138,14 @@ static const XA_Mp3 xa_mp3s[] = {
 	{"philly", true}, //XA_Philly
 	//WEEK3B.XA
 	{"blammed", true}, //XA_Blammed
+	
+	{NULL, false}
+};
+
+static const XA_Mp3_2 xa_mp3s2[] = {
+	//MENU2.XA
+	{"freaky", false},   //XA_GettinFreaky_Disc2
+	{"gameover", false}, //XA_GameOver_Disc2
 	//MOD1A.XA
 	{"where-are-you", true},   //XA_Where_Are_You
 	{"eruption", true}, //XA_Eruption
@@ -91,6 +157,23 @@ static const XA_Mp3 xa_mp3s[] = {
 	{"triple-trouble", true}, //XA_TripleTrouble
 	//MOD1D.XA
 	{"unbeatable", true}, //XA_Unbeatable
+	
+	{NULL, false}
+};
+
+static const XA_Mp3_3 xa_mp3s3[] = {
+	//MENU3.XA
+	{"freaky", false},   //XA_GettinFreaky_Disc3
+	{"gameover", false}, //XA_GameOver_Disc3
+	//AETHOS1.XA
+	{"aethos", true}, //XA_Aethos
+	{"rotten-smoothie", true}, //XA_RottenSmoothie
+	//AETHOS2.XA
+	{"twiddlefinger", true}, //XA_TwiddleFinger
+	{"crimson-awakening", true}, //XA_CrimsonAwakening
+	//AETHOS3.XA
+	{"well-done", true}, //XA_WellDone
+	{"hate-boner", true}, //XA_HateBoner
 	
 	{NULL, false}
 };

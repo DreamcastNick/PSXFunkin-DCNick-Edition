@@ -1,5 +1,7 @@
 all: \
-  iso/music/menu.xa \
+  iso/music/menu1.xa \
+  iso/music/menu2.xa \
+  iso/music/menu3.xa \
   iso/music/week1a.xa \
   iso/music/week1b.xa \
   iso/music/week2a.xa \
@@ -10,6 +12,9 @@ all: \
   iso/music/mod1b.xa \
   iso/music/mod1c.xa \
   iso/music/mod1d.xa \
+  iso/music/aethos1.xa \
+  iso/music/aethos2.xa \
+  iso/music/aethos3.xa \
 
 # XA converts
 iso/music/%.xa: iso/music/%.ogg
@@ -18,7 +23,9 @@ iso/music/%.xa:
 	tools/xainterleave/xainterleave $@
 
 # XA interleaves
-iso/music/menu.xa: iso/music/freaky.xa iso/music/gameover.xa
+iso/music/menu1.xa: iso/music/freaky.xa iso/music/gameover.xa
+iso/music/menu2.xa: iso/music/freaky.xa iso/music/gameover.xa
+iso/music/menu3.xa: iso/music/freaky.xa iso/music/gameover.xa
 iso/music/week1a.xa: iso/music/bopeebo/Inst.xa iso/music/bopeebo/Vocals.xa iso/music/fresh/Inst.xa iso/music/fresh/Vocals.xa
 iso/music/week1b.xa: iso/music/dadbattle/Inst.xa iso/music/dadbattle/Vocals.xa iso/music/tutorial/Inst.xa
 iso/music/week2a.xa: iso/music/spookeez/Inst.xa iso/music/spookeez/Vocals.xa iso/music/south/Inst.xa iso/music/south/Vocals.xa
@@ -29,3 +36,11 @@ iso/music/mod1a.xa: iso/music/where-are-you/Inst.xa iso/music/where-are-you/Voca
 iso/music/mod1b.xa: iso/music/kaioken/Inst.xa iso/music/kaioken/Vocals.xa iso/music/ferocious/Inst.xa iso/music/ferocious/Vocals.xa
 iso/music/mod1c.xa: iso/music/monochrome/Inst.xa iso/music/monochrome/Vocals.xa iso/music/triple-trouble/Inst.xa iso/music/triple-trouble/Vocals.xa
 iso/music/mod1d.xa: iso/music/unbeatable/Inst.xa iso/music/unbeatable/Vocals.xa
+iso/music/aethos1.xa: iso/music/aethos/Inst.xa iso/music/aethos/Voices.xa iso/music/rotten-smoothie/Inst.xa iso/music/rotten-smoothie/Voices.xa
+iso/music/aethos2.xa: iso/music/twiddlefinger/Inst.xa iso/music/twiddlefinger/Voices.xa iso/music/crimson-awakening/Inst.xa iso/music/crimson-awakening/Voices.xa
+iso/music/aethos3.xa: iso/music/well-done/Inst.xa iso/music/well-done/Voices.xa iso/music/hate-boner/Inst.xa iso/music/hate-boner/Voices.xa
+
+.PHONY: clean
+clean:
+	echo "Cleaning .xa files:"
+	find iso -type f \( -name "*.xa" \) -print -delete

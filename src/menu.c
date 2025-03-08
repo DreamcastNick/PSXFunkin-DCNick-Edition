@@ -31,6 +31,10 @@
 #include "character/menuo.h"
 #include "character/menugf.h"
 
+#include "disc_swap_disc1.h"
+#include "disc_swap_disc2.h"
+#include "disc_swap_disc3.h"
+
 static u32 Sounds[3];
 //Menu messages
 static const char *funny_messages[][2] = {
@@ -376,8 +380,18 @@ void Menu_Load(MenuPage page)
     Mem_Free(data);
 
 	//Play menu music
-	Audio_PlayXA_Track(XA_GettinFreaky, 0x40, 0, 1);
-	Audio_WaitPlayXA();
+	if (currentDisc == 1) {
+		Audio_PlayXA_TrackDisc1(XA_GettinFreaky_Disc1, 0x40, 0, true, 0);
+		Audio_WaitPlayXA();
+	}
+	if (currentDisc == 2) {
+		Audio_PlayXA_TrackDisc2(XA_GettinFreaky_Disc2, 0x40, 0, true, 0);
+		Audio_WaitPlayXA();
+	}
+	if (currentDisc == 3) {
+		Audio_PlayXA_TrackDisc3(XA_GettinFreaky_Disc3, 0x40, 0, true, 0);
+		Audio_WaitPlayXA();
+	}
 	
 	//Set background colour
 	Gfx_SetClear(0, 0, 0);
@@ -714,7 +728,6 @@ void Menu_Tick(void)
 				{"1", StageId_1_1, StageId_1_3,  "DADDY DEAREST", {"BOPEEBO", "FRESH", "DADBATTLE"}},
 				{"2", StageId_2_1, StageId_2_3,  "SPOOKY MONTH", {"SPOOKEEZ", "SOUTH", "MONSTER"}},
 				{"3", StageId_3_1, StageId_3_3,  "PICO", {"PICO", "PHILLY NICE", "BLAMMED"}},
-				{"4", StageId_Mod1_1, StageId_Mod1_3,  "FIRST ENCOUNTER", {"WHERE ARE YOU", "ERUPTION", "KAIO KEN"}},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d", 
@@ -954,13 +967,19 @@ void Menu_Tick(void)
 				{StageId_3_1, 0xFF941653, "PICO", 8},
 				{StageId_3_2, 0xFF941653, "PHILLY NICE", 8},
 				{StageId_3_3, 0xFF941653, "BLAMMED", 8},
-				{StageId_Mod1_1, 0xFFCFCFCF, "WHERE ARE YOU", 10},
-				{StageId_Mod1_2, 0xFFF9BB00, "ERUPTION", 10},
-				{StageId_Mod1_3, 0xFFEA4747, "KAIO KEN", 12},
-				{StageId_Mod1_4, 0xFF00FF00, "FEROCIOUS", 14},
-				{StageId_Mod1_5, 0xFF000000, "MONOCHROME", 18},
-				{StageId_Mod1_6, 0xFF800000, "TRIPLE TROUBLE", 16},
-				{StageId_Mod1_7, 0xFFACDEFF, "UNBEATABLE", 20},
+				{StageId_4_1, 0xFFCFCFCF, "WHERE ARE YOU", 10},
+				{StageId_4_2, 0xFFF9BB00, "ERUPTION", 10},
+				{StageId_4_3, 0xFFEA4747, "KAIO KEN", 12},
+				{StageId_4_4, 0xFF00FF00, "FEROCIOUS", 14},
+				{StageId_4_5, 0xFF000000, "MONOCHROME", 18},
+				{StageId_4_6, 0xFF800000, "TRIPLE TROUBLE", 16},
+				{StageId_4_7, 0xFFACDEFF, "UNBEATABLE", 20},
+				{StageId_5_1, 0xFF9271FD, "AETHOS", 0},
+				{StageId_5_2, 0xFF9271FD, "ROTTEN SMOOTHIE", 0},
+				{StageId_5_3, 0xFF9271FD, "TWIDDLEFINGER", 0},
+				{StageId_5_4, 0xFF9271FD, "CRIMSON AWAKENING", 0},
+				{StageId_5_5, 0xFF9271FD, "WELL DONE", 0},
+				{StageId_5_6, 0xFF9271FD, "HATE BONER", 0},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
@@ -1354,10 +1373,118 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Stage:
 		{
-			//Unload menu state
+			char discIndicator[32];
+
+			if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
+			{
+				if (sprintf(discIndicator, "\\DISC1.ID;1") == 0)
+				{
+					DisplayMessage("Disc 1 is already inserted. Press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+				}
+			}
+			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") == 0)
+				{
+					DisplayMessage("Disc 2 is already inserted. Press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+				}
+			}
+			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			{
+				if (sprintf(discIndicator, "\\DISC3.ID;1") == 0)
+				{
+					DisplayMessage("Disc 3 is already inserted. Press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+				}
+			}
+
+			if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 2 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+			else if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			{
+				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 3 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+
+			if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
+			{
+				if (sprintf(discIndicator, "\\DISC1.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 1 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			{
+				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 3 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+
+			if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
+			{
+				if (sprintf(discIndicator, "\\DISC1.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 1 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 2 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+
 			Menu_Unload();
-			
-			//Load new stage
 			LoadScr_Start();
 			Stage_Load(menu.page_param.stage.id, menu.page_param.stage.diff, menu.page_param.stage.story);
 			gameloop = GameLoop_Stage;

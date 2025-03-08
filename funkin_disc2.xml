@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Defines the ISO project -->
+<iso_project image_name="funkin_disc2.bin" cue_sheet="funkin_disc2.cue" no_xa="0">
+	<!-- Data track -->
+	<track type="data">
+		<!-- Identifiers -->
+		<identifiers
+			system        = "PLAYSTATION"
+			application   = "PLAYSTATION"
+			volume        = "PSXFUNKIN"
+			volume_set    = "PSXFUNKIN"
+			publisher     = "CUCKYDEV"
+			copyright     = "NINJAMUFFIN99"
+		/>
+		<license file="licensea.dat"/>
+		
+		<!-- Data directory tree -->
+		<directory_tree>
+			<!-- System -->
+			<file name = "DISC2.ID" type = "data" source = "iso/DISC2.ID"/>
+			<file name = "system.cnf" type = "data" source = "iso/system.cnf"/>
+			<file name = "SCUS_412.05" type = "data" source = "funkin_disc2.ps-exe"/>
+			
+			<!-- Menu assets -->
+			<dir name = "menu">
+				<file name = "loading.tim" type = "data" source = "iso/menu/loading.tim"/>
+				<file name = "menu.arc" type = "data" source = "iso/menu/menu.arc"/>
+				<file name = "week.arc" type = "data" source = "iso/menu/backgrounds/week.arc"/>
+			</dir>
+			
+			<!-- Fonts -->
+			<dir name = "fonts">
+				<file name = "fonts.tim" type = "data" source = "iso/font/fonts.tim"/>
+			</dir>
+			
+			<!-- Stage assets -->
+			<dir name = "stage">
+				<file name = "note4k.tim" type = "data" source = "iso/stage/note4k.tim"/>
+				<file name = "note5k.tim" type = "data" source = "iso/stage/note5k.tim"/>
+				<file name = "note6k.tim" type = "data" source = "iso/stage/note6k.tim"/>
+				<file name = "note7k.tim" type = "data" source = "iso/stage/note7k.tim"/>
+				<file name = "note9k.tim" type = "data" source = "iso/stage/note9k.tim"/>
+				<file name = "type4k0.tim" type = "data" source = "iso/stage/type4k0.tim"/>
+				<file name = "type5k0.tim" type = "data" source = "iso/stage/type5k0.tim"/>
+				<file name = "type6k0.tim" type = "data" source = "iso/stage/type6k0.tim"/>
+				<file name = "type7k0.tim" type = "data" source = "iso/stage/type7k0.tim"/>
+				<file name = "type9k0.tim" type = "data" source = "iso/stage/type9k0.tim"/>
+				<file name = "type4k1.tim" type = "data" source = "iso/stage/type4k1.tim"/>
+				<file name = "type5k1.tim" type = "data" source = "iso/stage/type5k1.tim"/>
+				<file name = "type6k1.tim" type = "data" source = "iso/stage/type6k1.tim"/>
+				<file name = "type7k1.tim" type = "data" source = "iso/stage/type7k1.tim"/>
+				<file name = "type9k1.tim" type = "data" source = "iso/stage/type9k1.tim"/>
+				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
+				<file name = "grid0.tim" type = "data" source = "iso/stage/grid0.tim"/>
+				<file name = "grid1.tim" type = "data" source = "iso/stage/grid1.tim"/>
+				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
+				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
+				<file name = "static.tim" type = "data" source = "iso/stage/static.tim"/>
+				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
+			</dir>
+			
+			<dir name = "str">
+				<file name = "grace.str" type = "str" source = "iso/movie/grace.str"/>
+			</dir>
+			
+			<!-- Week 1 assets -->
+			<dir name = "week1">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
+			</dir>
+			
+			<!-- Week 2 assets -->
+			<dir name = "week2">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/week2/back.arc"/>
+			</dir>
+			
+			<!-- Week 3 assets -->
+			<dir name = "week3">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
+			</dir>
+			
+			<dir name = "trio">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/trio/back.arc"/>
+			</dir>				
+			
+			<dir name = "kitchen">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
+				<file name = "handa.arc" type = "data" source = "iso/kitchen/handa.arc"/>
+				<file name = "handb.arc" type = "data" source = "iso/kitchen/handb.arc"/>
+				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
+			</dir>
+			
+			<!-- Mod 1 assets -->
+			<dir name = "chart">
+				<!-- Where Are You charts -->
+				<file name = "4.1e.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
+				<file name = "4.1n.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
+				<file name = "4.1h.cht" type = "data" source = "iso/chart/where-are-you-hard.json.cht"/>
+				<!-- Eruption charts -->
+				<file name = "4.2e.cht" type = "data" source = "iso/chart/eruption-easy.json.cht"/>
+				<file name = "4.2n.cht" type = "data" source = "iso/chart/eruption.json.cht"/>
+				<file name = "4.2h.cht" type = "data" source = "iso/chart/eruption-hard.json.cht"/>
+				<!-- Kaio-Ken charts -->
+				<file name = "4.3e.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
+				<file name = "4.3n.cht" type = "data" source = "iso/chart/kaio-ken.json.cht"/>
+				<file name = "4.3h.cht" type = "data" source = "iso/chart/kaio-ken-hard.json.cht"/>
+				<!-- Ferocious charts -->
+				<file name = "4.4e.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
+				<file name = "4.4n.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
+				<file name = "4.4h.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
+				<!-- Monochrome charts -->
+				<file name = "4.5e.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<file name = "4.5n.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<file name = "4.5h.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
+				<!-- Triple Trouble charts -->
+				<file name = "4.6e.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<file name = "4.6n.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<file name = "4.6h.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
+				<!-- Unbeatable charts -->
+				<file name = "4.7e.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+				<file name = "4.7n.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+				<file name = "4.7h.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+			</dir>
+		
+			<!-- Character assets -->
+			<dir name = "char">
+				<!-- Boyfriend assets -->
+				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
+				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
+				
+				<!-- Apple assets -->
+				<file name = "apple.arc" type = "data" source = "iso/apple/main.arc"/>
+				<file name = "appded.arc" type = "data" source = "iso/apple/dead.arc"/>
+				
+				<!-- Dad assets -->
+				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
+				
+				<!-- Orange assets -->
+				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
+				
+				<!-- Triple Trouble assets -->
+				<file name = "exep3.arc" type = "data" source = "iso/exep3/main.arc"/>
+					
+				<!-- Spook assets -->
+				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
+
+				<!-- Monster assets -->
+				<file name = "monster.arc" type = "data" source = "iso/monster/main.arc"/>
+				
+				<!-- Pico assets -->
+				<file name = "pico.arc" type = "data" source = "iso/pico/main.arc"/>
+
+				<!-- Girlfriend assets -->
+				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
+				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
+				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
+				
+				<!-- Menu Characters assets -->
+				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
+				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
+				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
+			</dir>
+		    
+			<!-- Sound effects -->
+			<dir name = "sounds">
+				<!-- Menu Sounds -->
+				<file name = "scroll.vag" type = "data" source = "iso/sounds/menu/scroll.VAG"/>
+				<file name = "confirm.vag" type = "data" source = "iso/sounds/menu/confirm.VAG"/>
+				<file name = "cancel.vag" type = "data" source = "iso/sounds/menu/cancel.VAG"/>
+				<!-- Stage Sounds -->
+				<file name = "intro0.vag" type = "data" source = "iso/sounds/stage/intro0.VAG"/>
+				<file name = "intro1.vag" type = "data" source = "iso/sounds/stage/intro1.VAG"/>
+				<file name = "intro2.vag" type = "data" source = "iso/sounds/stage/intro2.VAG"/>
+				<file name = "intro3.vag" type = "data" source = "iso/sounds/stage/intro3.VAG"/>
+				<file name = "hitstat.vag" type = "data" source = "iso/sounds/stage/hitstat.VAG"/>
+			</dir>
+			
+			<!-- Music -->
+			<dir name = "music">
+				<file name = "menu2.xa" type = "xa" source = "iso/music/menu2.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1a.xa" type = "xa" source = "iso/music/mod1a.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1b.xa" type = "xa" source = "iso/music/mod1b.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1c.xa" type = "xa" source = "iso/music/mod1c.xa"/>
+				<dummy sectors="128"/>
+				<file name = "mod1d.xa" type = "xa" source = "iso/music/mod1d.xa"/>
+				<dummy sectors="128"/>
+			</dir>
+			
+			<!-- Dummy sectors -->
+			<dummy sectors="1024"/>
+		</directory_tree>
+	</track>
+</iso_project>

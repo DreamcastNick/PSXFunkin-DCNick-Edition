@@ -1,4 +1,4 @@
-TARGET = funkin
+TARGET = funkin_disc1
 TYPE = ps-exe
 
 SRCS = src/main.c \
@@ -14,6 +14,8 @@ SRCS = src/main.c \
        src/debug.c \
        src/save.c \
        src/psx.c \
+	   src/disc_swap_disc1.c \
+	   src/str.c \
        src/io.c \
        src/gfx.c \
        src/audio.c \
@@ -24,15 +26,18 @@ SRCS = src/main.c \
        src/stage/week2.c \
        src/stage/week3.c \
 	   src/stage/trio.c \
+	   src/stage/kitchen.c \
        src/animation.c \
        src/character.c \
        src/character/bf.c \
+       src/character/apple.c \
        src/character/speaker.c \
        src/character/dad.c \
+       src/character/orange.c \
+	   src/character/exep3.c \
        src/character/spook.c \
        src/character/pico.c \
        src/character/monster.c \
-	   src/character/exep3.c \
        src/character/gf.c \
 	   src/character/menuo.c \
 	   src/character/menup.c \
@@ -41,6 +46,8 @@ SRCS = src/main.c \
        src/object/combo.c \
        src/object/splash.c \
        src/pause.c \
+	   src/psn00b/vlc.c \
+       src/psn00b/vlc2.s \
        mips/common/crt0/crt0.s
 
 CPPFLAGS += -Wall -Wextra -pedantic -mno-check-zero-division

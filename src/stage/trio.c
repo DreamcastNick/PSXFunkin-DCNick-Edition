@@ -52,7 +52,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 	}
 
 
-	if (StageId_Mod1_6)
+	if (StageId_4_6)
 	{	
 		if (stage.song_step == 0)
 			opacity = 0;
@@ -184,7 +184,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 	switch (swapfard)
 	{
 		case 0:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -221,7 +221,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 1:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -258,7 +258,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 2:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -295,7 +295,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 3:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -332,7 +332,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 4:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -369,7 +369,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 5:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -406,7 +406,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 6:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -443,7 +443,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 7:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -480,7 +480,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 8:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -517,7 +517,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 9:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -554,7 +554,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 10:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -591,7 +591,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 11:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -628,7 +628,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 12:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -665,7 +665,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 13:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -702,7 +702,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 14:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -739,7 +739,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 15:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -776,7 +776,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 16:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -813,7 +813,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 17:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -850,7 +850,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 18:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -887,7 +887,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 19:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -924,7 +924,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 20:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -961,7 +961,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 21:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -998,7 +998,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 22:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1035,7 +1035,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 23:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1072,7 +1072,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 24:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1109,7 +1109,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 25:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1146,7 +1146,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 26:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1183,7 +1183,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 27:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1220,7 +1220,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 28:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1257,7 +1257,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 29:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1294,7 +1294,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 30:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1331,7 +1331,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 31:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1368,7 +1368,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 32:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1405,7 +1405,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 33:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1442,7 +1442,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 34:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1479,7 +1479,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 35:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1516,7 +1516,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 36:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1553,7 +1553,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 37:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1590,7 +1590,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 38:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1627,7 +1627,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 39:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1664,7 +1664,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 40:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1701,7 +1701,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 41:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1738,7 +1738,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 42:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1775,7 +1775,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 43:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1812,7 +1812,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		case 44:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1849,7 +1849,7 @@ void Back_Trio_DrawHUD(StageBack* back)
 			}
 		break;
 		default:
-			if (stage.stage_id == StageId_Mod1_6)
+			if (stage.stage_id == StageId_4_6)
 			{
 				if (stage.song_step >= 0 && stage.song_step <= 16)
 				{
@@ -1904,9 +1904,9 @@ void Back_Trio_DrawFG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= -100 && stage.song_step <= 1040)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= -100 && stage.song_step <= 1040)
 		Stage_DrawTex(&this->tex_back1, &normtrees_src, &normtrees_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
 		Stage_DrawTex(&this->tex_back1, &normtrees_src, &normtrees_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	RECT normtreesflip_src = {0, 0, 256, 256};
@@ -1917,7 +1917,7 @@ void Back_Trio_DrawFG(StageBack *back)
 		FIXED_DEC(380,1)
 	};
 	
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
 		Stage_DrawTex(&this->tex_back8, &normtreesflip_src, &normtreesflip_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw xenophanes foreground trees
@@ -1928,9 +1928,9 @@ void Back_Trio_DrawFG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 		Stage_DrawTex(&this->tex_back4, &xenotrees_src, &xenotrees_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 		Stage_DrawTex(&this->tex_back4, &xenotrees_src, &xenotrees_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	RECT xenotreesflip_src = {0, 0, 256, 256};
@@ -1940,7 +1940,7 @@ void Back_Trio_DrawFG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 		Stage_DrawTex(&this->tex_back9, &xenotreesflip_src, &xenotreesflip_dst, stage.camera.bzoom, stage.camera.angle);
 }
 
@@ -1961,9 +1961,9 @@ void Back_Trio_DrawBG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= -100 && stage.song_step <= 1040)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= -100 && stage.song_step <= 1040)
 		Stage_DrawTex(&this->tex_back0, &normbg_src, &normbg_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
 		Stage_DrawTex(&this->tex_back0, &normbg_src, &normbg_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	RECT normbgflip_src = {0, 0, 256, 256};
@@ -1973,7 +1973,7 @@ void Back_Trio_DrawBG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
 		Stage_DrawTex(&this->tex_back7, &normbgflip_src, &normbgflip_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	//Draw xenophanes background
@@ -1984,9 +1984,9 @@ void Back_Trio_DrawBG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 		Stage_DrawTex(&this->tex_back6, &xenobg_src, &xenobg_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 		Stage_DrawTex(&this->tex_back6, &xenobg_src, &xenobg_dst, stage.camera.bzoom, stage.camera.angle);
 	
 	RECT xenobgflip_src = {0, 0, 256, 256};
@@ -1996,7 +1996,7 @@ void Back_Trio_DrawBG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 		Stage_DrawTex(&this->tex_back10, &xenobgflip_src, &xenobgflip_dst, stage.camera.bzoom, stage.camera.angle);	
 	
 	//Draw backdrop
@@ -2007,11 +2007,11 @@ void Back_Trio_DrawBG(StageBack *back)
 		FIXED_DEC(490,1),
 		FIXED_DEC(380,1)
 	};
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= -100 && stage.song_step <= 1040)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= -100 && stage.song_step <= 1040)
 		Stage_DrawTex(&this->tex_back2, &backdrop_src, &backdrop_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 1296 && stage.song_step <= 2320)
 		Stage_DrawTex(&this->tex_back2, &backdrop_src, &backdrop_dst, stage.camera.bzoom, stage.camera.angle);
-	if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
+	if (stage.stage_id == StageId_4_6 && stage.song_step >= 2832 && stage.song_step <= 4111)
 		Stage_DrawTex(&this->tex_back2, &backdrop_src, &backdrop_dst, stage.camera.bzoom, stage.camera.angle);
 
 	//Draw xenophanes backdrop
@@ -2090,371 +2090,371 @@ void Back_Trio_DrawBG(StageBack *back)
 	switch (swapfard)
 	{
 		case 0:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 1:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 2:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 3:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 4:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static1_src, &static1_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 5:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 6:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 7:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 8:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 9:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static2_src, &static2_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 10:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 11:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 12:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 13:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 14:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static3_src, &static3_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 15:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 16:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 17:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 18:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 19:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static4_src, &static4_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 20:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 21:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 22:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 23:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 24:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static5_src, &static5_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 25:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 26:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 27:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 28:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 29:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static6_src, &static6_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 30:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 31:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 32:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 33:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 34:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static7_src, &static7_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 35:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 36:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 37:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 38:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 39:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static8_src, &static8_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 				case 40:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 41:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 42:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 43:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		case 44:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 		default:		
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 1040 && stage.song_step <= 1296)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 2320 && stage.song_step <= 2832)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
-			if (stage.stage_id == StageId_Mod1_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
+			if (stage.stage_id == StageId_4_6 && stage.song_step >= 4111 && stage.song_step <= 5250)
 			Stage_DrawTex(&this->tex_back3, &static0_src, &static0_dst, stage.camera.bzoom, stage.camera.angle);
 		break;
 	}

@@ -11,11 +11,16 @@
 #include "gfx.h"
 #include "audio.h"
 #include "pad.h"
+#include "str.h"
 
 #include "menu.h"
 #include "save.h"
 #include "stage.h"
 #include "pause.h"
+
+#include "disc_swap_disc1.h"
+#include "disc_swap_disc2.h"
+#include "disc_swap_disc3.h"
 
 //Game loop
 GameLoop gameloop;
@@ -65,6 +70,7 @@ int main(int argc, char **argv)
 	Gfx_Init();
 	Pad_Init();
 	MCRD_Init();
+	Str_Init();
 	
 	Timer_Init();
 

@@ -58,13 +58,22 @@ typedef enum
 	StageId_3_2, //Philly
 	StageId_3_3, //Blammed
 
-	StageId_Mod1_1, //Where Are You
-	StageId_Mod1_2, //Eruption
-	StageId_Mod1_3, //Kaio-Ken
-	StageId_Mod1_4, //Ferocious
-	StageId_Mod1_5, //Monochrome
-	StageId_Mod1_6, //Triple Trouble
-	StageId_Mod1_7, //Unbeatable
+	StageId_4_1, //Where Are You
+	StageId_4_2, //Eruption
+	StageId_4_3, //Kaio-Ken
+	StageId_4_4, //Ferocious
+	StageId_4_5, //Monochrome
+	StageId_4_6, //Triple Trouble
+	StageId_4_7, //Unbeatable
+	
+	StageId_5_1, //Aethos
+	StageId_5_2, //Rotten Smoothie
+	StageId_5_3, //Twiddlefinger
+	StageId_5_4, //Crimson Awakening
+	StageId_5_5, //Well Done
+	StageId_5_6, //Hate Boner
+	
+	StageId_Temp, //Placeholder For Stuff
 	
 	StageId_Max
 } StageId;
@@ -127,6 +136,7 @@ typedef struct
 	u8 week, week_song;
 	u8 music_track, music_channel;
 	boolean tim;
+	boolean has_note_types;
 	
 	StageId next_stage;
 	u8 next_load;
@@ -197,7 +207,7 @@ typedef struct
 	struct
 	{
 		s32 mode;
-		boolean ghost, downscroll, middlescroll, expsync, debug, songtimer, botplay;
+		boolean ghost, downscroll, middlescroll, expsync, debug, songtimer, botplay, flash;
 		int savescore[StageId_Max][StageDiff_Max];
 	}prefs;	
 	u32 offset;
@@ -228,6 +238,16 @@ typedef struct
 	fixed_t speed;
 	fixed_t step_crochet, step_time;
 	fixed_t early_safe, late_safe, early_sus_safe, late_sus_safe;
+	fixed_t flash, flashspd;
+	
+	boolean movie_is_playing;
+
+	fixed_t movie_pos;
+	fixed_t audio_last_pos_before_movie;
+	fixed_t audio_start_pos;
+
+	//STR Lbas
+	CdlFILE str_grace_lba;
 
 	//if stage have intro or no
 	boolean intro;
@@ -267,7 +287,7 @@ typedef struct
 	
 	Section *cur_section; //Current section
 	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
-
+	
 	fixed_t note_scroll, song_time, interp_time, interp_ms, interp_speed;
 
 	struct
@@ -315,6 +335,18 @@ typedef struct
 	
 	//Animations
 	u16 startscreen;
+	fixed_t iconangle;
+	fixed_t iconangle2;
+	boolean iconanim;
+	boolean iconanim2;
+	boolean iconact;
+	boolean iconact2;
+	fixed_t heightOffset;
+	fixed_t heightOffset2;
+	fixed_t waveTime;
+	fixed_t waveTime2;
+	fixed_t waveDir;
+    fixed_t waveDir2;
 } Stage;
 
 extern Stage stage;
@@ -337,6 +369,7 @@ void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 
 
 //Stage functions
+void Stage_Init();
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);
 void Stage_Unload();
 void Stage_Tick();
