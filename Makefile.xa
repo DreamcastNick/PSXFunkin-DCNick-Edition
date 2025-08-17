@@ -15,6 +15,7 @@ all: \
   iso/music/aethos1.xa \
   iso/music/aethos2.xa \
   iso/music/aethos3.xa \
+  iso/music/billy.xa \
 
 # XA converts
 iso/music/%.xa: iso/music/%.ogg
@@ -54,6 +55,8 @@ iso/music/aethos1.xa: iso/music/aethos/Inst.xa iso/music/aethos/Voices.xa iso/mu
 iso/music/aethos2.xa: iso/music/twiddlefinger/Inst.xa iso/music/twiddlefinger/Voices.xa iso/music/crimson-awakening/Inst.xa iso/music/crimson-awakening/Voices.xa
 
 iso/music/aethos3.xa: iso/music/well-done/Inst.xa iso/music/well-done/Voices.xa iso/music/hate-boner/Inst.xa iso/music/hate-boner/Voices.xa
+
+iso/music/billy.xa: iso/music/silly-billy/Inst.xa iso/music/silly-billy/Vocals.xa
 
 .PHONY: clean
 clean:

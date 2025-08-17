@@ -61,15 +61,17 @@ static const XA_TrackDef3 xa_tracks_disc3[] = {
 	//MENU.XA
 	{XA_Menu3, XA_LENGTH(11300)}, //XA_GettinFreaky_Disc3
 	{XA_Menu3, XA_LENGTH(3800)},  //XA_GameOver_Disc3
-	//1.XA
+	//AETHOS1.XA
 	{XA_Aethos1, XA_LENGTH(32200)}, //XA_Aethos
 	{XA_Aethos1, XA_LENGTH(21600)}, //XA_RottenSmoothie
-	//2.XA
+	//AETHOS2.XA
 	{XA_Aethos2, XA_LENGTH(22500)}, //XA_TwiddleFinger
 	{XA_Aethos2, XA_LENGTH(35600)}, //XA_CrimsonAwakening
-	//3.XA
+	//AETHOS3.XA
 	{XA_Aethos3, XA_LENGTH(33000)}, //XA_WellDone
 	{XA_Aethos3, XA_LENGTH(27900)}, //XA_HateBoner
+	//BILLY.XA
+	{XA_Billy, XA_LENGTH(37500)}, //XA_SillyBilly
 };
 
 static const char *xa_paths_disc1[] = {
@@ -97,6 +99,7 @@ static const char *xa_paths_disc3[] = {
 	"\\MUSIC\\AETHOS1.XA;1", //XA_Aethos1
 	"\\MUSIC\\AETHOS2.XA;1", //XA_Aethos2
 	"\\MUSIC\\AETHOS3.XA;1", //XA_Aethos3
+	"\\MUSIC\\BILLY.XA;1",   //XA_Billy
 	NULL,
 };
 
@@ -174,6 +177,8 @@ static const XA_Mp3_3 xa_mp3s3[] = {
 	//AETHOS3.XA
 	{"well-done", true}, //XA_WellDone
 	{"hate-boner", true}, //XA_HateBoner
+	//BILLY.XA
+	{"silly-billy", true}, //XA_SillyBilly
 	
 	{NULL, false}
 };

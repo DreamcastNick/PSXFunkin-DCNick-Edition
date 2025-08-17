@@ -60,10 +60,6 @@
 				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
 			</dir>
 			
-			<dir name = "str">
-				<file name = "grace.str" type = "str" source = "iso/movie/grace.str"/>
-			</dir>
-			
 			<!-- Week 1 assets -->
 			<dir name = "week1">
 				<!-- Background art -->
@@ -80,19 +76,6 @@
 			<dir name = "week3">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
-			</dir>
-			
-			<dir name = "trio">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/trio/back.arc"/>
-			</dir>
-			
-			<dir name = "kitchen">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
-				<file name = "handa.arc" type = "data" source = "iso/kitchen/handa.arc"/>
-				<file name = "handb.arc" type = "data" source = "iso/kitchen/handb.arc"/>
-				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
 			</dir>
 			
 			<dir name = "chart">
@@ -144,19 +127,9 @@
 				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
 				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
 				
-				<!-- Apple assets -->
-				<file name = "apple.arc" type = "data" source = "iso/apple/main.arc"/>
-				<file name = "appded.arc" type = "data" source = "iso/apple/dead.arc"/>
-				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
-				
-				<!-- Triple Trouble assets -->
-				<file name = "exep3.arc" type = "data" source = "iso/exep3/main.arc"/>
-				
-				<!-- Orange assets -->
-				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
-				
+
 				<!-- Spook assets -->
 				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
 

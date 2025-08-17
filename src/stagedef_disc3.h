@@ -98,6 +98,8 @@
 		//Song info
 		5, 4,
 		XA_CrimsonAwakening, 2,
+		false,
+		false,
 		
 		StageId_5_5, 0,
 	},
@@ -149,5 +151,30 @@
 		false,
 		false,
 		
-		StageId_5_6, 0,
+		StageId_5_7, 0,
+	},
+	{ //StageId_1_7 (Silly Billy)
+		//Characters
+		{Char_BFY_New,       FIXED_DEC(128,1),  FIXED_DEC(80,1)},
+		{NULL},
+		{Char_SillyBilly_New, FIXED_DEC(-25,1),  FIXED_DEC(83,1)},
+		{NULL},
+		{NULL},
+		
+		//Stage background
+		Back_Sillybg_New,
+
+		//Camera Offset (X, Y, Scale)
+		FIXED_DEC(0,1), FIXED_DEC(0,1), FIXED_DEC(1,1),
+		
+		//Song info
+		{FIXED_DEC(3,1),FIXED_DEC(3,1),FIXED_DEC(3,1)},
+				
+		//Song info
+		5, 7,
+		XA_SillyBilly, 0,
+		false,
+		false,
+		
+		StageId_5_7, 0,
 	},

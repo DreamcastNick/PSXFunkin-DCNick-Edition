@@ -62,6 +62,8 @@
 			
 			<dir name = "str">
 				<file name = "grace.str" type = "str" source = "iso/movie/grace.str"/>
+				<file name = "intro.str" type = "str" source = "iso/movie/intro.str"/>
+				<file name = "final.str" type = "str" source = "iso/movie/final.str"/>
 			</dir>
 			
 			<!-- Week 1 assets -->
@@ -70,32 +72,22 @@
 				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
 			</dir>
 			
-			<!-- Week 2 assets -->
-			<dir name = "week2">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week2/back.arc"/>
-			</dir>
-			
-			<!-- Week 3 assets -->
-			<dir name = "week3">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
-			</dir>
-			
-			<dir name = "trio">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/trio/back.arc"/>
-			</dir>	
-			
 			<dir name = "kitchen">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
 				<file name = "handa.arc" type = "data" source = "iso/kitchen/handa.arc"/>
 				<file name = "handb.arc" type = "data" source = "iso/kitchen/handb.arc"/>
 				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
-			</dir>		
+			</dir>
+			
+			<dir name = "billy">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/sillybg/back.arc"/>
+				<file name = "intro.str" type = "str" source = "iso/movie/intro.str"/>
+				<file name = "final.str" type = "str" source = "iso/movie/final.str"/>
+			</dir>
 				
-			<!-- Mod 1 assets -->
+			<!-- Aethos Mods assets -->
 			<dir name = "chart">
 				<!-- Aethos charts -->
 				<file name = "5.1e.cht" type = "data" source = "iso/chart/aethos.json.cht"/>
@@ -105,22 +97,26 @@
 				<file name = "5.2e.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
 				<file name = "5.2n.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
 				<file name = "5.2h.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
-				<!-- Kaio-Ken charts -->
+				<!-- Twiddlefinger charts -->
 				<file name = "5.3e.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
 				<file name = "5.3n.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
 				<file name = "5.3h.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
-				<!-- Ferocious charts -->
+				<!-- Crimson Awakening charts -->
 				<file name = "5.4e.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
 				<file name = "5.4n.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
 				<file name = "5.4h.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
-				<!-- Monochrome charts -->
+				<!-- Well Done charts -->
 				<file name = "5.5e.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
 				<file name = "5.5n.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
 				<file name = "5.5h.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
-				<!-- Triple Trouble charts -->
+				<!-- Hate Boner charts -->
 				<file name = "5.6e.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
 				<file name = "5.6n.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
 				<file name = "5.6h.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
+				<!-- Silly Billy charts -->
+				<file name = "5.7e.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
+				<file name = "5.7n.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
+				<file name = "5.7h.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
 			</dir>
 		
 			<!-- Character assets -->
@@ -136,20 +132,12 @@
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
 				
-				<!-- Triple Trouble assets -->
-				<file name = "exep3.arc" type = "data" source = "iso/exep3/main.arc"/>
-				
 				<!-- Orange assets -->
 				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
 				
-				<!-- Spook assets -->
-				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
-
-				<!-- Monster assets -->
-				<file name = "monster.arc" type = "data" source = "iso/monster/main.arc"/>
-				
-				<!-- Pico assets -->
-				<file name = "pico.arc" type = "data" source = "iso/pico/main.arc"/>
+				<!-- Silly Billy assets -->
+				<file name = "billy.arc" type = "data" source = "iso/sillybilly/main.arc"/>
+				<file name = "bfy.arc" type = "data" source = "iso/bfy/main.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
@@ -185,6 +173,8 @@
 				<file name = "aethos2.xa" type = "xa" source = "iso/music/aethos2.xa"/>
 				<dummy sectors="128"/>
 				<file name = "aethos3.xa" type = "xa" source = "iso/music/aethos3.xa"/>
+				<dummy sectors="128"/>
+				<file name = "billy.xa" type = "xa" source = "iso/music/billy.xa"/>
 				<dummy sectors="128"/>
 			</dir>
 			

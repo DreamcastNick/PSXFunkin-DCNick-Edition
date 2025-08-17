@@ -40,6 +40,7 @@ typedef enum
 	XA_Aethos1,	   //AETHOS1.XA
 	XA_Aethos2,	   //AETHOS2.XA
 	XA_Aethos3,	   //AETHOS3.XA
+	XA_Billy,	   //BILLY.XA 
 	
 	XA_Max3,
 } XA_File3;
@@ -103,6 +104,8 @@ typedef enum
 	//AETHOS3.XA
 	XA_WellDone, //Well Done
 	XA_HateBoner, //Hate Boner
+	//BILLY.XA
+	XA_SillyBilly, //Silly Billy
 	
 	XA_TrackMax3,
 } XA_Track3;

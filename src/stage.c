@@ -211,12 +211,16 @@ static u32 Sounds[7];
 
 #include "character/bf.h"
 #include "character/apple.h"
+#include "character/bfy.h"
+
 #include "character/dad.h"
-#include "character/orange.h"
-#include "character/exep3.h"
 #include "character/spook.h"
 #include "character/monster.h"
 #include "character/pico.h"
+#include "character/exep3.h"
+#include "character/orange.h"
+#include "character/sillybilly.h"
+
 #include "character/gf.h"
 
 #include "stage/dummy.h"
@@ -225,6 +229,7 @@ static u32 Sounds[7];
 #include "stage/week3.h"
 #include "stage/trio.h"
 #include "stage/kitchen.h"
+#include "stage/sillybg.h"
 
 static const StageDef stage_defs[StageId_Max] = {
 	#include "stagedef_disc1.h"
@@ -2180,7 +2185,7 @@ static void Stage_TimerGetLength(void)
 	{
 		currentDisc = 2;
 	}
-	if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_6)
+	if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_7)
 	{
 		currentDisc = 3;
 	}
@@ -2634,7 +2639,7 @@ static void Stage_LoadMusic(void)
 	{
 		Audio_SeekXA_TrackDisc2(stage.stage_def->music_track, stage.audio_start_pos);
 	}
-	if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_6)
+	if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_7)
 	{
 		Audio_SeekXA_TrackDisc3(stage.stage_def->music_track, stage.audio_start_pos);
 	}
@@ -2713,17 +2718,11 @@ static void Stage_LoadState(void)
 		stage.player_state[i].hud = true;
 	}
 
-	//for rotten smoothie
-	/*if(stage.stage_id == StageId_5_2)
+	//for silly billy
+	if(stage.stage_id == StageId_5_7)
     {
         stage.player_state[1].hud = false;
-		
-		for (int i = 0; i < stage.keys; i++)
-        {
-            stage.note.y  += FIXED_DEC(-38,1);
-            stage.note_x[i] += FIXED_DEC(44,1) + FIXED_DEC(i * 6,1);
-        }
-    }*/
+    }
 	
 	//Update the keys
 	switch (stage.keys)
@@ -2956,13 +2955,22 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	// Persist music/flow state for this song
 	if (id >= StageId_1_1 && id <= StageId_3_3) stage.music_disc_active = 1; else
 	if (id >= StageId_4_1 && id <= StageId_4_7) stage.music_disc_active = 2; else
-	if (id >= StageId_5_1 && id <= StageId_5_6) stage.music_disc_active = 3;
+	if (id >= StageId_5_1 && id <= StageId_5_7) stage.music_disc_active = 3;
 	stage.music_track_active = stage.stage_def->music_track;
 	stage.music_channel_active = stage.stage_def->music_channel;
 	stage.next_stage_active = stage.stage_def->next_stage;
 	stage.next_load_active = stage.stage_def->next_load;
 	
-	IO_FindFile(&stage.str_grace_lba, "\\STR\\GRACE.STR;1");
+	if (stage.stage_id == StageId_5_2)
+	{
+		IO_FindFile(&stage.str_grace_lba, "\\STR\\GRACE.STR;1");
+	}
+	
+	if (stage.stage_id == StageId_5_7)
+	{
+		IO_FindFile(&stage.str_sillybilly_intro_lba, "\\STR\\INTRO.STR;1");
+		IO_FindFile(&stage.str_sillybilly_final_lba, "\\STR\\FINAL.STR;1");
+	}
 
     // Check movies
     // Don't play movie if you are retrying the song
@@ -2993,7 +3001,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 		Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID1.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
 	}
-	else if (stage.stage_id >= StageId_5_3 && stage.stage_id <= StageId_5_6)
+	else if (stage.stage_id >= StageId_5_3 && stage.stage_id <= StageId_5_7)
 	{
 		Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID0.TIM;1"), GFX_LOADTEX_FREE);
@@ -3283,15 +3291,72 @@ void Stage_Tick(void)
 		Audio_WaitPlayXA();
 	}
 	
-	// At step 1824 on stage 5_2, reload HUD/grid textures so they draw again
-	if (stage.stage_id == StageId_5_2 && stage.song_step == 1824 && (stage.flag & STAGE_FLAG_JUST_STEP))
+	if (stage.stage_id == StageId_5_7 && stage.song_step == 0 && stage.flag & STAGE_FLAG_JUST_STEP && !stage.movie_is_playing)
 	{
-		// Perform stage-only mid swap (reload background assets without touching characters/music)
-		Stage_RequestSwapTo(StageId_5_2, STAGE_LOAD_STAGE);
+		stage.audio_start_pos = 0;
+		Str_PlayFile(&stage.str_sillybilly_intro_lba);
+		if (currentDisc == 1) {
+			Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 12);
+		}
+		if (currentDisc == 2) {
+			Audio_PlayXA_TrackDisc2(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 12);
+		}
+		if (currentDisc == 3) {
+			Audio_PlayXA_TrackDisc3(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 12);
+		}
+		Audio_WaitPlayXA();
+	}
+	
+	if (stage.stage_id == StageId_5_7 && stage.song_step == 3492 && stage.flag & STAGE_FLAG_JUST_STEP && !stage.movie_is_playing)
+	{
+		stage.audio_start_pos = 304;
+		Str_PlayFile(&stage.str_sillybilly_final_lba);
+		if (currentDisc == 1) {
+			Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 338);
+		}
+		if (currentDisc == 2) {
+			Audio_PlayXA_TrackDisc2(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 338);
+		}
+		if (currentDisc == 3) {
+			Audio_PlayXA_TrackDisc3(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 338);
+		}
+		Audio_WaitPlayXA();
+	}
+	
+	// At step 1824 on stage 5_2, reload HUD/grid textures so they draw again
+	if (stage.stage_id == StageId_5_2)
+	{
+		if (stage.song_step == 1824 && (stage.flag & STAGE_FLAG_JUST_STEP))
+		{
+			// Perform stage-only mid swap (reload background assets without touching characters/music)
+			Stage_RequestSwapTo(StageId_5_2, STAGE_LOAD_STAGE);
 
-		Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
-		Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID1.TIM;1"), GFX_LOADTEX_FREE);
-		Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID1.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
+		}	
+	}
+	
+	if (stage.stage_id == StageId_5_7)
+	{
+		if (stage.song_step == 128 && (stage.flag & STAGE_FLAG_JUST_STEP))
+		{
+			// Perform stage-only mid swap (reload background assets without touching characters/music)
+			Stage_RequestSwapTo(StageId_5_7, STAGE_LOAD_STAGE);
+
+			Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID0.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
+		}
+		if (stage.song_step == 3888 && (stage.flag & STAGE_FLAG_JUST_STEP))
+		{
+			// Perform stage-only mid swap (reload background assets without touching characters/music)
+			Stage_RequestSwapTo(StageId_5_7, STAGE_LOAD_STAGE);
+
+			Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\GRID0.TIM;1"), GFX_LOADTEX_FREE);
+			Gfx_LoadTex(&stage.tex_hude, IO_Read("\\STAGE\\HUDE.TIM;1"), GFX_LOADTEX_FREE);
+		}
 	}
 	
 	if (inctimer)
@@ -3363,7 +3428,7 @@ void Stage_Tick(void)
 			{
 				currentDisc = 2;
 			}
-			if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_6)
+			if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_7)
 			{
 				currentDisc = 3;
 			}
@@ -3405,40 +3470,66 @@ void Stage_Tick(void)
 				}
 			}
 			
-			if (stage.stage_id == StageId_5_2 && stage.song_step >= -48 && stage.song_step <= 16)
+			if (stage.stage_id == StageId_5_2)
 			{
-				hudEnabled = 0;
-				noteEnabled = 0;
+				if (stage.song_step >= -48 && stage.song_step <= 16)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else if (stage.song_step >= 512 && stage.song_step <= 528)
+				{
+					hudEnabled = 0;
+					noteEnabled = 1;
+				}
+				else if (stage.song_step >= 1304 && stage.song_step <= 1559)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else if (stage.song_step >= 1560 && stage.song_step <= 1824)
+				{
+					hudEnabled = 0;
+					noteEnabled = 1;
+				}
+				else if (stage.song_step >= 2080 && stage.song_step <= 2084)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else if (stage.song_step >= 2208 && stage.song_step <= 2224)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else if (stage.song_step >= 2364 && stage.song_step <= 5500)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else
+				{
+					hudEnabled = 1;
+					noteEnabled = 1;
+				}
 			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 512 && stage.song_step <= 528)
+			if (stage.stage_id == StageId_5_7)
 			{
-				hudEnabled = 0;
-				noteEnabled = 1;
-			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 1304 && stage.song_step <= 1559)
-			{
-				hudEnabled = 0;
-				noteEnabled = 0;
-			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 1560 && stage.song_step <= 1824)
-			{
-				hudEnabled = 0;
-				noteEnabled = 1;
-			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 2080 && stage.song_step <= 2084)
-			{
-				hudEnabled = 0;
-				noteEnabled = 0;
-			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 2208 && stage.song_step <= 2224)
-			{
-				hudEnabled = 0;
-				noteEnabled = 0;
-			}
-			else if (stage.stage_id == StageId_5_2 && stage.song_step >= 2364 && stage.song_step <= 5500)
-			{
-				hudEnabled = 0;
-				noteEnabled = 0;
+				if (stage.song_step >= 3356 && stage.song_step <= 3620)
+				{
+					hudEnabled = 0;
+					noteEnabled = 0;
+				}
+				else if (stage.song_step >= 3621 && stage.song_step <= 3888)
+				{
+					hudEnabled = 0;
+					noteEnabled = 1;
+				}
+				else
+				{
+					hudEnabled = 1;
+					noteEnabled = 1;
+				}
 			}
 			else
 			{
@@ -3522,7 +3613,7 @@ void Stage_Tick(void)
 			if (stage.prefs.debug)
 				Debug_Tick();
 			
-			//FntPrint("step %d, beat %d", stage.song_step, stage.song_beat);
+			FntPrint("step %d, beat %d", stage.song_step, stage.song_beat);
 
 			if (noteshake) 
 			{
@@ -3810,6 +3901,9 @@ void Stage_Tick(void)
 					stage.intro = false;
 				break;
 				case StageId_5_6:
+					stage.intro = false;
+				break;
+				case StageId_5_7:
 					stage.intro = false;
 				break;
 				default:
@@ -4102,7 +4196,7 @@ void Stage_Tick(void)
 						health_dst.w = health_back.w << FIXED_SHIFT;
 						Stage_DrawTex(&stage.tex_hud1, &health_back, &health_dst, stage.bump, stage.camera.hudangle);
 					}
-					else if (stage.stage_id >= StageId_5_3 && stage.stage_id <= StageId_5_6)
+					else if (stage.stage_id >= StageId_5_3 && stage.stage_id <= StageId_5_7)
 					{
 						if (stage.player != NULL)
 							Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i, 1);
@@ -4254,7 +4348,7 @@ void Stage_Tick(void)
 				{
 					currentDisc = 2;
 				}
-				if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_6)
+				if (stage.stage_id >= StageId_5_1 && stage.stage_id <= StageId_5_7)
 				{
 					currentDisc = 3;
 				}

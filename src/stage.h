@@ -72,6 +72,7 @@ typedef enum
 	StageId_5_4, //Crimson Awakening
 	StageId_5_5, //Well Done
 	StageId_5_6, //Hate Boner
+	StageId_5_7, //Silly Billy
 	
 	StageId_Temp, //Placeholder For Stuff
 	
@@ -261,6 +262,8 @@ typedef struct
 
 	//STR Lbas
 	CdlFILE str_grace_lba;
+	CdlFILE str_sillybilly_intro_lba;
+	CdlFILE str_sillybilly_final_lba;
 
 	//if stage have intro or no
 	boolean intro;

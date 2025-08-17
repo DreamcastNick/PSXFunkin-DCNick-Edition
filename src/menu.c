@@ -980,6 +980,7 @@ void Menu_Tick(void)
 				{StageId_5_4, 0xFFB90000, "CRIMSON AWAKENING", 28},
 				{StageId_5_5, 0xFF7A0E10, "WELL DONE", 29},
 				{StageId_5_6, 0xFFB0B0B0, "HATE BONER", 30},
+				{StageId_5_7, 0xFF7985CC, "SILLY BILLY", 31},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
@@ -1397,7 +1398,7 @@ void Menu_Tick(void)
 					}
 				}
 			}
-			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
 			{
 				if (sprintf(discIndicator, "\\DISC3.ID;1") == 0)
 				{
@@ -1421,7 +1422,7 @@ void Menu_Tick(void)
 					HandleDiscSwap();
 				}
 			}
-			else if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			else if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
 			{
 				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
 				{
@@ -1446,7 +1447,7 @@ void Menu_Tick(void)
 					HandleDiscSwap();
 				}
 			}
-			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_6))
+			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
 			{
 				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
 				{

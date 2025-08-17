@@ -416,10 +416,26 @@ void Str_PlayFile(CdlFILE* file)
 		stage.movie_pos += timer_dt;
 
 		// Early stop condition inside loop (stage-specific cutoff)
-		if (stage.stage_id == StageId_5_2 && stage.song_step == 1824)
+		if (stage.stage_id == StageId_5_2)
 		{
-			stage.movie_is_playing = false;
-			break;
+			if (stage.song_step == 1824)
+			{
+				stage.movie_is_playing = false;
+				break;
+			}
+		}
+		if (stage.stage_id == StageId_5_7)
+		{
+			if (stage.song_step == 128)
+			{
+				stage.movie_is_playing = false;
+				break;
+			}
+			if (stage.song_step == 3888)
+			{
+				stage.movie_is_playing = false;
+				break;
+			}
 		}
 	}
 

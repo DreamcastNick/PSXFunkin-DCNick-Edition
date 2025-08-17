@@ -60,42 +60,18 @@
 				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
 			</dir>
 			
-			<dir name = "str">
-				<file name = "grace.str" type = "str" source = "iso/movie/grace.str"/>
-			</dir>
-			
 			<!-- Week 1 assets -->
 			<dir name = "week1">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
 			</dir>
 			
-			<!-- Week 2 assets -->
-			<dir name = "week2">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week2/back.arc"/>
-			</dir>
-			
-			<!-- Week 3 assets -->
-			<dir name = "week3">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week3/back.arc"/>
-			</dir>
-			
 			<dir name = "trio">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/trio/back.arc"/>
-			</dir>				
-			
-			<dir name = "kitchen">
-				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
-				<file name = "handa.arc" type = "data" source = "iso/kitchen/handa.arc"/>
-				<file name = "handb.arc" type = "data" source = "iso/kitchen/handb.arc"/>
-				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
 			</dir>
 			
-			<!-- Mod 1 assets -->
+			<!-- Extra Mods assets -->
 			<dir name = "chart">
 				<!-- Where Are You charts -->
 				<file name = "4.1e.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
@@ -133,28 +109,12 @@
 				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
 				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
 				
-				<!-- Apple assets -->
-				<file name = "apple.arc" type = "data" source = "iso/apple/main.arc"/>
-				<file name = "appded.arc" type = "data" source = "iso/apple/dead.arc"/>
-				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
 				
-				<!-- Orange assets -->
-				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
-				
 				<!-- Triple Trouble assets -->
 				<file name = "exep3.arc" type = "data" source = "iso/exep3/main.arc"/>
-					
-				<!-- Spook assets -->
-				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
-
-				<!-- Monster assets -->
-				<file name = "monster.arc" type = "data" source = "iso/monster/main.arc"/>
 				
-				<!-- Pico assets -->
-				<file name = "pico.arc" type = "data" source = "iso/pico/main.arc"/>
-
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
