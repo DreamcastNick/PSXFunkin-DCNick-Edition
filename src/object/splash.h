@@ -18,11 +18,12 @@ typedef struct
 	
 	//Splash state
 	u8 colour;
+	boolean background; // Whether to draw in background or foreground
 	
 	fixed_t x, y, xsp, ysp, size, sin, cos;
 } Obj_Splash;
 
 //Splash object functions
-Obj_Splash *Obj_Splash_New(fixed_t x, fixed_t y, u8 colour);
+Obj_Splash *Obj_Splash_New(fixed_t x, fixed_t y, u8 colour, boolean background);
 
 #endif

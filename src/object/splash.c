@@ -37,7 +37,20 @@ boolean Obj_Splash_Tick(Object *obj)
 		scale << 3
 	};
 	
-	Stage_DrawTex(&stage.tex_note, &plub_src, &plub_dst, stage.bump, stage.camera.hudangle);
+	//Apply background/foreground logic
+	fixed_t zoom = stage.bump;
+	fixed_t angle = stage.camera.hudangle;
+	
+	if (this->background)
+	{
+		//Background drawing - use world camera
+		plub_dst.x -= stage.camera.x;
+		plub_dst.y -= stage.camera.y;
+		zoom = stage.camera.bzoom;
+		angle = stage.camera.angle;
+	}
+	
+	Stage_DrawTex(&stage.tex_note, &plub_src, &plub_dst, zoom, angle);
 	
 	//Draw tail
 	fixed_t tx =  this->sin * scale >> 6;
@@ -49,7 +62,18 @@ boolean Obj_Splash_Tick(Object *obj)
 	POINT_FIXED bl = {lx - tx, ly - ty};
 	POINT_FIXED br = {lx + tx, ly + ty};
 	
-	Stage_DrawTexArb(&stage.tex_note, &tail_src, &tl, &tr, &bl, &br, stage.bump, stage.camera.hudangle);
+	//Apply background/foreground logic for tail
+	fixed_t tail_zoom = stage.bump;
+	fixed_t tail_angle = stage.camera.hudangle;
+	
+	if (this->background)
+	{
+		//Background drawing - use world camera
+		tail_zoom = stage.camera.bzoom;
+		tail_angle = stage.camera.angle;
+	}
+	
+	Stage_DrawTexArb(&stage.tex_note, &tail_src, &tl, &tr, &bl, &br, tail_zoom, tail_angle);
 	
 	return this->size >= FIXED_UNIT;
 }
@@ -59,7 +83,7 @@ void Obj_Splash_Free(Object *obj)
 	(void)obj;
 }
 
-Obj_Splash *Obj_Splash_New(fixed_t x, fixed_t y, u8 colour)
+Obj_Splash *Obj_Splash_New(fixed_t x, fixed_t y, u8 colour, boolean background)
 {
 	//Allocate new object
 	Obj_Splash *this = (Obj_Splash*)Mem_Alloc(sizeof(Obj_Splash));
@@ -81,6 +105,7 @@ Obj_Splash *Obj_Splash_New(fixed_t x, fixed_t y, u8 colour)
 	this->y = y + this->ysp;
 	
 	this->colour = colour;
+	this->background = background;
 	
 	return this;
 }

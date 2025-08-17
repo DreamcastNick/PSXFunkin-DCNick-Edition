@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
             if (is_opponent)
                 new_note.type = (new_note.type + keys) % max_keys;
 
-            if (j[3] == "Alt Animation" || j[3] == "alt")
+            if (j[3] == "Alt Animation")
                 new_note.type |= NOTE_FLAG_ALT_ANIM;
 
             else if ((new_note.is_opponent) && is_alt)

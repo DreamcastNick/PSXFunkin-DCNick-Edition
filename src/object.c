@@ -30,7 +30,11 @@ void ObjectList_Remove(ObjectList *list, Object *obj)
 	
 	//Free object
 	obj->free(obj);
-	Mem_Free(obj);
+	#ifdef MEM_POOL
+		Mem_PoolFree(obj);
+	#else
+		Mem_Free(obj);
+	#endif
 }
 
 void ObjectList_Tick(ObjectList *list)
@@ -58,7 +62,11 @@ void ObjectList_Free(ObjectList *list)
 		//Free object and iterate on next linked object
 		Object *next = obj->next;
 		obj->free(obj);
-		Mem_Free(obj);
+		#ifdef MEM_POOL
+			Mem_PoolFree(obj);
+		#else
+			Mem_Free(obj);
+		#endif
 		obj = next;
 	}
 	

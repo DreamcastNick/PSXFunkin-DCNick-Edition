@@ -196,6 +196,9 @@ typedef struct
 	char rank[13];
 	
 	u16 pad_held, pad_press;
+	
+	//player prefs for boolean back logic
+	boolean visible, hud;
 } PlayerState;
 
 typedef struct
@@ -227,6 +230,16 @@ typedef struct
 	const StageDef *stage_def;
 	StageId stage_id;
 	StageDiff stage_diff;
+	// Original song info for reliable restarts (unchanged by mid-song swaps)
+	StageId original_stage_id;
+	StageDiff original_stage_diff;
+	boolean original_story;
+	// Active music/flow state (persists across mid-game swaps)
+	u8 music_disc_active;      // 1, 2, or 3 (disc index)
+	u16 music_track_active;    // track enum value for current song
+	u8 music_channel_active;   // XA channel for current song
+	StageId next_stage_active; // story progression target from original def
+	u8 next_load_active;       // flags for partial reload on next
 	
 	IO_Data chart_data;
 	Section *sections;
@@ -304,6 +317,9 @@ typedef struct
 	fixed_t time_base;
 	u16 step_base;
 	Section *section_base;
+
+	// Grace period after swaps to avoid false misses
+	u8 swap_grace_frames;
 	
 	s16 noteshakex;
 	s16 noteshakey;
@@ -335,18 +351,6 @@ typedef struct
 	
 	//Animations
 	u16 startscreen;
-	fixed_t iconangle;
-	fixed_t iconangle2;
-	boolean iconanim;
-	boolean iconanim2;
-	boolean iconact;
-	boolean iconact2;
-	fixed_t heightOffset;
-	fixed_t heightOffset2;
-	fixed_t waveTime;
-	fixed_t waveTime2;
-	fixed_t waveDir;
-    fixed_t waveDir2;
 } Stage;
 
 extern Stage stage;
@@ -369,9 +373,14 @@ void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 
 
 //Stage functions
-void Stage_Init();
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);
 void Stage_Unload();
 void Stage_Tick();
+
+// Mid-game swap API (does not reload chart or music)
+// Queue a swap to a specific `StageId` with selected load flags (STAGE_LOAD_*)
+void Stage_RequestSwapTo(StageId target, u8 load_flags);
+// Queue a swap using current `stage.stage_def->next_stage` and `next_load`
+void Stage_RequestNextLoadSwap(void);
 
 #endif

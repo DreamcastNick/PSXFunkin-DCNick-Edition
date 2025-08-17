@@ -19,4 +19,7 @@ fixed_t lerp(fixed_t position, fixed_t target, fixed_t speed);
 void MUtil_RotatePoint(POINT *p, s16 s, s16 c);
 fixed_t MUtil_Pull(fixed_t a, fixed_t b, fixed_t t);
 
+//dont blame me - luckyazure
+s16 MUtil_Smooth(u16 x);
+
 #endif

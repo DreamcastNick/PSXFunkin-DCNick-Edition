@@ -167,6 +167,14 @@ void Back_Kitchen_DrawHUD(StageBack *back)
     
     fx = stage.camera.x;
     fy = stage.camera.y;
+
+    // Force reload of hands A, B, C at step 1824 on 5_2
+    if (stage.stage_id == StageId_5_2 && stage.song_step == 1824 && (stage.flag & STAGE_FLAG_JUST_STEP))
+    {
+        this->handa_frame = this->handa_tex_id = 0xFF;
+        this->handb_frame = this->handb_tex_id = 0xFE;
+        this->handc_frame = this->handc_tex_id = 0xFD;
+    }
     
     if (stage.song_step == 784)
     {

@@ -117,3 +117,7 @@ iso/kitchen/back.arc: iso/kitchen/back0.tim iso/kitchen/back1.tim iso/kitchen/cu
 iso/kitchen/handa.arc: iso/kitchen/handa.tim 
 iso/kitchen/handb.arc: iso/kitchen/handb.tim
 iso/kitchen/handc.arc: iso/kitchen/handc.tim
+
+clean:
+	echo "Cleaning .arc and .tim files:"
+	find iso -type f \( -name "*.arc" -o -name "*.tim" \) -print -delete

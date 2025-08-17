@@ -44,13 +44,14 @@ void ErrorLock(void)
 
 //Memory heap
 //#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+#define MEM_POOL //Enable memory pool for frequently allocated objects
 
 #define MEM_IMPLEMENTATION
 #include "mem.h"
 #undef MEM_IMPLEMENTATION
 
 #ifndef PSXF_STDMEM
-static u8 malloc_heap[0x1A0000];
+static u8 malloc_heap[0x1A6000];
 #endif
 
 //Entry point
@@ -86,7 +87,7 @@ int main(int argc, char **argv)
 	Menu_Load(MenuPage_Opening);
 	
 	//Game loop
-	while (PSX_Running())
+	while (true)
 	{
 		//Prepare frame
 		Timer_Tick();

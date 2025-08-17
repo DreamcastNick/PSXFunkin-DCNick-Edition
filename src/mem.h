@@ -7,6 +7,7 @@
 	
 	Additional control defines:
 	MEM_STAT - This will enable the Mem_GetStat function which returns information about available memory in the heap.
+	MEM_POOL - This will enable memory pool functionality for frequently allocated objects.
 */
 
 #ifndef MEM_GUARD_MEM_H
@@ -23,6 +24,7 @@
 #include <stdlib.h>
 
 #undef MEM_STAT /* Control unsupported */
+#undef MEM_POOL /* Control unsupported */
 
 #define Mem_Init(x,y)
 #define Mem_Alloc malloc
@@ -38,6 +40,14 @@ void Mem_Free(void *ptr);
 	void Mem_GetStat(size_t *used, size_t *size, size_t *max);
 #endif
 
+#ifdef MEM_POOL
+	/* Memory pool functions for frequently allocated objects */
+	void *Mem_PoolAlloc(size_t size);
+	void Mem_PoolFree(void *ptr);
+	void Mem_PoolInit(void);
+	void Mem_PoolCleanup(void);
+#endif
+
 /* Implementation */
 #ifdef MEM_IMPLEMENTATION
 
@@ -51,6 +61,92 @@ typedef struct Mem_Header
 static Mem_Header *mem = NULL;
 #ifdef MEM_STAT
 	static size_t mem_used, mem_max;
+#endif
+
+#ifdef MEM_POOL
+/* Memory pool for frequently allocated objects */
+#define MEM_POOL_SIZE 16
+#define MEM_POOL_MAX_ENTRIES 32
+
+typedef struct Mem_PoolEntry
+{
+	void *ptr;
+	size_t size;
+	boolean in_use;
+} Mem_PoolEntry;
+
+static Mem_PoolEntry mem_pool[MEM_POOL_MAX_ENTRIES];
+static size_t mem_pool_count = 0;
+
+void Mem_PoolInit(void)
+{
+	for (int i = 0; i < MEM_POOL_MAX_ENTRIES; i++)
+	{
+		mem_pool[i].ptr = NULL;
+		mem_pool[i].size = 0;
+		mem_pool[i].in_use = false;
+	}
+	mem_pool_count = 0;
+}
+
+void *Mem_PoolAlloc(size_t size)
+{
+	//Try to find an existing pool entry of the right size
+	for (int i = 0; i < mem_pool_count; i++)
+	{
+		if (!mem_pool[i].in_use && mem_pool[i].size >= size)
+		{
+			mem_pool[i].in_use = true;
+			return mem_pool[i].ptr;
+		}
+	}
+	
+	//Allocate new entry if pool not full
+	if (mem_pool_count < MEM_POOL_MAX_ENTRIES)
+	{
+		void *ptr = Mem_Alloc(size);
+		if (ptr != NULL)
+		{
+			mem_pool[mem_pool_count].ptr = ptr;
+			mem_pool[mem_pool_count].size = size;
+			mem_pool[mem_pool_count].in_use = true;
+			mem_pool_count++;
+		}
+		return ptr;
+	}
+	
+	//Fall back to regular allocation
+	return Mem_Alloc(size);
+}
+
+void Mem_PoolFree(void *ptr)
+{
+	//Find and mark as free
+	for (int i = 0; i < mem_pool_count; i++)
+	{
+		if (mem_pool[i].ptr == ptr && mem_pool[i].in_use)
+		{
+			mem_pool[i].in_use = false;
+			return;
+		}
+	}
+	
+	//Not in pool, use regular free
+	Mem_Free(ptr);
+}
+
+void Mem_PoolCleanup(void)
+{
+	for (int i = 0; i < mem_pool_count; i++)
+	{
+		if (mem_pool[i].ptr != NULL)
+		{
+			Mem_Free(mem_pool[i].ptr);
+			mem_pool[i].ptr = NULL;
+		}
+	}
+	mem_pool_count = 0;
+}
 #endif
 
 int Mem_Init(void *ptr, size_t size)
@@ -70,6 +166,10 @@ int Mem_Init(void *ptr, size_t size)
 	/* Initial mem state */
 	#ifdef MEM_STAT
 		mem_max = mem_used = MEM_HEDSIZE;
+	#endif
+	
+	#ifdef MEM_POOL
+		Mem_PoolInit();
 	#endif
 	
 	return 0;

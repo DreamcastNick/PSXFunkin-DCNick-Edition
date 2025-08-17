@@ -299,8 +299,8 @@ static void Menu_DrawHealth(u8 i, s16 x, s16 y, boolean is_selected)
 
     //Get src and dst
     RECT src = {
-        (i % 6) * icon_size,
-        (i / 6) * icon_size,
+        (i % 7) * icon_size,
+        (i / 7) * icon_size,
         icon_size,
         icon_size
     };
@@ -957,29 +957,29 @@ void Menu_Tick(void)
 				const char *text;
 				u8 icon;
 			} menu_options[] = {
-				{StageId_1_4, 0xFF9271FD, "TUTORIAL", 2},
+				{StageId_1_4, 0xFF9271FD, "TUTORIAL", 1},
 				{StageId_1_1, 0xFF9271FD, "BOPEEBO", 0},
 				{StageId_1_2, 0xFF9271FD, "FRESH", 0},
 				{StageId_1_3, 0xFF9271FD, "DADBATTLE", 0},
-				{StageId_2_1, 0xFF223344, "SPOOKEEZ", 4},
-				{StageId_2_2, 0xFF223344, "SOUTH", 4},
-				{StageId_2_3, 0xFF223344, "MONSTER", 6},
-				{StageId_3_1, 0xFF941653, "PICO", 8},
-				{StageId_3_2, 0xFF941653, "PHILLY NICE", 8},
-				{StageId_3_3, 0xFF941653, "BLAMMED", 8},
-				{StageId_4_1, 0xFFCFCFCF, "WHERE ARE YOU", 10},
-				{StageId_4_2, 0xFFF9BB00, "ERUPTION", 10},
-				{StageId_4_3, 0xFFEA4747, "KAIO KEN", 12},
-				{StageId_4_4, 0xFF00FF00, "FEROCIOUS", 14},
-				{StageId_4_5, 0xFF000000, "MONOCHROME", 18},
-				{StageId_4_6, 0xFF800000, "TRIPLE TROUBLE", 16},
-				{StageId_4_7, 0xFFACDEFF, "UNBEATABLE", 20},
-				{StageId_5_1, 0xFF9271FD, "AETHOS", 0},
-				{StageId_5_2, 0xFF9271FD, "ROTTEN SMOOTHIE", 0},
-				{StageId_5_3, 0xFF9271FD, "TWIDDLEFINGER", 0},
-				{StageId_5_4, 0xFF9271FD, "CRIMSON AWAKENING", 0},
-				{StageId_5_5, 0xFF9271FD, "WELL DONE", 0},
-				{StageId_5_6, 0xFF9271FD, "HATE BONER", 0},
+				{StageId_2_1, 0xFF223344, "SPOOKEEZ", 2},
+				{StageId_2_2, 0xFF223344, "SOUTH", 2},
+				{StageId_2_3, 0xFF223344, "MONSTER", 3},
+				{StageId_3_1, 0xFF941653, "PICO", 4},
+				{StageId_3_2, 0xFF941653, "PHILLY NICE", 4},
+				{StageId_3_3, 0xFF941653, "BLAMMED", 4},
+				{StageId_4_1, 0xFFCFCFCF, "WHERE ARE YOU", 18},
+				{StageId_4_2, 0xFFF9BB00, "ERUPTION", 18},
+				{StageId_4_3, 0xFFEA4747, "KAIO KEN", 19},
+				{StageId_4_4, 0xFF00FF00, "FEROCIOUS", 20},
+				{StageId_4_5, 0xFF000000, "MONOCHROME", 22},
+				{StageId_4_6, 0xFF290675, "TRIPLE TROUBLE", 21},
+				{StageId_4_7, 0xFFACDEFF, "UNBEATABLE", 24},
+				{StageId_5_1, 0xFFFFCC33, "AETHOS", 25},
+				{StageId_5_2, 0xFFA57D4D, "ROTTEN SMOOTHIE", 26},
+				{StageId_5_3, 0xFF9E3A3A, "TWIDDLEFINGER", 27},
+				{StageId_5_4, 0xFFB90000, "CRIMSON AWAKENING", 28},
+				{StageId_5_5, 0xFF7A0E10, "WELL DONE", 29},
+				{StageId_5_6, 0xFFB0B0B0, "HATE BONER", 30},
 			};
 
 			sprintf(menu.scoredisp, "PERSONAL BEST: %d",(
