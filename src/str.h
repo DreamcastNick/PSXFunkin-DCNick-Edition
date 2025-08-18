@@ -11,9 +11,21 @@
 #include <libpress.h>
 
 void Str_Init(void);
-void Str_PlayFile(CdlFILE* file);
+void Str_PlayFile(CdlFILE* file, int manual_max_frames);
 void Str_Play(const char *filedir);
+void Str_PlayWithFrameCount(const char *filedir, int manual_max_frames);
 void Str_CanPlayDef(void);
+
+// Movie progress and frame information functions
+int Str_GetTotalFrames(void);
+int Str_GetCurrentFrame(void);
+int Str_GetProgressPercent(void);
+
+// Global variables for easy access to movie frame information
+extern int movie_total_frames;
+extern int movie_current_frame;
+extern int movie_progress_percent;
+extern int movie_manual_frame_count;
 
 extern boolean movie_is_playing;
 #endif

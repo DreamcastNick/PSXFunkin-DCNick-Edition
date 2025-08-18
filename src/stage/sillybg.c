@@ -521,7 +521,7 @@ StageBack *Back_Sillybg_New(void)
 	lyrics_select=0;
 	//stage.bluenotes=false;
 
-	Gfx_SetClear(0, 0, 0);
+	Gfx_SetClear(139, 138, 196);
 
 	return (StageBack*)this;
 }

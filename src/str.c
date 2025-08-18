@@ -55,6 +55,8 @@ typedef struct
 
 	int  frame_id, sector_count;
 	int  dropped_frames;
+	int  total_frames;        // Total number of frames in the .STR file
+	int  max_frame_id;        // Highest frame ID encountered
 	RECT slice_pos;
 	int  frame_width;
 	int  frame_height;
@@ -85,6 +87,12 @@ typedef struct
 } STR_Def;
 
 static StreamContext* str_ctx;
+
+	// Global variables for easy access to movie frame information
+	int movie_total_frames = 0;
+	int movie_current_frame = 0;
+	int movie_progress_percent = 0;
+	int movie_manual_frame_count = 0; // Stores the manually set frame count
 
 // This buffer is used by cd_sector_handler() as a temporary area for sectors
 // read from the CD. Due to DMA limitations it can't be allocated on the stack
@@ -136,6 +144,12 @@ void cd_sector_handler(void)
 		str_ctx->frame_id     = sector_header->frame_id;
 		str_ctx->sector_count = sector_header->sector_count;
 		str_ctx->cur_frame   ^= 1;
+
+		// Track the maximum frame ID encountered
+		if (sector_header->frame_id > str_ctx->max_frame_id)
+		{
+			str_ctx->max_frame_id = sector_header->frame_id;
+		}
 
 		frame = &str_ctx->frames[str_ctx->cur_frame];
 
@@ -259,26 +273,87 @@ static void Str_Update(void)
 {
 	StreamBuffer *new_frame = get_next_frame();
 	StreamBuffer *display_frame = 0;
+	static int frame_counter = 0;
+	static int frame_timer = 0;
+	static int last_frame_id = -1;
+	static int frame_duplication_count = 0;
+	
+	// Adaptive frame pacing based on total movie length
+	// Calculate target duplications to maintain smooth 60fps playback
+	int target_duplications;
+	if (str_ctx->total_frames > 0)
+	{
+		// Calculate optimal frame pacing based on movie length
+		// For very short movies (< 100 frames): 2-3 duplications for smooth playback
+		// For medium movies (100-500 frames): 3-4 duplications for balanced performance
+		// For long movies (> 500 frames): 4 duplications for optimal performance
+		if (str_ctx->total_frames < 100)
+		{
+			target_duplications = 2 + (str_ctx->total_frames / 50); // 2-4 duplications
+		}
+		else if (str_ctx->total_frames < 500)
+		{
+			target_duplications = 3 + (str_ctx->total_frames / 200); // 3-5 duplications
+		}
+		else
+		{
+			target_duplications = 4; // Standard 4 duplications for long movies
+		}
+	}
+	else
+	{
+		// Fallback to standard pacing if total frames not yet known
+		target_duplications = 4;
+	}
+	
+	const int timer_scale = 1000; // Use milliseconds * 1000 for precision
 
 	Gfx_FlipWithoutOT();
 	if (stage.note_scroll >= 0)
 		Stage_Tick();
 	DrawSync(0);
 
+	// Update frame timing using integer math
+	// timer_dt is in seconds, convert to milliseconds * 1000 for precision
+	frame_timer += (int)(timer_dt * timer_scale);
+	frame_counter++;
+
 	// If a new frame arrived, decompress it and make it the current display frame.
-    if (new_frame)
+	if (new_frame)
 	{
 		VLC_Context vlc_ctx;
 		DecDCTvlcStart(&vlc_ctx, new_frame->mdec_data, sizeof(new_frame->mdec_data) / 4, new_frame->bs_data);
 		display_frame = new_frame;
 		str_ctx->last_frame = new_frame;
 		str_ctx->decoding_busy = 1;
+		
+		// Reset frame duplication counter for new frame
+		frame_duplication_count = 0;
+		last_frame_id = str_ctx->frame_id;
+		
+		// Reset frame timer when we get a new frame
+		frame_timer = 0;
 	}
 	else
 	{
 		// No new frame available: duplicate the last decoded frame to maintain 60 Hz output.
 		display_frame = str_ctx->last_frame;
-		// If there is no last frame and the stream ended, stop playback.
+		
+		// Check if the stream has ended and we've shown the last frame enough times
+		if (str_ctx->frame_ready < 0)
+		{
+			// Stream ended - check if we've shown the last frame enough times
+			if (frame_duplication_count >= target_duplications)
+			{
+				// We've shown the last frame enough times, stop playback
+				STR_StopStream();
+				Mem_Free(str_ctx);
+				Mem_Free(sector_header);
+				return;
+			}
+		}
+		
+		// If there is no last frame and the stream ended, stop playback immediately
 		if (!display_frame && str_ctx->frame_ready < 0)
 		{
 			STR_StopStream();
@@ -286,68 +361,82 @@ static void Str_Update(void)
 			Mem_Free(sector_header);
 			return;
 		}
+		
 		// If we still don't have anything to display yet, skip this tick.
 		if (!display_frame)
 			return;
+			
+		// Increment frame duplication counter
+		frame_duplication_count++;
 	}
 
-	// Removed pre-flip fills to avoid modifying the display page during scanout
-	// Track which page index we are drawing to after the flip (gfx.c flips db last).
-	// Gfx_GetDrawClip() returns draw[db].clip, so we derive page index from its y.
-	// Page 0: draw at y=240, Page 1: draw at y=0 (from gfx.c initialization).
-	{
-		RECT *clip = Gfx_GetDrawClip();
-		u8 page_idx = (clip->y == 0) ? 0 : 1; // y=0 => top page index 0, y=240 => bottom page index 1
-		str_ctx->current_page_index = page_idx;
-	}
-
-    // Place the frame at the center of the currently active framebuffer
-	RECT *fb_clip = Gfx_GetDrawClip();
-	int  x_offset = 0;
-	int  y_offset = 0;
-	// Force full-screen movie to known page Y to avoid drift
-	int  dst_x = 0;
-	int  dst_y = (str_ctx->current_page_index == 0) ? 0 : 240;
+	// Always draw the frame to ensure movie is visible at all times
 	// Decode into an offscreen VRAM texture page instead of the visible framebuffer
 	str_ctx->decode_dst_x = MOVIE_VRAM_X;
 	str_ctx->decode_dst_y = MOVIE_VRAM_Y;
 	str_ctx->decode_frame_width = display_frame->width;
 	str_ctx->decode_frame_height = display_frame->height;
 
-	// Draw the uploaded frame as a textured quad. Split horizontally if wider than one 16bpp tpage (256px).
+	// Draw the uploaded frame as a textured quad covering the full screen
+	// Split horizontally if wider than one 16bpp tpage (256px).
+	int frame_w = str_ctx->decode_frame_width;
+	int frame_h = str_ctx->decode_frame_height;
+
+	// If the frame spans two 16bpp tpages, drop 1px from the second half to hide a vertical seam
+	const int spans_two_pages = (frame_w > 256);
+	const int seam_crop = spans_two_pages ? 1 : 0; // crop 1px from the second page
+	int effective_w = frame_w - seam_crop;
+
+	// Calculate destination rectangles for full screen coverage
+	// Ensure the movie covers the entire visible area
+	RECT dst_full = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+
+	// First half (tpage at MOVIE_VRAM_X)
+	int src0_w = spans_two_pages ? 255 : effective_w; // PS1 UV max per page is 255
+	RECT src0 = {0, 0, src0_w, frame_h};
+	RECT dst0 = {0, 0, (SCREEN_WIDTH * src0_w) / effective_w, SCREEN_HEIGHT};
+	
+	// Draw to current buffer (this will be visible on the next flip)
+	Gfx_DrawTex(&str_ctx->tex, &src0, &dst0);
+
+	// Second half (tpage at MOVIE_VRAM_X + 256)
+	int src1_w_total = frame_w - 256;
+	if (src1_w_total > 0)
 	{
-		int frame_w = str_ctx->decode_frame_width;
-		int frame_h = str_ctx->decode_frame_height;
-
-		// If the frame spans two 16bpp tpages, drop 1px from the second half to hide a vertical seam
-		const int spans_two_pages = (frame_w > 256);
-		const int seam_crop = spans_two_pages ? 1 : 0; // crop 1px from the second page
-		int effective_w = frame_w - seam_crop;
-
-		// First half (tpage at MOVIE_VRAM_X)
-		int src0_w = spans_two_pages ? 255 : effective_w; // PS1 UV max per page is 255
-		RECT src0 = {0, 0, src0_w, frame_h};
-		RECT dst0 = {0, 0, (SCREEN_WIDTH * src0_w) / effective_w, SCREEN_HEIGHT};
-		Gfx_DrawTex(&str_ctx->tex, &src0, &dst0);
-
-		// Second half (tpage at MOVIE_VRAM_X + 256)
-		int src1_w_total = frame_w - 256;
-		if (src1_w_total > 0)
+		Gfx_Tex tex2 = str_ctx->tex;
+		tex2.tpage = getTPage(2, 0, MOVIE_VRAM_X + 256, MOVIE_VRAM_Y);
+		// Skip 1px at the start of the second page to eliminate the seam
+		int src1_x = seam_crop ? 1 : 0;
+		int src1_w = src1_w_total - src1_x;
+		if (src1_w > 0)
 		{
-			Gfx_Tex tex2 = str_ctx->tex;
-			tex2.tpage = getTPage(2, 0, MOVIE_VRAM_X + 256, MOVIE_VRAM_Y);
-			// Skip 1px at the start of the second page to eliminate the seam
-			int src1_x = seam_crop ? 1 : 0;
-			int src1_w = src1_w_total - src1_x;
-			if (src1_w > 0)
-			{
-				RECT src1 = {src1_x, 0, src1_w, frame_h};
-				RECT dst1 = {dst0.w, 0, SCREEN_WIDTH - dst0.w, SCREEN_HEIGHT};
-				Gfx_DrawTex(&tex2, &src1, &dst1);
-			}
+			RECT src1 = {src1_x, 0, src1_w, frame_h};
+			RECT dst1 = {dst0.w, 0, SCREEN_WIDTH - dst0.w, SCREEN_HEIGHT};
+			Gfx_DrawTex(&tex2, &src1, &dst1);
 		}
 	}
-
+	
+	// Also draw to the other buffer to ensure visibility on both screens
+	// This is a workaround to ensure the movie appears on both top and bottom screens
+	// We'll draw a black background first, then the movie frame
+	RECT full_screen = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	Gfx_DrawRect(&full_screen, 0, 0, 0); // Black background
+	
+	// Draw movie frame again to ensure it's visible
+	Gfx_DrawTex(&str_ctx->tex, &src0, &dst0);
+	if (src1_w_total > 0)
+	{
+		Gfx_Tex tex3 = str_ctx->tex;
+		tex3.tpage = getTPage(2, 0, MOVIE_VRAM_X + 256, MOVIE_VRAM_Y);
+		int src1_x = seam_crop ? 1 : 0;
+		int src1_w = src1_w_total - src1_x;
+		if (src1_w > 0)
+		{
+			RECT src1_other = {src1_x, 0, src1_w, frame_h};
+			RECT dst1_other = {dst0.w, 0, SCREEN_WIDTH - dst0.w, SCREEN_HEIGHT};
+			Gfx_DrawTex(&tex3, &src1_other, &dst1_other);
+		}
+	}
 	if (new_frame)
 	{
 		// Decoding to offscreen VRAM; no prefill required
@@ -355,7 +444,7 @@ static void Str_Update(void)
 		// Start decoding this new frame into the current draw buffer.
 		DecDCTin(display_frame->mdec_data, DECDCT_MODE_16BPP);
 
-        str_ctx->slice_pos.x = str_ctx->decode_dst_x;
+		str_ctx->slice_pos.x = str_ctx->decode_dst_x;
 		str_ctx->slice_pos.y = str_ctx->decode_dst_y;
 		str_ctx->slice_pos.w = BLOCK_SIZE;
 		str_ctx->slice_pos.h = str_ctx->decode_frame_height;
@@ -371,7 +460,48 @@ static void Str_Update(void)
 	}
 	else
 	{
-		// Nothing to duplicate when drawing from offscreen VRAM
+		// No new frame - ensure the last frame stays on screen
+		// This prevents the movie from disappearing between frame updates
+		
+		// Redraw the last frame to ensure it remains visible
+		// This is important for maintaining consistent display during frame duplication
+		if (str_ctx->last_frame && display_frame)
+		{
+			// Get the frame dimensions for redrawing
+			int frame_w = display_frame->width;
+			int frame_h = display_frame->height;
+			
+			// Handle wide frames that span multiple texture pages
+			const int spans_two_pages = (frame_w > 256);
+			const int seam_crop = spans_two_pages ? 1 : 0;
+			int effective_w = frame_w - seam_crop;
+			
+			// Redraw first half to ensure visibility
+			int src0_w = spans_two_pages ? 255 : effective_w;
+			RECT src0_redraw = {0, 0, src0_w, frame_h};
+			RECT dst0_redraw = {0, 0, (SCREEN_WIDTH * src0_w) / effective_w, SCREEN_HEIGHT};
+			Gfx_DrawTex(&str_ctx->tex, &src0_redraw, &dst0_redraw);
+			
+			// Redraw second half if needed
+			int src1_w_total = frame_w - 256;
+			if (src1_w_total > 0)
+			{
+				Gfx_Tex tex2_redraw = str_ctx->tex;
+				tex2_redraw.tpage = getTPage(2, 0, MOVIE_VRAM_X + 256, MOVIE_VRAM_Y);
+				int src1_x = seam_crop ? 1 : 0;
+				int src1_w = src1_w_total - src1_x;
+				if (src1_w > 0)
+				{
+					RECT src1_redraw = {src1_x, 0, src1_w, frame_h};
+					RECT dst1_redraw = {dst0_redraw.w, 0, SCREEN_WIDTH - dst0_redraw.w, SCREEN_HEIGHT};
+					Gfx_DrawTex(&tex2_redraw, &src1_redraw, &dst1_redraw);
+				}
+			}
+			
+			// Also ensure black background is maintained
+			RECT full_screen_redraw = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+			Gfx_DrawRect(&full_screen_redraw, 0, 0, 0);
+		}
 	}
 }
 
@@ -381,14 +511,21 @@ void Str_Init(void)
 	stage.movie_is_playing = false;
 }
 
-void Str_PlayFile(CdlFILE* file)
+void Str_PlayFile(CdlFILE* file, int manual_max_frames)
 {
 	str_ctx = Mem_Alloc(sizeof(StreamContext));
 	sector_header = Mem_Alloc(sizeof(STR_Header));
+	
+	// Set clear color to black for movies
+	Gfx_SetClear(0, 0, 0);
+	Gfx_EnableClear();
+	
 	STR_InitStream();
 
 	str_ctx->frame_id       = -1;
 	str_ctx->dropped_frames =  0;
+	str_ctx->total_frames   = manual_max_frames; // Use manual frame count
+	str_ctx->max_frame_id   = -1;
 	str_ctx->sector_pending =  0;
 	str_ctx->frame_ready    =  0;
 
@@ -408,12 +545,65 @@ void Str_PlayFile(CdlFILE* file)
 		Pad_Update();
 	}
 	
+	// Add timeout protection to prevent infinite loops
+	int frame_timeout = 0;
+	int last_frame_id_check = -1; // Track frame progress for timeout protection
+	const int max_frames_without_progress = 300; // 5 seconds at 60fps
+	
 	while (stage.movie_is_playing)
 	{
 		Timer_Tick();
 		Pad_Update();
 		Str_Update();
 		stage.movie_pos += timer_dt;
+		
+		// Timeout protection - if no progress for too long, stop
+		if (str_ctx->frame_id >= 0)
+		{
+			if (str_ctx->frame_id == last_frame_id_check)
+			{
+				frame_timeout++;
+				if (frame_timeout > max_frames_without_progress)
+				{
+					// No progress for too long, stop to prevent infinite loop
+					stage.movie_is_playing = false;
+					break;
+				}
+			}
+			else
+			{
+				frame_timeout = 0; // Reset timeout on progress
+				last_frame_id_check = str_ctx->frame_id;
+			}
+		}
+
+		// Update total frames count during playback for real-time access
+		if (str_ctx->max_frame_id >= 0)
+		{
+			str_ctx->total_frames = str_ctx->max_frame_id + 1; // Frame IDs are 0-based
+		}
+		
+		// Update global variables for easy access during playback
+		movie_total_frames = str_ctx->total_frames;
+		movie_current_frame = str_ctx->frame_id;
+		movie_manual_frame_count = str_ctx->total_frames; // Store the manual frame count
+		if (movie_total_frames > 0)
+		{
+			movie_progress_percent = (movie_current_frame * 100) / movie_total_frames;
+		}
+		
+		// Check if movie has reached the end
+		if (str_ctx->frame_ready < 0 && str_ctx->frame_id >= 0)
+		{
+			// Stream ended - check if we've shown the last frame enough times
+			// This prevents infinite looping when the movie ends
+			if (str_ctx->total_frames > 0 && str_ctx->frame_id >= str_ctx->total_frames - 1)
+			{
+				// We've reached the last frame, stop playback
+				stage.movie_is_playing = false;
+				break;
+			}
+		}
 
 		// Early stop condition inside loop (stage-specific cutoff)
 		if (stage.stage_id == StageId_5_2)
@@ -439,11 +629,19 @@ void Str_PlayFile(CdlFILE* file)
 		}
 	}
 
+	// Calculate total frames and finalize frame pacing
+	if (str_ctx->max_frame_id >= 0)
+	{
+		str_ctx->total_frames = str_ctx->max_frame_id + 1; // Frame IDs are 0-based
+	}
+	
 	// Stop CD streaming and MDEC cleanly
 	STR_StopStream();
 	Mem_Free(str_ctx);
 	Mem_Free(sector_header);
 
+	// Set clear color to black for movies
+	Gfx_SetClear(0, 0, 0);
 	Gfx_EnableClear();
 
 	//Prepare CD drive for XA reading
@@ -461,7 +659,18 @@ void Str_Play(const char *filedir)
 	IO_FindFile(&file, filedir);
 	CdSync(0, 0);
 
-	Str_PlayFile(&file);
+	// Default to 0 (auto-detect) if no manual frame count specified
+	Str_PlayFile(&file, 0);
+}
+
+void Str_PlayWithFrameCount(const char *filedir, int manual_max_frames)
+{
+	CdlFILE file;
+
+	IO_FindFile(&file, filedir);
+	CdSync(0, 0);
+
+	Str_PlayFile(&file, manual_max_frames);
 }
 
 void Str_CanPlayDef(void)
@@ -473,4 +682,27 @@ void Str_CanPlayDef(void)
 	   if (str_def[i].id == stage.stage_id && stage.story)
 			Str_Play(str_def[i].name);
 	}
+}
+
+// Get current movie progress information
+int Str_GetTotalFrames(void)
+{
+	if (str_ctx && str_ctx->total_frames > 0)
+		return str_ctx->total_frames;
+	return 0;
+}
+
+int Str_GetCurrentFrame(void)
+{
+	if (str_ctx && str_ctx->frame_id >= 0)
+		return str_ctx->frame_id;
+	return 0;
+}
+
+// Get progress as integer percentage (0-100)
+int Str_GetProgressPercent(void)
+{
+	if (str_ctx && str_ctx->total_frames > 0)
+		return (str_ctx->frame_id * 100) / str_ctx->total_frames;
+	return 0;
 }

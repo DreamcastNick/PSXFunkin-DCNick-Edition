@@ -309,7 +309,7 @@ typedef struct
 	struct
 	{
 		int* x;
-		int y;
+		int* y;
 		u16 size;
 	} note;
 	
