@@ -185,6 +185,9 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){11, 12, ASCR_BACK, 1}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 	
 	{1, (const u8[]){ 5, 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 7, 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
@@ -215,7 +218,10 @@ static const Animation char_flip_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){ 5,  6, ASCR_BACK, 1}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
-	
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
+
 	{1, (const u8[]){11, 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 7, 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
 	{1, (const u8[]){ 9, 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
@@ -245,6 +251,9 @@ static const Animation char_bfalt_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){ 38, 39, ASCR_BACK, 0}},            //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 	
 	{1, (const u8[]){ 32, 40, 40, 41, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 34, 42, 42, 43, ASCR_BACK, 0}},     //PlayerAnim_DownMiss
@@ -275,6 +284,9 @@ static const Animation char_altflip_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){ 32, 33, ASCR_BACK, 0}},            //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 	
 	{1, (const u8[]){ 38, 46, 46, 47, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{1, (const u8[]){ 34, 42, 42, 43, ASCR_BACK, 0}},     //PlayerAnim_DownMiss

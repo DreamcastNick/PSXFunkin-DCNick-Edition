@@ -70,23 +70,23 @@ int note_x4k_silly_billy[8] = {
 	FIXED_DEC(94,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
 	FIXED_DEC(128,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent
-	FIXED_DEC(-128+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-94+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC(-60+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-128+50,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-94+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC(-60+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 int note_x4k_silly_billy_middle[8] = {
 	// BF - silly billy opponent + player middle scroll
-	FIXED_DEC(26-64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(60-64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC(94-64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(128-64,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(26-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(60-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC(94-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(128-68,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent + player middle scroll
-	FIXED_DEC(-128+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-94+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC(-60+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-128+50,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-94+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC(-60+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static u16 note_key4k[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
@@ -136,26 +136,26 @@ int note_x5k_silly_billy[10] = {
 	FIXED_DEC(118-10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	FIXED_DEC(150-10,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent
-	FIXED_DEC((-128-10)+64,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((-94-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC((-512)+64,1)    - FIXED_DEC(SCREEN_WIDEADD,4),// special case
-	FIXED_DEC((-60-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((-26-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-128-10)+50,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-94-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC((-512)+50,1)    - FIXED_DEC(SCREEN_WIDEADD,4),// special case
+	FIXED_DEC((-60-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-26-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 int note_x5k_silly_billy_middle[10] = {
 	// BF - silly billy opponent + player middle scroll
-	FIXED_DEC((16-10)+64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((50-10)+64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC((84-10)+64,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((118-10)+64,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((150-10)+64,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((16-10)-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((50-10)-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC((84-10)-68,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((118-10)-68,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((150-10)-68,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent + player middle scroll
-	FIXED_DEC((-128-10)+64,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((-94-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
-	FIXED_DEC((-512)+64,1)    - FIXED_DEC(SCREEN_WIDEADD,4),// special case
-	FIXED_DEC((-60-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC((-26-10)+64,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-128-10)+50,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-94-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+34
+	FIXED_DEC((-512)+50,1)    - FIXED_DEC(SCREEN_WIDEADD,4),// special case
+	FIXED_DEC((-60-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC((-26-10)+50,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static u16 note_key5k[] = {INPUT_LEFT5K, INPUT_DOWN5K, INPUT_MIDDLE, INPUT_UP5K, INPUT_RIGHT5K};
@@ -212,29 +212,29 @@ int note_x6k_silly_billy[12] = {
 	FIXED_DEC(122,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	FIXED_DEC(146,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent
-	FIXED_DEC(-146+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-122+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-98+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-74+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+24
-	FIXED_DEC(-50+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-146+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-122+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-98+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-74+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+24
+	FIXED_DEC(-50+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 int note_x6k_silly_billy_middle[12] = {
 	// BF - silly billy opponent + player middle scroll
-	FIXED_DEC(26+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(50+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+24
-	FIXED_DEC(74+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(98+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(122+48,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(146+48,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(26-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(50-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+24
+	FIXED_DEC(74-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(98-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(122-42,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(146-42,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent + player middle scroll
-	FIXED_DEC(-146+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-122+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-98+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-74+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+24
-	FIXED_DEC(-50+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-146+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-122+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-98+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-74+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+24
+	FIXED_DEC(-50+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static u16 note_key6k[] = {PAD_LEFT, PAD_UP, PAD_RIGHT, PAD_SQUARE, PAD_CROSS, PAD_CIRCLE};
@@ -297,32 +297,32 @@ int note_x7k_silly_billy[14] = {
 	FIXED_DEC(126,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	FIXED_DEC(146,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent
-	FIXED_DEC(-146+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-126+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-106+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-86+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-66+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+20
-	FIXED_DEC(-46+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-146+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-126+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-106+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-86+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-66+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+20
+	FIXED_DEC(-46+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 int note_x7k_silly_billy_middle[14] = {
 	// BF - silly billy opponent + player middle scroll
-	FIXED_DEC(26+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(46+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+20
-	FIXED_DEC(66+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(86+48,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(106+48,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(126+48,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(146+48,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(26-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(46-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+20
+	FIXED_DEC(66-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(86-42,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(106-42,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(126-42,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(146-42,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent + player middle scroll
-	FIXED_DEC(-146+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-126+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-106+48,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-86+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-66+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+20
-	FIXED_DEC(-46+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-26+48,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-146+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-126+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-106+38,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-86+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-66+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),//+20
+	FIXED_DEC(-46+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-26+38,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static u16 note_key7k[] = {PAD_LEFT, PAD_UP, PAD_RIGHT, INPUT_MIDDLE, PAD_SQUARE, PAD_CROSS, PAD_CIRCLE};
@@ -396,38 +396,38 @@ int note_x9k_silly_billy[18] = {
 	FIXED_DEC(132,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	FIXED_DEC(149,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent
-	FIXED_DEC(-149+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-132+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+17
-	FIXED_DEC(-115+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-98+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-81+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-64+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-47+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-30+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-13+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-149+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-132+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+17
+	FIXED_DEC(-115+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-98+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-81+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-64+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-47+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-30+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-13+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 int note_x9k_silly_billy_middle[18] = {
 	// BF - silly billy opponent + player middle scroll
-	FIXED_DEC(13+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(30+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+17
-	FIXED_DEC(47+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(64+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(81+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(98+24,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(115+24,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(132+24,1) + FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(149+24,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(13-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(30-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),//+17
+	FIXED_DEC(47-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(64-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(81-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(98-11,1)  + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(115-11,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(132-11,1) + FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(149-11,1) + FIXED_DEC(SCREEN_WIDEADD,4),
 	// Opponent - silly billy opponent + player middle scroll
-	FIXED_DEC(-149+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-132+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+17
-	FIXED_DEC(-115+24,1) - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-98+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-81+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-64+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-47+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-30+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
-	FIXED_DEC(-13+24,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-149+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-132+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),//+17
+	FIXED_DEC(-115+9,1) - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-98+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-81+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-64+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-47+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-30+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
+	FIXED_DEC(-13+9,1)  - FIXED_DEC(SCREEN_WIDEADD,4),
 };
 
 static u16 note_key9k[] = {PAD_LEFT, PAD_DOWN, PAD_UP, PAD_RIGHT, INPUT_MIDDLE, PAD_SQUARE, PAD_CROSS, PAD_TRIANGLE, PAD_CIRCLE};
@@ -465,8 +465,10 @@ static u32 Sounds[7];
 #include "character/exep3.h"
 #include "character/orange.h"
 #include "character/sillybilly.h"
+#include "character/jerry.h"
 
 #include "character/gf.h"
+#include "character/logan.h"
 
 #include "stage/dummy.h"
 #include "stage/week1.h"
@@ -730,7 +732,6 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	
 	//Restore vocals and health
 	Stage_StartVocal();
-	if (!stage.movie_is_playing)
 		this->health += 230;
 	
 	//Create combo object telling of our combo
@@ -871,8 +872,6 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 			//Hit the mine
 			note->type |= NOTE_FLAG_HIT;
-	
-			if (!stage.movie_is_playing)
 				this->health += 230;
 
 			if (this->character->spec & CHAR_SPEC_MISSANIM)
@@ -896,8 +895,6 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			
 			//Hit the mine
 			note->type |= NOTE_FLAG_HIT;
-	
-			if (!stage.movie_is_playing)
 				this->health += 230;
 
 			if (this->character->spec & CHAR_SPEC_MISSANIM)
@@ -1740,6 +1737,7 @@ static void Stage_DrawHUDNotes(boolean back)
 		//Opponent
 		note_dst.x = stage.note.x[(i + stage.keys)] - FIXED_DEC(stage.note.size / 2,1);
 		note_dst.y = stage.note.y[(i + stage.keys)] - FIXED_DEC(stage.note.size / 2,1);
+		// Adjust note_dst up by 32 when back is true on downscroll during StageId_5_7
 		if (stage.prefs.downscroll)
 			note_dst.y = -note_dst.y - note_dst.h;
 		
@@ -1821,12 +1819,9 @@ static void Stage_DrawNotes(boolean back)
 			if (note_fp + stage.late_safe >= stage.note_scroll)
 				continue;
 			
-			//Miss note if player's note
-			if (!stage.movie_is_playing)
-			{
 				if ((note->type == NOTE_FLAG_DANGER) && !bot)
 				{
-					this->health -= 2000;
+				this->health -= 4750;
 					Stage_CutVocal();
 					Stage_MissNote(this);
 				}
@@ -1848,7 +1843,6 @@ static void Stage_DrawNotes(boolean back)
 						this->health -= 475;
 						Stage_CutVocal();
 						Stage_MissNote(this);
-					}
 				}
 			}
 
@@ -2240,7 +2234,6 @@ static void Stage_DrawNotes(boolean back)
 				}
 
 				note_dst.x = stage.note.x[(Stage_GetNoteType(note) % stage.max_keys)] - FIXED_DEC(stage.note.size / 2,1);
-				note_dst.y = y - FIXED_DEC(stage.note.size / 2,1);
 				if (back == false)
 				{
 					u8 note_index = Stage_GetNoteType(note) % stage.keys;
@@ -2252,6 +2245,7 @@ static void Stage_DrawNotes(boolean back)
 				}
 				else
 				{
+					note_dst.y = y - FIXED_DEC(stage.note.size / 2,1);
 					note_dst.y += offset;
 				}			
 				note_dst.w = note_src.w << FIXED_SHIFT;
@@ -3037,9 +3031,16 @@ static void Stage_LoadState(void)
 				for (int i = 0; i < 4; i++) {
 					stage.note.y[i] = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
 				}
-				// Set opponent Y positions to match player positions
+				// Set opponent Y positions higher for StageId_5_7
 				for (int i = 0; i < 4; i++) {
-					stage.note.y[i + 4] = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 4] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 4] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims4k;
 				note_key = note_key4k;
@@ -3064,7 +3065,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 5; i++) {
-					stage.note.y[i + 5] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 5] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 5] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims5k;
 				note_key = note_key5k;
@@ -3091,7 +3099,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 6; i++) {
-					stage.note.y[i + 6] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 6] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 6] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims6k;
 				note_key = note_key6k;
@@ -3118,7 +3133,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 7; i++) {
-					stage.note.y[i + 7] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 7] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 7] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims7k;
 				note_key = note_key7k;
@@ -3145,7 +3167,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 9; i++) {
-					stage.note.y[i + 9] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 9] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 9] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims9k;
 				note_key = note_key9k;
@@ -3165,7 +3194,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 4; i++) {
-					stage.note.y[i + 4] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 4] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 4] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims4k;
 				note_key = note_key4k;
@@ -3828,7 +3864,7 @@ void Stage_Tick(void)
 	
 	if (stage.stage_id == StageId_5_2 && stage.song_step == 1312 && stage.flag & STAGE_FLAG_JUST_STEP && !stage.movie_is_playing)
 	{
-		Str_PlayFile(&stage.str_grace_lba, 678);
+		Str_PlayFile(&stage.str_grace_lba);
 		if (currentDisc == 1) {
 			Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 168);
 		}
@@ -3844,7 +3880,7 @@ void Stage_Tick(void)
 	if (stage.stage_id == StageId_5_7 && stage.song_step == 0 && stage.flag & STAGE_FLAG_JUST_STEP && !stage.movie_is_playing)
 	{
 		stage.audio_start_pos = 0;
-		Str_PlayFile(&stage.str_sillybilly_intro_lba, 143);
+		Str_PlayFile(&stage.str_sillybilly_intro_lba);
 		if (currentDisc == 1) {
 			Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 12);
 		}
@@ -3860,7 +3896,7 @@ void Stage_Tick(void)
 	if (stage.stage_id == StageId_5_7 && stage.song_step == 3492 && stage.flag & STAGE_FLAG_JUST_STEP && !stage.movie_is_playing)
 	{
 		stage.audio_start_pos = 304;
-		Str_PlayFile(&stage.str_sillybilly_final_lba, 490);
+		Str_PlayFile(&stage.str_sillybilly_final_lba);
 		if (currentDisc == 1) {
 			Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 338);
 		}
@@ -4121,7 +4157,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 4; i++) {
-							stage.note.y[i + 4] = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 4] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 4] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims4k;
 						note_key = note_key4k;
@@ -4146,7 +4189,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 5; i++) {
-							stage.note.y[i + 5] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 5] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 5] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims5k;
 						note_key = note_key5k;
@@ -4173,7 +4223,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 6; i++) {
-							stage.note.y[i + 6] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 6] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 6] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims6k;
 						note_key = note_key6k;
@@ -4200,7 +4257,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 7; i++) {
-							stage.note.y[i + 7] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 7] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 7] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims7k;
 						note_key = note_key7k;
@@ -4227,7 +4291,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 9; i++) {
-							stage.note.y[i + 9] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 9] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 9] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims9k;
 						note_key = note_key9k;
@@ -4247,7 +4318,14 @@ void Stage_Tick(void)
 						}
 						// Set opponent Y positions to match player positions
 						for (int i = 0; i < 4; i++) {
-							stage.note.y[i + 4] = FIXED_DEC(96 - SCREEN_HEIGHT2, 1);
+							if (stage.prefs.downscroll)
+							{
+								stage.note.y[i + 4] = FIXED_DEC(12, 1);
+							}
+							else
+							{
+								stage.note.y[i + 4] = FIXED_DEC(-126, 1);
+							}
 						}
 						note_anims = note_anims4k;
 						note_key = note_key4k;
@@ -4426,7 +4504,7 @@ void Stage_Tick(void)
 			if (stage.prefs.debug)
 				Debug_Tick();
 			
-			FntPrint("step %d, beat %d", stage.song_step, stage.song_beat);
+			//FntPrint("step %d, beat %d", stage.song_step, stage.song_beat);
 
 			if (noteshake) 
 			{
@@ -4963,9 +5041,6 @@ void Stage_Tick(void)
 						stage.player_state[0].health = 20000;
 					
 					//Draw health bar
-					if (stage.movie_is_playing)
-						return;
-					
 					if (stage.stage_id >= StageId_1_1 && stage.stage_id <= StageId_4_7)
 					{
 						if (stage.player != NULL)

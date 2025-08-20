@@ -148,6 +148,13 @@
 				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
 				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
 				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
+				
+				<!-- Jerry assets -->
+				<file name = "jerry.arc" type = "data" source = "iso/jerry/main.arc"/>
+				
+				<!-- Logan Head assets -->
+				<file name = "logan.arc" type = "data" source = "iso/logan/main.arc"/>
+				<file name = "eyes.tim" type = "data" source = "iso/logan/eyes.tim"/>
 			</dir>
 		    
 			<!-- Sound effects -->

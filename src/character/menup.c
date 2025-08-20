@@ -61,6 +61,9 @@ const Animation char_menup_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},         //CharAnim_UpAlt
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},         //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},         //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 //Menu MenuP player functions

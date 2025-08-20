@@ -90,6 +90,8 @@ const Animation char_menuo_anim[CharAnim_Max] = {
 	{2, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},
 	{2, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},
 };
 
 //MenuO character functions

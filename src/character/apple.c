@@ -182,7 +182,10 @@ static const Animation char_apple_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){19, 20, 21, ASCR_BACK, 0}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
-	
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
+
 	{2, (const u8[]){ 7,  8,  9, 10, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{2, (const u8[]){11, 12, 13, 14, ASCR_BACK, 0}},     //PlayerAnim_DownMiss
 	{2, (const u8[]){15, 16, 17, 18, ASCR_BACK, 0}},     //PlayerAnim_UpMiss
@@ -212,6 +215,9 @@ static const Animation char_real_anim[PlayerAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UpAlt
 	{2, (const u8[]){51, 52, 53, 54, 55, 56, ASCR_BACK, 0}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 	
 	{2, (const u8[]){33, 34, 35, 36, 37, 38, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{2, (const u8[]){39, 40, 41, 42, 43, 44, ASCR_BACK, 0}},     //PlayerAnim_DownMiss

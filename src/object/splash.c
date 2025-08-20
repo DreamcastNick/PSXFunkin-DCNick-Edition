@@ -43,9 +43,6 @@ boolean Obj_Splash_Tick(Object *obj)
 	
 	if (this->background)
 	{
-		//Background drawing - use world camera
-		plub_dst.x -= stage.camera.x;
-		plub_dst.y -= stage.camera.y;
 		zoom = stage.camera.bzoom;
 		angle = stage.camera.angle;
 	}

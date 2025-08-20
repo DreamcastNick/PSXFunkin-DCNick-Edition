@@ -92,7 +92,6 @@ static StreamContext* str_ctx;
 	int movie_total_frames = 0;
 	int movie_current_frame = 0;
 	int movie_progress_percent = 0;
-	int movie_manual_frame_count = 0; // Stores the manually set frame count
 
 // This buffer is used by cd_sector_handler() as a temporary area for sectors
 // read from the CD. Due to DMA limitations it can't be allocated on the stack
@@ -309,8 +308,10 @@ static void Str_Update(void)
 	const int timer_scale = 1000; // Use milliseconds * 1000 for precision
 
 	Gfx_FlipWithoutOT();
-	if (stage.note_scroll >= 0)
+	if (stage.note_scroll >= 0 && stage.movie_is_playing)
+	{
 		Stage_Tick();
+	}
 	DrawSync(0);
 
 	// Update frame timing using integer math
@@ -511,7 +512,7 @@ void Str_Init(void)
 	stage.movie_is_playing = false;
 }
 
-void Str_PlayFile(CdlFILE* file, int manual_max_frames)
+void Str_PlayFile(CdlFILE* file)
 {
 	str_ctx = Mem_Alloc(sizeof(StreamContext));
 	sector_header = Mem_Alloc(sizeof(STR_Header));
@@ -524,7 +525,7 @@ void Str_PlayFile(CdlFILE* file, int manual_max_frames)
 
 	str_ctx->frame_id       = -1;
 	str_ctx->dropped_frames =  0;
-	str_ctx->total_frames   = manual_max_frames; // Use manual frame count
+	str_ctx->total_frames   = 0;
 	str_ctx->max_frame_id   = -1;
 	str_ctx->sector_pending =  0;
 	str_ctx->frame_ready    =  0;
@@ -586,7 +587,6 @@ void Str_PlayFile(CdlFILE* file, int manual_max_frames)
 		// Update global variables for easy access during playback
 		movie_total_frames = str_ctx->total_frames;
 		movie_current_frame = str_ctx->frame_id;
-		movie_manual_frame_count = str_ctx->total_frames; // Store the manual frame count
 		if (movie_total_frames > 0)
 		{
 			movie_progress_percent = (movie_current_frame * 100) / movie_total_frames;
@@ -659,18 +659,7 @@ void Str_Play(const char *filedir)
 	IO_FindFile(&file, filedir);
 	CdSync(0, 0);
 
-	// Default to 0 (auto-detect) if no manual frame count specified
-	Str_PlayFile(&file, 0);
-}
-
-void Str_PlayWithFrameCount(const char *filedir, int manual_max_frames)
-{
-	CdlFILE file;
-
-	IO_FindFile(&file, filedir);
-	CdSync(0, 0);
-
-	Str_PlayFile(&file, manual_max_frames);
+	Str_PlayFile(&file);
 }
 
 void Str_CanPlayDef(void)

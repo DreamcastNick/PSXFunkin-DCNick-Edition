@@ -11,9 +11,8 @@
 #include <libpress.h>
 
 void Str_Init(void);
-void Str_PlayFile(CdlFILE* file, int manual_max_frames);
+void Str_PlayFile(CdlFILE* file);
 void Str_Play(const char *filedir);
-void Str_PlayWithFrameCount(const char *filedir, int manual_max_frames);
 void Str_CanPlayDef(void);
 
 // Movie progress and frame information functions

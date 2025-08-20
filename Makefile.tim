@@ -37,10 +37,13 @@ all: \
 	iso/exep3/main.arc \
 	iso/orange/main.arc \
 	iso/sillybilly/main.arc \
+	iso/jerry/main.arc \
 	iso/bfy/main.arc \
 	iso/gf/main.arc \
 	iso/gf/tut.arc \
 	iso/gf/speaker.tim \
+	iso/logan/main.arc \
+	iso/logan/eyes.tim \
 	iso/menup/main.arc \
 	iso/menuo/main.arc \
 	iso/menugf/main.arc \
@@ -93,12 +96,18 @@ iso/orange/main.arc: iso/orange/orange0.tim iso/orange/orange1.tim iso/orange/or
 # Silly Billy
 iso/sillybilly/main.arc: iso/sillybilly/idle0.tim iso/sillybilly/idle1.tim iso/sillybilly/idle2.tim iso/sillybilly/idle3.tim iso/sillybilly/left0.tim iso/sillybilly/left1.tim iso/sillybilly/left2.tim iso/sillybilly/left3.tim iso/sillybilly/down0.tim iso/sillybilly/down1.tim iso/sillybilly/down2.tim iso/sillybilly/down3.tim iso/sillybilly/down4.tim iso/sillybilly/right0.tim iso/sillybilly/sidle0.tim iso/sillybilly/sleft0.tim iso/sillybilly/ungrow0.tim iso/sillybilly/ungrow1.tim iso/sillybilly/ungrow2.tim iso/sillybilly/ungrow3.tim iso/sillybilly/unsh0.tim iso/sillybilly/unsh1.tim iso/sillybilly/unsh2.tim iso/sillybilly/unsh3.tim iso/sillybilly/unsh4.tim iso/sillybilly/unsh5.tim iso/sillybilly/unsh6.tim iso/sillybilly/unsh7.tim iso/sillybilly/sing0.tim iso/sillybilly/sing1.tim iso/sillybilly/sing2.tim iso/sillybilly/sing3.tim iso/sillybilly/sing4.tim iso/sillybilly/sing5.tim iso/sillybilly/sing6.tim iso/sillybilly/sing9.tim iso/sillybilly/sing11.tim iso/sillybilly/sing14.tim iso/sillybilly/sing16.tim iso/sillybilly/sing20.tim iso/sillybilly/sing22.tim iso/sillybilly/sing24.tim iso/sillybilly/sing27.tim iso/sillybilly/sing29.tim iso/sillybilly/sing31.tim iso/sillybilly/sing33.tim iso/sillybilly/sing36.tim iso/sillybilly/sing37.tim iso/sillybilly/sing39.tim iso/sillybilly/sing41.tim iso/sillybilly/sing44.tim
 
+# Jerry
+iso/jerry/main.arc: iso/jerry/jerry0.tim iso/jerry/jerry1.tim iso/jerry/jerry2.tim iso/jerry/jerry3.tim iso/jerry/jerry4.tim iso/jerry/jerry5.tim iso/jerry/jerry6.tim iso/jerry/jerry7.tim 
+
 # BF Yourself
 iso/bfy/main.arc: iso/bfy/idle0.tim iso/bfy/idle1.tim iso/bfy/left0.tim iso/bfy/down0.tim iso/bfy/up0.tim iso/bfy/right0.tim iso/bfy/right1.tim iso/bfy/dead0.tim
 
 # GF
 iso/gf/main.arc: iso/gf/gf0.tim iso/gf/gf1.tim iso/gf/gf2.tim
 iso/gf/tut.arc: iso/gf/tut0.tim iso/gf/tut1.tim
+
+# Logan Head
+iso/logan/main.arc: iso/logan/logan0.tim
 
 # Menu Player
 iso/menup/main.arc: iso/menup/bf.tim

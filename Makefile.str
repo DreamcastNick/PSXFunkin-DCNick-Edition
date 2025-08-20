@@ -2,10 +2,20 @@ all: \
 	$(addsuffix .str, $(basename $(wildcard iso/movie/*.mp4))) \
 	$(addsuffix .str, $(basename $(wildcard iso/movie/*/*.mp4)))
 
-# STR converts
+# Special cases
+iso/movie/final.str: iso/movie/final.mp4
+	tools/psxavenc/psxavenc -t str -r 30 -I -b 4 -c 2 -x 2 -v v2 -F 1 $< $@
+	
+iso/movie/grace.str: iso/movie/grace.mp4
+	tools/psxavenc/psxavenc -t str -r 30 -I -b 4 -c 2 -x 2 -v v2 -F 1 $< $@
+
+iso/movie/intro.str: iso/movie/intro.mp4
+	tools/psxavenc/psxavenc -t str -r 30 -I -b 4 -c 2 -x 2 -v v2 -F 1 $< $@
+
+# Default rule (15 fps)
 iso/movie/%.str: iso/movie/%.mp4
-	tools/psxavenc/psxavenc -t str -f 37800 -r 15 -s 320x240 -I -b 4 -c 2 -x 2 -v v3 -F 1 $< $@
+	tools/psxavenc/psxavenc -t str -r 15 -I -b 4 -c 2 -x 2 -v v2 -F 1 $< $@
 
 clean:
-	echo "Cleaning .str files:"
+	@echo "Cleaning .str files:"
 	find iso -type f \( -name "*.str" \) -print -delete

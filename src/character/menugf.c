@@ -69,6 +69,9 @@ const Animation char_menugf_anim[CharAnim_Max] = {
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_LeftAlt}},                                   //CharAnim_UpAlt
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_LeftAlt}},                                   //CharAnim_Right
 	{1, (const u8[]){6,  6,  7,  7,  8,  8,  9,  9, 10, 10, 11,  ASCR_BACK, 1}}, 		//CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 //MenuGF character functions

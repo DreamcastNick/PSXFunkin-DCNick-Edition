@@ -42,6 +42,9 @@ SRCS = src/main.c \
        src/character/bfy.c \
        src/character/orange.c \
        src/character/sillybilly.c \
+	   src/character/jerry.c \
+	   src/character/logan.c \
+	   src/character/eyes.c \
 	src/character/menuo.c \
 	src/character/menup.c \
 	src/character/menugf.c \

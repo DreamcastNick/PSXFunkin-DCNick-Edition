@@ -244,6 +244,9 @@ static const Animation char_eggman_anim[CharAnim_Max] = {
 	{2, (const u8[]){25, 26, 27, 28, ASCR_BACK, 0}},                       //CharAnim_UpAlt
 	{2, (const u8[]){18, 19, 20, 21, ASCR_BACK, 0}}, 					   //CharAnim_Right
 	{2, (const u8[]){22, 23, 24, 25, ASCR_BACK, 0}},                       //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 static const Animation char_knux_anim[CharAnim_Max] = {
@@ -256,6 +259,9 @@ static const Animation char_knux_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 45, 46, ASCR_BACK, 0}},         				  //CharAnim_UpAlt
 	{2, (const u8[]){ 37, 38, 39, 40, ASCR_BACK, 0}},         		  //CharAnim_Right
 	{2, (const u8[]){ 37, 38, 39, 40, ASCR_BACK, 0}},         		  //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 static const Animation char_tails_anim[CharAnim_Max] = {
@@ -268,6 +274,9 @@ static const Animation char_tails_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 73, 74, 75, 76, 77, 78, ASCR_BACK, 0}},         		  //CharAnim_UpAlt
 	{2, (const u8[]){ 79, 80, 81, 82, 83, 84, ASCR_BACK, 0}},         		  //CharAnim_Right
 	{2, (const u8[]){ 79, 80, 81, 82, 83, 84, ASCR_BACK, 0}},         		  //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 static const Animation char_xeno_anim[CharAnim_Max] = {
@@ -280,6 +289,9 @@ static const Animation char_xeno_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 99, 100, ASCR_BACK, 0}},                             //CharAnim_UpAlt
 	{2, (const u8[]){ 97, 98, ASCR_BACK, 0}}, 					   		   //CharAnim_Right
 	{2, (const u8[]){ 99, 100, ASCR_BACK, 0}},                             //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 static const Animation char_xenof_anim[CharAnim_Max] = {
@@ -292,6 +304,9 @@ static const Animation char_xenof_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 99, 100, ASCR_BACK, 0}},                             //CharAnim_UpAlt
 	{2, (const u8[]){ 91, 92, ASCR_BACK, 0}}, 					   		   //CharAnim_Right
 	{2, (const u8[]){ 99, 100, ASCR_BACK, 0}},                             //CharAnim_RightAlt
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnGrow
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_UnShrink
+	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_Sing
 };
 
 //ExeP3 character functions

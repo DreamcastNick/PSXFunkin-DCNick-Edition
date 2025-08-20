@@ -1,0 +1,5 @@
+	{Char_ArcMain_Jerry1,{0,107,95,97},{167,174}},
+	{Char_ArcMain_Jerry1,{100,107,95,97},{166,174}},
+	{Char_ArcMain_Jerry2,{0,0,94,97},{165,174}},
+	{Char_ArcMain_Jerry2,{100,0,94,97},{165,174}},
+	{Char_ArcMain_Jerry2,{0,100,94,98},{165,174}},

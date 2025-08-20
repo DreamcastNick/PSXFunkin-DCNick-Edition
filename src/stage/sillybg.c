@@ -12,6 +12,7 @@
 #include "../random.h"
 #include "../timer.h"
 #include "../animation.h"
+#include <stdlib.h>
 
 int lyrics_select;
 int movenotes;
@@ -395,7 +396,7 @@ void Back_Sillybg_DrawHUD()
 	RECT Bottom_bar = {0, 222, 320, 18};
 	Gfx_BlendRect(&Bottom_bar, 0, 0, 0, -100);
 
-	if(stage.song_step >= -30 && stage.song_step <= 128)
+	if(stage.song_step >= -30 && stage.song_step <= 0)
 	{
 		RECT blackstart = {0, 0, 320, 240};
 		Gfx_DrawRect(&blackstart, 0, 0, 0);
