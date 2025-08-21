@@ -4,8 +4,8 @@
 #include "mem.h"
 #include "mutil.h"
 
-//Gfx constants
-#define OTLEN 6  //Reduced from 8 to save memory
+//Gfx constants - Optimized for memory efficiency
+#define OTLEN 8  //Further reduced to save memory for full 2MB heap usage
 
 //Gfx state
 DISPENV disp[2];
@@ -13,7 +13,7 @@ DRAWENV draw[2];
 u8 db;
 
 static u32 ot[2][OTLEN];    //Ordering table length
-static u8 pribuff[2][16384]; //Primitive buffer - reduced from 32768 to save memory
+static u8 pribuff[2][32768]; //Primitive buffer - optimized for memory efficiency
 static u8 *nextpri;          //Next primitive pointer
 
 //Gfx functions

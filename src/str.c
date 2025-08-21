@@ -11,6 +11,7 @@
 #include "mem.h"
 #include "timer.h"
 #include "stage.h"
+#include "audio.h"
 
 /* CD and MDEC interrupt handlers */
 #define BLOCK_SIZE 16
@@ -145,9 +146,9 @@ void cd_sector_handler(void)
 		str_ctx->cur_frame   ^= 1;
 
 		// Track the maximum frame ID encountered
-		if (sector_header->frame_id > str_ctx->max_frame_id)
+		if ((int)sector_header->frame_id > str_ctx->max_frame_id)
 		{
-			str_ctx->max_frame_id = sector_header->frame_id;
+			str_ctx->max_frame_id = (int)sector_header->frame_id;
 		}
 
 		frame = &str_ctx->frames[str_ctx->cur_frame];
@@ -201,6 +202,8 @@ void mdec_dma_handler(void)
 
 void cd_event_handler(u8 event, u8 *payload) 
 {
+	(void)payload; // Suppress unused parameter warning
+	
 	// Ignore all events other than a sector being ready.
 	if (event != CdlDataReady)
 		return;
@@ -274,7 +277,6 @@ static void Str_Update(void)
 	StreamBuffer *display_frame = 0;
 	static int frame_counter = 0;
 	static int frame_timer = 0;
-	static int last_frame_id = -1;
 	static int frame_duplication_count = 0;
 	
 	// Adaptive frame pacing based on total movie length
@@ -330,7 +332,6 @@ static void Str_Update(void)
 		
 		// Reset frame duplication counter for new frame
 		frame_duplication_count = 0;
-		last_frame_id = str_ctx->frame_id;
 		
 		// Reset frame timer when we get a new frame
 		frame_timer = 0;
@@ -390,7 +391,6 @@ static void Str_Update(void)
 
 	// Calculate destination rectangles for full screen coverage
 	// Ensure the movie covers the entire visible area
-	RECT dst_full = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 	// First half (tpage at MOVIE_VRAM_X)
 	int src0_w = spans_two_pages ? 255 : effective_w; // PS1 UV max per page is 255

@@ -25,9 +25,9 @@ static u32 xa_pos, xa_start, xa_end;
 static s16 xa_offset;
 
 //audio stuff - optimized for memory usage
-#define BUFFER_SIZE (10 << 11) //10 sectors - reduced from 13 to save memory
+#define BUFFER_SIZE (13 << 11) //10 sectors - reduced from 13 to save memory
 #define CHUNK_SIZE (BUFFER_SIZE)
-#define CHUNK_SIZE_MAX (BUFFER_SIZE * 3) // reduced from 4 to 3 channels to save memory
+#define CHUNK_SIZE_MAX (BUFFER_SIZE * 4) // reduced from 4 to 3 channels to save memory
 
 #define BUFFER_TIME FIXED_DEC(((BUFFER_SIZE * 28) / 16), 44100)
 

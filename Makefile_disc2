@@ -21,6 +21,7 @@ SRCS = src/main.c \
        src/audio.c \
        src/pad.c \
        src/timer.c \
+       src/tween.c \
        src/stage/dummy.c \
        src/stage/week1.c \
        src/stage/week2.c \

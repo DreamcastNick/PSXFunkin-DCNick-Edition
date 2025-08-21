@@ -17,12 +17,21 @@
 #include "object.h"
 #include "font.h"
 #include "debug.h"
+#include "tween.h"
 
 //Stage constants
 #define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE | PAD_L2)
 #define INPUT_DOWN  (PAD_DOWN  | PAD_CROSS | PAD_L1)
 #define INPUT_UP    (PAD_UP    | PAD_TRIANGLE | PAD_R1)
 #define INPUT_RIGHT (PAD_RIGHT | PAD_CIRCLE | PAD_R2)
+
+//Icon bounce constants
+#define ICON_BOUNCE_SCALE_X FIXED_DEC(11, 10)  // 1.1
+#define ICON_BOUNCE_SCALE_Y_SQUASH FIXED_DEC(8, 10)   // 0.8
+#define ICON_BOUNCE_SCALE_Y_STRETCH FIXED_DEC(13, 10) // 1.3
+#define ICON_BOUNCE_ANGLE FIXED_DEC(150, 1)  // 0.015 degrees (very small rotation)
+#define ICON_BOUNCE_DURATION_SCALE FIXED_DEC(125, 1000) // Conductor.crochet / 1250
+#define ICON_BOUNCE_DURATION_ANGLE FIXED_DEC(130, 1000) // Conductor.crochet / 1300
 
 #define INPUT_LEFT5K  (PAD_LEFT  | PAD_SQUARE)
 #define INPUT_DOWN5K  (PAD_DOWN  | PAD_CROSS)
@@ -149,7 +158,7 @@ typedef struct
 
 typedef struct
 {
-	u16 end; //1/12 steps
+	u32 end; //1/12 steps (was u16)
 	u16 flag;
 } Section;
 
@@ -166,7 +175,7 @@ typedef struct
 
 typedef struct
 {
-	u16 pos; //1/12 steps
+	u32 pos; //1/12 steps (was u16)
 	u16 type;
 	u16 is_opponent;
 } Note;
@@ -318,7 +327,7 @@ typedef struct
 	int timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
-	u16 step_base;
+	u32 step_base;
 	Section *section_base;
 
 	// Grace period after swaps to avoid false misses
@@ -352,6 +361,15 @@ typedef struct
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
 	
+	//Icon bounce animation fields
+	boolean uses_bounce;
+	fixed_t icon_scale_p1_x, icon_scale_p1_y;
+	fixed_t icon_scale_p2_x, icon_scale_p2_y;
+	fixed_t icon_angle_p1, icon_angle_p2;
+	Tween icon_scale_tween_p1_x, icon_scale_tween_p1_y;
+	Tween icon_scale_tween_p2_x, icon_scale_tween_p2_y;
+	Tween icon_angle_tween_p1, icon_angle_tween_p2;
+	
 	//Animations
 	u16 startscreen;
 } Stage;
@@ -379,6 +397,12 @@ void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);
 void Stage_Unload();
 void Stage_Tick();
+
+//Icon bounce functions
+void Stage_UpdateIconBounce(void);
+void Stage_SetIconBounce(boolean enabled);
+boolean Stage_GetIconBounce(void);
+void Stage_TriggerIconBounce(void);
 
 // Mid-game swap API (does not reload chart or music)
 // Queue a swap to a specific `StageId` with selected load flags (STAGE_LOAD_*)

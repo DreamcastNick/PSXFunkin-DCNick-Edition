@@ -14,34 +14,34 @@ iso/paps/main.arc: iso/paps/papsc0.tim iso/paps/papsc1.tim iso/paps/papsc2.tim i
   "papsc11.tim",
 
 
-  PapsC_ArcMain_PapsC0,
-  PapsC_ArcMain_PapsC1,
-  PapsC_ArcMain_PapsC2,
-  PapsC_ArcMain_PapsC3,
-  PapsC_ArcMain_PapsC4,
-  PapsC_ArcMain_PapsC5,
-  PapsC_ArcMain_PapsC6,
-  PapsC_ArcMain_PapsC7,
-  PapsC_ArcMain_PapsC8,
-  PapsC_ArcMain_PapsC9,
-  PapsC_ArcMain_PapsC10,
-  PapsC_ArcMain_PapsC11,
+  Paps_ArcMain_PapsC0,
+  Paps_ArcMain_PapsC1,
+  Paps_ArcMain_PapsC2,
+  Paps_ArcMain_PapsC3,
+  Paps_ArcMain_PapsC4,
+  Paps_ArcMain_PapsC5,
+  Paps_ArcMain_PapsC6,
+  Paps_ArcMain_PapsC7,
+  Paps_ArcMain_PapsC8,
+  Paps_ArcMain_PapsC9,
+  Paps_ArcMain_PapsC10,
+  Paps_ArcMain_PapsC11,
 
 
 
-  {PapsC_ArcMain_PapsC0, {  0,  0,234,224}, {160,160}}, //0 idle 1
-  {PapsC_ArcMain_PapsC1, {  0,  0,234,224}, {160,160}}, //1 idle 2
-  {PapsC_ArcMain_PapsC2, {  0,  0,234,224}, {160,160}}, //2 idle 3
-  {PapsC_ArcMain_PapsC3, {  0,  0,233,224}, {160,160}}, //3 idle 4
+  {Paps_ArcMain_PapsC0, {  0,  0,234,224}, {160,160}}, //0 idle 1
+  {Paps_ArcMain_PapsC1, {  0,  0,234,224}, {160,160}}, //1 idle 2
+  {Paps_ArcMain_PapsC2, {  0,  0,234,224}, {160,160}}, //2 idle 3
+  {Paps_ArcMain_PapsC3, {  0,  0,233,224}, {160,160}}, //3 idle 4
 
-  {PapsC_ArcMain_PapsC4, {  0,  0,234,224}, {124,149}}, //4 left 1
-  {PapsC_ArcMain_PapsC5, {  0,  0,234,224}, {124,149}}, //5 left 2
+  {Paps_ArcMain_PapsC4, {  0,  0,234,224}, {124,149}}, //4 left 1
+  {Paps_ArcMain_PapsC5, {  0,  0,234,224}, {124,149}}, //5 left 2
 
-  {PapsC_ArcMain_PapsC6, {  0,  0,234,224}, {154,169}}, //6 down 1
-  {PapsC_ArcMain_PapsC7, {  0,  0,233,224}, {154,169}}, //7 down 2
+  {Paps_ArcMain_PapsC6, {  0,  0,234,224}, {154,169}}, //6 down 1
+  {Paps_ArcMain_PapsC7, {  0,  0,233,224}, {154,169}}, //7 down 2
 
-  {PapsC_ArcMain_PapsC8, {  0,  0,234,223}, {160,150}}, //8 up 1
-  {PapsC_ArcMain_PapsC9, {  0,  0,234,223}, {160,150}}, //9 up 2
+  {Paps_ArcMain_PapsC8, {  0,  0,234,223}, {160,150}}, //8 up 1
+  {Paps_ArcMain_PapsC9, {  0,  0,234,223}, {160,150}}, //9 up 2
 
-  {PapsC_ArcMain_PapsC10, {  0,  0,234,223}, {187,160}}, //10 right 1
-  {PapsC_ArcMain_PapsC11, {  0,  0,233,223}, {187,160}}, //11 right 2
+  {Paps_ArcMain_PapsC10, {  0,  0,234,223}, {187,160}}, //10 right 1
+  {Paps_ArcMain_PapsC11, {  0,  0,233,223}, {187,160}}, //11 right 2

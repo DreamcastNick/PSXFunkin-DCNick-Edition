@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <unordered_set>
+#include <cmath>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -18,7 +19,7 @@ using json = nlohmann::json;
 
 struct Section
 {
-    uint64_t end;
+    uint32_t end;
     uint16_t flag = 0;
 };
 
@@ -35,7 +36,7 @@ struct Section
 
 struct Note
 {
-    uint64_t pos; // 1/12 steps
+    uint32_t pos; // 1/12 steps
     uint16_t type;
     uint8_t is_opponent, pad = 0;
 };
@@ -62,15 +63,23 @@ uint16_t ChartKey(json &j)
     return 4;
 }
 
-uint64_t PosRound(double pos, double crochet)
+uint32_t PosRound(double pos, double crochet)
 {
-    return static_cast<uint64_t>(std::floor(pos / crochet + 0.5));
+    return static_cast<uint32_t>(std::floor(pos / crochet + 0.5));
 }
 
 void WriteWord(std::ostream &out, uint16_t word)
 {
     out.put(word >> 0);
     out.put(word >> 8);
+}
+
+void WriteDWord(std::ostream &out, uint32_t dword)
+{
+    out.put(static_cast<char>(dword >> 0));
+    out.put(static_cast<char>(dword >> 8));
+    out.put(static_cast<char>(dword >> 16));
+    out.put(static_cast<char>(dword >> 24));
 }
 
 int main(int argc, char *argv[])
@@ -103,15 +112,15 @@ int main(int argc, char *argv[])
 
     std::cout << argv[1] << " speed: " << speed << " ini bpm: " << bpm << " step_crochet: " << step_crochet << " keys: " << keys << std::endl;
 
-    uint64_t milli_base = 0;
-    uint64_t step_base = 0;
+    uint32_t milli_base = 0;
+    uint32_t step_base = 0;
 
     std::vector<Section> sections;
     std::vector<Note> notes;
 
-    uint64_t section_end = 0;
+    uint32_t section_end = 0;
     int score = 0, dups = 0;
-    std::unordered_set<uint64_t> note_fudge;
+    std::unordered_set<uint32_t> note_fudge;
     for (auto &i : song_info["notes"]) // Iterate through sections
     {
         bool is_opponent = i["mustHitSection"] != true; // Note: swapped
@@ -130,7 +139,7 @@ int main(int argc, char *argv[])
 
             std::cout << "chg bpm: " << bpm << " step_crochet: " << step_crochet << " milli_base: " << milli_base << " step_base: " << step_base << std::endl;
         }
-        new_section.end = (section_end += 16) * 12; //(uint64_t)i["lengthInSteps"]) * 12; // I had to do this for compatibility
+        new_section.end = (section_end += 16) * 12; //(uint32_t)i["lengthInSteps"]) * 12; // I had to do this for compatibility
         new_section.flag = PosRound(bpm, 1.0 / 24.0) & SECTION_FLAG_BPM_MASK;
         bool is_alt = i["altAnim"] == true;
         if (is_opponent)
@@ -142,8 +151,13 @@ int main(int argc, char *argv[])
         {
             // Push main note
             Note new_note;
+			
+			//Event type
+			if (j[1] == -1)
+				continue;
+			
             int sustain = static_cast<int>(PosRound(j[2], step_crochet)) - 1;
-            new_note.pos = (step_base * 12) + PosRound(((uint64_t)j[0] - milli_base) * 12.0, step_crochet);
+            new_note.pos = (step_base * 12) + PosRound(((uint32_t)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;
 
             new_note.is_opponent = false;
@@ -181,12 +195,12 @@ int main(int argc, char *argv[])
             if (j[3] == "magic")
                 new_note.type |= NOTE_FLAG_MAGIC;
 
-            // if (note_fudge.count(*((uint64_t*)&new_note)))
+            // if (note_fudge.count(*((uint32_t*)&new_note)))
             //{
             //    dups += 1;
             //    continue;
             //}
-            //note_fudge.insert(*((uint64_t*)&new_note));
+            //note_fudge.insert(*((uint32_t*)&new_note));
 
             notes.push_back(new_note);
             if (!new_note.is_opponent)
@@ -218,12 +232,12 @@ int main(int argc, char *argv[])
 
     // Push dummy section and note
     Section dum_section;
-    dum_section.end = 0xFFFFFFFFFFFFFFFFULL; // Changed to use a larger value
+    dum_section.end = 0xFFFFFFFF; // Changed to use a larger value
     dum_section.flag = sections[sections.size() - 1].flag;
     sections.push_back(dum_section);
 
     Note dum_note;
-    dum_note.pos = 0xFFFFFFFFFFFFFFFFULL; // Changed to use a larger value
+    dum_note.pos = 0xFFFFFFFF; // Changed to use a larger value
     dum_note.type = NOTE_FLAG_HIT;
     dum_note.is_opponent = false;
     notes.push_back(dum_note);
@@ -236,24 +250,24 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write headers
+    // Write headers (u16 keys, u32 note offset)
+    // note_offset = header(6) + sections_count * section_size(6)
     WriteWord(out, keys);
-    WriteWord(out, 4 + (sections.size() << 2));
+    WriteDWord(out, 6 + static_cast<uint32_t>(sections.size()) * 6);
 
-    // Write sections
+    // Write sections (u32 end, u16 flag)
     for (auto &i : sections)
     {
-        WriteWord(out, static_cast<uint16_t>(i.end));
+        WriteDWord(out, i.end);
         WriteWord(out, i.flag);
     }
 
-    // Write notes
+    // Write notes (u32 pos, u16 type, u16 is_opponent)
     for (auto &i : notes)
     {
-        WriteWord(out, static_cast<uint16_t>(i.pos));
+        WriteDWord(out, i.pos);
         WriteWord(out, i.type);
-        out.put(i.is_opponent);
-        out.put(0);
+        WriteWord(out, static_cast<uint16_t>(i.is_opponent ? 1 : 0));
     }
     return 0;
 }
