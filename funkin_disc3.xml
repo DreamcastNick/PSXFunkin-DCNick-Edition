@@ -37,8 +37,8 @@
 			<!-- Stage assets -->
 			<dir name = "stage">
 				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
-				<file name = "grid0.tim" type = "data" source = "iso/stage/grid0.tim"/>
-				<file name = "grid1.tim" type = "data" source = "iso/stage/grid1.tim"/>
+				<file name = "grid0.tim" type = "data" source = "iso/stage/grid/grid0.tim"/>
+				<file name = "grid1.tim" type = "data" source = "iso/stage/grid/grid1.tim"/>
 				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
 				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
 				<file name = "static.tim" type = "data" source = "iso/stage/static.tim"/>
@@ -47,21 +47,21 @@
 			
 			<!-- Note assets -->
 			<dir name = "note">
-				<file name = "note4k.tim" type = "data" source = "iso/stage/note4k.tim"/>
-				<file name = "note5k.tim" type = "data" source = "iso/stage/note5k.tim"/>
-				<file name = "note6k.tim" type = "data" source = "iso/stage/note6k.tim"/>
-				<file name = "note7k.tim" type = "data" source = "iso/stage/note7k.tim"/>
-				<file name = "note9k.tim" type = "data" source = "iso/stage/note9k.tim"/>
-				<file name = "type4k0.tim" type = "data" source = "iso/stage/type4k0.tim"/>
-				<file name = "type5k0.tim" type = "data" source = "iso/stage/type5k0.tim"/>
-				<file name = "type6k0.tim" type = "data" source = "iso/stage/type6k0.tim"/>
-				<file name = "type7k0.tim" type = "data" source = "iso/stage/type7k0.tim"/>
-				<file name = "type9k0.tim" type = "data" source = "iso/stage/type9k0.tim"/>
-				<file name = "type4k1.tim" type = "data" source = "iso/stage/type4k1.tim"/>
-				<file name = "type5k1.tim" type = "data" source = "iso/stage/type5k1.tim"/>
-				<file name = "type6k1.tim" type = "data" source = "iso/stage/type6k1.tim"/>
-				<file name = "type7k1.tim" type = "data" source = "iso/stage/type7k1.tim"/>
-				<file name = "type9k1.tim" type = "data" source = "iso/stage/type9k1.tim"/>
+				<file name = "note4k.tim" type = "data" source = "iso/stage/notes/note4k.tim"/>
+				<file name = "note5k.tim" type = "data" source = "iso/stage/notes/note5k.tim"/>
+				<file name = "note6k.tim" type = "data" source = "iso/stage/notes/note6k.tim"/>
+				<file name = "note7k.tim" type = "data" source = "iso/stage/notes/note7k.tim"/>
+				<file name = "note9k.tim" type = "data" source = "iso/stage/notes/note9k.tim"/>
+				<file name = "type4k0.tim" type = "data" source = "iso/stage/notes/type4k0.tim"/>
+				<file name = "type5k0.tim" type = "data" source = "iso/stage/notes/type5k0.tim"/>
+				<file name = "type6k0.tim" type = "data" source = "iso/stage/notes/type6k0.tim"/>
+				<file name = "type7k0.tim" type = "data" source = "iso/stage/notes/type7k0.tim"/>
+				<file name = "type9k0.tim" type = "data" source = "iso/stage/notes/type9k0.tim"/>
+				<file name = "type4k1.tim" type = "data" source = "iso/stage/notes/type4k1.tim"/>
+				<file name = "type5k1.tim" type = "data" source = "iso/stage/notes/type5k1.tim"/>
+				<file name = "type6k1.tim" type = "data" source = "iso/stage/notes/type6k1.tim"/>
+				<file name = "type7k1.tim" type = "data" source = "iso/stage/notes/type7k1.tim"/>
+				<file name = "type9k1.tim" type = "data" source = "iso/stage/notes/type9k1.tim"/>
 			</dir>
 			
 			<!-- Movie assets -->
@@ -74,22 +74,22 @@
 			<!-- Week 1 assets -->
 			<dir name = "week1">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
+				<file name = "back.arc" type = "data" source = "iso/stages/week1/back.arc"/>
 			</dir>
 			
 			<!-- Kitchen assets -->
 			<dir name = "kitchen">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
-				<file name = "handa.arc" type = "data" source = "iso/kitchen/handa.arc"/>
-				<file name = "handb.arc" type = "data" source = "iso/kitchen/handb.arc"/>
-				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
+				<file name = "back.arc" type = "data" source = "iso/stages/kitchen/back.arc"/>
+				<file name = "handa.arc" type = "data" source = "iso/stages/kitchen/handa.arc"/>
+				<file name = "handb.arc" type = "data" source = "iso/stages/kitchen/handb.arc"/>
+				<file name = "handc.arc" type = "data" source = "iso/stages/kitchen/handc.arc"/>
 			</dir>
 			
 			<!-- Billy assets -->
 			<dir name = "billy">
 				<!-- Background art -->
-				<file name = "back.arc" type = "data" source = "iso/sillybg/back.arc"/>
+				<file name = "back.arc" type = "data" source = "iso/stages/sillybg/back.arc"/>
 			</dir>
 				
 			<!-- Aethos Mods assets -->
@@ -127,51 +127,51 @@
 			<!-- Player Character assets -->
 			<dir name = "pchar">
 				<!-- Boyfriend assets -->
-				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
-				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
+				<file name = "bf.arc" type = "data" source = "iso/characters/bf/main.arc"/>
+				<file name = "bfdead.arc" type = "data" source = "iso/characters/bf/dead.arc"/>
 				
 				<!-- Apple assets -->
-				<file name = "apple.arc" type = "data" source = "iso/apple/main.arc"/>
-				<file name = "appded.arc" type = "data" source = "iso/apple/dead.arc"/>
+				<file name = "apple.arc" type = "data" source = "iso/characters/apple/main.arc"/>
+				<file name = "appded.arc" type = "data" source = "iso/characters/apple/dead.arc"/>
 				
 				<!-- BF Yourself assets -->
-				<file name = "bfy.arc" type = "data" source = "iso/bfy/main.arc"/>
+				<file name = "bfy.arc" type = "data" source = "iso/characters/bfy/main.arc"/>
 				
 				<!-- Menu Characters assets -->
-				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
+				<file name = "menup.arc" type = "data" source = "iso/characters/menup/main.arc"/>
 			</dir>
 			
 			<!-- Opponent Character assets -->
 			<dir name = "ochar">
 				<!-- Dad assets -->
-				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
+				<file name = "dad.arc" type = "data" source = "iso/characters/dad/main.arc"/>
 
 				<!-- Orange assets -->
-				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
+				<file name = "orange.arc" type = "data" source = "iso/characters/orange/main.arc"/>
 				
 				<!-- Silly Billy assets -->
-				<file name = "billy.arc" type = "data" source = "iso/sillybilly/main.arc"/>
+				<file name = "billy.arc" type = "data" source = "iso/characters/sillybilly/main.arc"/>
 				
 				<!-- Jerry assets -->
-				<file name = "jerry.arc" type = "data" source = "iso/jerry/main.arc"/>
+				<file name = "jerry.arc" type = "data" source = "iso/characters/jerry/main.arc"/>
 				
 				<!-- Menu Characters assets -->
-				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
+				<file name = "menuo.arc" type = "data" source = "iso/characters/menuo/main.arc"/>
 			</dir>
 			
 			<!-- Girlfriend Character assets -->
 			<dir name = "gchar">
 				<!-- Girlfriend assets -->
-				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
-				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
-				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
+				<file name = "gf.arc" type = "data" source = "iso/characters/gf/main.arc"/>
+				<file name = "gftut.arc" type = "data" source = "iso/characters/gf/tut.arc"/>
+				<file name = "speaker.tim" type = "data" source = "iso/characters/gf/speaker.tim"/>
 				
 				<!-- Logan Head assets -->
-				<file name = "logan.arc" type = "data" source = "iso/logan/main.arc"/>
-				<file name = "eyes.tim" type = "data" source = "iso/logan/eyes.tim"/>
+				<file name = "logan.arc" type = "data" source = "iso/characters/logan/main.arc"/>
+				<file name = "eyes.tim" type = "data" source = "iso/characters/logan/eyes.tim"/>
 				
 				<!-- Menu Characters assets -->
-				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
+				<file name = "menugf.arc" type = "data" source = "iso/characters/menugf/main.arc"/>
 			</dir>
 			
 			<!-- Sound effects -->

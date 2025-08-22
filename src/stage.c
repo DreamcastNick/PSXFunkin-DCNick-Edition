@@ -1215,7 +1215,7 @@ void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
     fixed_t wz = dst->w;
     fixed_t hz = dst->h;
 	
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 )
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1261,7 +1261,7 @@ void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
     fixed_t wz = dst->w;
     fixed_t hz = dst->h;
     
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1303,7 +1303,7 @@ void Stage_DrawTexCol_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
     fixed_t wz = -dst->w;
     fixed_t hz = dst->h;
 	
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1350,7 +1350,7 @@ void Stage_DrawTex_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, f
 
 void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation)
 {
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1389,7 +1389,7 @@ void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, cons
 
 void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode)
 {
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1433,7 +1433,7 @@ void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_
 	fixed_t wz = dst->w;
 	fixed_t hz = dst->h;
 	
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1476,7 +1476,7 @@ void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixe
 	fixed_t hz = dst->h;
 
 	//Don't draw if HUD and is disabled
-	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1 || tex == &stage.tex_hude)
 	{
 		#ifdef STAGE_NOHUD
 			return;
@@ -1578,17 +1578,18 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 void Stage_UpdateIconBounce(void)
 {
     static u8 bounce_state = 0; // 0 = normal, 1 = bouncing TO, 2 = returning FROM
-    
+    u8 bounce_speed = 1 >> 1;
+	
     // Don't update icon bounce when stage is paused
     if (stage.paused)
         return;
     
-    // Check if we should trigger icon bounce (every gf_speed beats)
-    if (stage.song_beat % stage.gf_speed == 0 && bounce_state == 0) {
+    // Check if we should trigger icon bounce (every bounce_speed beats)
+    if (stage.song_beat % bounce_speed == 0 && bounce_state == 0) {
         bounce_state = 1; // Start bouncing TO the bounce state
         
         // Determine which icon gets which animation based on beat pattern
-        if ((stage.song_beat % (stage.gf_speed * 2)) == 0) {
+        if ((stage.song_beat % (bounce_speed * 2)) == 0) {
             // Player 1 gets squash, Player 2 gets stretch
             stage.icon_scale_p1_x = ICON_BOUNCE_SCALE_X;
             stage.icon_scale_p1_y = ICON_BOUNCE_SCALE_Y_SQUASH;
@@ -1608,17 +1609,17 @@ void Stage_UpdateIconBounce(void)
         
         // Start ALL tweens TO the bounce state (from current tween values to bounce values)
         Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), stage.icon_scale_p1_x, 
-                          ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
         Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), stage.icon_scale_p1_y, 
-                          ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
         Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), stage.icon_scale_p2_x, 
-                          ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
         Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), stage.icon_scale_p2_y, 
-                          ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
         Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), stage.icon_angle_p1, 
-                          ICON_BOUNCE_DURATION_ANGLE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
         Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), stage.icon_angle_p2, 
-                          ICON_BOUNCE_DURATION_ANGLE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                          ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
     }
     
     // Update all tweens
@@ -1644,17 +1645,17 @@ void Stage_UpdateIconBounce(void)
             
             // Start ALL return tweens to animate back to normal
             Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
             Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
             Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
             Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
             Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), 0, 
-                              ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
             Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), 0, 
-                              ICON_BOUNCE_DURATION_ANGLE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                              ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
         }
     }
     
@@ -1704,6 +1705,7 @@ boolean Stage_GetIconBounce(void)
 
 void Stage_TriggerIconBounce(void)
 {
+	u8 bounce_speed = 1 >> 1;
     if (!stage.uses_bounce) return;
     
     // Set all initial values first to ensure synchronized start
@@ -1717,17 +1719,17 @@ void Stage_TriggerIconBounce(void)
     
     // Initialize all tweens simultaneously to return to normal
     Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
     Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
     Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
     Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
     Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), 0, 
-                       ICON_BOUNCE_DURATION_SCALE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
     Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), 0, 
-                       ICON_BOUNCE_DURATION_ANGLE * stage.gf_speed, EASING_QUAD_OUT, 0);
+                       ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
 }
 
 
@@ -1783,20 +1785,20 @@ static void Stage_DrawHealthBar(s16 x, s32 color)
 	//Get src and dst
 	RECT src = {
 		0,
-	  252,
+	  251,
 	    x,
 		4
 	};
 	RECT_FIXED dst = {
 		FIXED_DEC(-128,1), 
-		(SCREEN_HEIGHT2 - 32) << FIXED_SHIFT, 
-		FIXED_DEC(src.w,1), 
-		FIXED_DEC(10,1)
+		FIXED_DEC(90,1), 
+		src.w << FIXED_SHIFT, 
+		src.h << FIXED_SHIFT
 	};
 	if (stage.prefs.downscroll)
 		dst.y = -dst.y - dst.h;
 	
-	Stage_DrawTexCol(&stage.tex_hud1, &src, &dst, stage.bump, stage.camera.hudangle, red >> 1, blue >> 1, green >> 1);
+	Stage_DrawTexCol(&stage.tex_hude, &src, &dst, stage.bump, stage.camera.hudangle, red >> 1, blue >> 1, green >> 1);
 }
 
 static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
@@ -2800,10 +2802,10 @@ static void Stage_OrangeTimerTick(void)
 			square_dst.y = -square_dst.y - square_dst.h + FIXED_DEC(1,1);
 
 		square_dst.w = square_fill.w << FIXED_SHIFT;
-		Stage_DrawTexCol(&stage.tex_hud1, &square_fill, &square_dst, stage.bump, stage.camera.hudangle, 255 >> 1, 128 >> 1, 0 >> 1);
+		Stage_DrawTexCol(&stage.tex_hude, &square_fill, &square_dst, stage.bump, stage.camera.hudangle, 255 >> 1, 128 >> 1, 0 >> 1);
 		
 		square_dst.w = square_black.w << FIXED_SHIFT;
-		Stage_DrawTexCol(&stage.tex_hud1, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
+		Stage_DrawTexCol(&stage.tex_hude, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
 	}
 }
 
