@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "audio.h"
 #include "event.h"
+#include "events.h"
 #include "pad.h"
 #include "main.h"
 #include "random.h"
@@ -747,11 +748,6 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	//Create note splashes if SICK
 	if (hit_type == 0)
 	{
-		if (stage.stage_id <= StageId_5_8)
-		{
-			return;
-		}
-		
 		for (int i = 0; i < 3; i++)
 		{
 			//Create splash object - determine background based on player's hud field
@@ -2939,102 +2935,179 @@ static void Stage_LoadStage(void)
 
 static void Stage_LoadChart(void)
 {
-	//Load stage data
-	char chart_path[64];
-	//Use standard path convention
-	sprintf(chart_path, "\\CHART\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+ 	//Load stage data
+ 	char chart_path[64];
+ 	//Use standard path convention
+ 	sprintf(chart_path, "\\CHART\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+ 	
+ 	if (stage.chart_data != NULL)
+ 		Mem_Free(stage.chart_data);
+ 	stage.chart_data = IO_Read(chart_path);
+ 	u8 *chart_byte = (u8*)stage.chart_data;
+ 	
+ 	// Parse 32-bit chart format: [u32 speed_fixed][u16 keys][u32 note_offset]
+ 	fixed_t speed_fixed = (fixed_t)((u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24));
+ 	u16 keys = (u16)(chart_byte[4] | (chart_byte[5] << 8));
+ 	u32 note_off = (u32)chart_byte[6] | ((u32)chart_byte[7] << 8) | ((u32)chart_byte[8] << 16) | ((u32)chart_byte[9] << 24);
+ 	
+ 	u8 *section_p = chart_byte + 10;
+ 	u8 *note_p = chart_byte + note_off;
+ 	u8 *event_p = NULL; // events immediately follow notes in file
+ 		
+ 	// Count sections and notes
+ 	size_t sections = (note_off - 10) / 6; // each section is 6 bytes (u32 end, u16 flag)
+ 	size_t notes = 0;
+ 	for (u8 *np = note_p;; np += 8) // each note is 8 bytes (u32 pos, u16 type, u16 is_opponent)
+ 	{
+ 		u32 pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
+ 		notes++;
+ 		if (pos == 0xFFFFFFFF)
+ 			break;
+ 	}
+ 	// Events start right after notes block
+ 	event_p = note_p + notes * 8;
+ 	size_t events_cnt = 0;
+ 	for (u8 *ep = event_p;; ep += 16) // each event is 16 bytes (u32 pos, u32 event, u32 v1, u32 v2)
+ 	{
+ 		u32 pos = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
+ 		events_cnt++;
+ 		if (pos == 0xFFFFFFFF)
+ 			break;
+ 	}
+ 		
+ 	// Allocate tightly packed arrays for sections, notes and events
+ 	 size_t sections_size = sections * sizeof(Section);
+ 	 size_t notes_size = notes * sizeof(Note);
+ 	 size_t events_size = events_cnt * sizeof(ChartEvent);
+ 	 size_t notes_off = MEM_ALIGN(sections_size);
+ 	 size_t events_off = notes_off + MEM_ALIGN(notes_size);
+ 	u8 *nchart = Mem_Alloc(events_off + events_size);
+ 		
+ 	// Copy sections
+ 	 Section *nsection_p = stage.sections = (Section*)nchart;
+ 	for (size_t i = 0; i < sections; i++, nsection_p++)
+ 	 {
+ 		u8 *sp = section_p + i * 6;
+ 		nsection_p->end = (u32)sp[0] | ((u32)sp[1] << 8) | ((u32)sp[2] << 16) | ((u32)sp[3] << 24);
+ 		nsection_p->flag = (u16)(sp[4] | (sp[5] << 8));
+ 	}
+ 		
+ 	// Copy notes
+ 	 Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
+ 	for (size_t i = 0; i < notes; i++, nnote_p++)
+ 	{
+ 		u8 *np = note_p + i * 8;
+ 		nnote_p->pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
+ 		nnote_p->type = (u16)(np[4] | (np[5] << 8));
+ 		nnote_p->is_opponent = (u16)(np[6] | (np[7] << 8));
+ 	}
+
+ 	// Copy events
+ 	 ChartEvent *nevent_p = stage.events = (ChartEvent*)(nchart + events_off);
+ 	for (size_t i = 0; i < events_cnt; i++, nevent_p++)
+ 	{
+ 		u8 *ep = event_p + i * 16;
+ 		nevent_p->pos    = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
+ 		nevent_p->event  = (u32)ep[4] | ((u32)ep[5] << 8) | ((u32)ep[6] << 16) | ((u32)ep[7] << 24);
+ 		nevent_p->value1 = (u32)ep[8] | ((u32)ep[9] << 8) | ((u32)ep[10] << 16) | ((u32)ep[11] << 24);
+ 		nevent_p->value2 = (u32)ep[12] | ((u32)ep[13] << 8) | ((u32)ep[14] << 16) | ((u32)ep[15] << 24);
+ 	}
+ 	
+ 	// Finalize
+ 	stage.num_notes = notes;
+ 	stage.keys = keys;
+ 	stage.max_keys = stage.keys * 2;
+ 		
+ 	 // Use reformatted chart
+ 	 Mem_Free(stage.chart_data);
+ 	 stage.chart_data = (IO_Data)nchart;
+ 	
+ 	 // Swap chart
+ 	 if (stage.prefs.mode == StageMode_Swap)
+ 	 {
+ 		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+ 			note->is_opponent = !note->is_opponent;
+ 	 }
+ 	 
+ 	 // Count max scores
+ 	 stage.player_state[0].max_score = 0;
+ 	 stage.player_state[1].max_score = 0;
+ 	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+ 	 {
+ 		 if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
+ 			 continue;
+ 		 if (note->is_opponent)
+ 			 stage.player_state[1].max_score += 35;
+ 		 else
+ 			 stage.player_state[0].max_score += 35;
+ 	 }
+ 	 if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
+ 		 stage.max_score = stage.player_state[1].max_score;
+ 	 else
+ 		 stage.max_score = stage.player_state[0].max_score;
+ 	
+ 	 stage.cur_section = stage.sections;
+ 	 stage.cur_note = stage.notes;
+ 	stage.cur_event = stage.events;
 	
-	if (stage.chart_data != NULL)
-		Mem_Free(stage.chart_data);
-	stage.chart_data = IO_Read(chart_path);
-	u8 *chart_byte = (u8*)stage.chart_data;
+ 	// Use speed from chart header
+ 	stage.speed = stage.ogspeed = speed_fixed;
+ 	 
+ 	 stage.step_crochet = 0;
+ 	 stage.time_base = 0;
+ 	 stage.step_base = 0;
+ 	 stage.section_base = stage.cur_section;
+ 	 Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, (u32)0);
+
+
+	char event_path[64];
+	sprintf(event_path, "\\CHART\\%d.%dEVENT.CHT;1", stage.stage_def->week, stage.stage_def->week_song);
+	if (IO_ExistFile(event_path) == true)
+	{
+		if (stage.event_chart_data != NULL)
+			Mem_Free(stage.event_chart_data);
+		stage.event_chart_data = IO_Read(event_path);
+	}
+	else
+	{
+		stage.event_chart_data = NULL;
+	}
 	
-	// Parse 32-bit chart format: [u16 keys][u32 note_offset]
-	u16 keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
-	u32 note_off = (u32)chart_byte[2] | ((u32)chart_byte[3] << 8) | ((u32)chart_byte[4] << 16) | ((u32)chart_byte[5] << 24);
-	
-	u8 *section_p = chart_byte + 6;
-		u8 *note_p = chart_byte + note_off;
-		
-	// Count sections and notes
-	size_t sections = (note_off - 6) / 6; // each section is 6 bytes (u32 end, u16 flag)
-		size_t notes = 0;
-	for (u8 *np = note_p;; np += 8) // each note is 8 bytes (u32 pos, u16 type, u16 is_opponent)
+	// Parse external events if present
+	if (stage.event_chart_data != NULL)
+	{
+		// Count events (16 bytes each, terminated by pos == 0xFFFFFFFF)
+		u8 *event_p = (u8*)stage.event_chart_data;
+		size_t events_cnt = 0;
+		for (u8 *ep = event_p;; ep += 16)
 		{
-		u32 pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
-			notes++;
-		if (pos == 0xFFFFFFFF)
+			u32 pos = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
+			events_cnt++;
+			if (pos == 0xFFFFFFFF)
 				break;
 		}
-		
-	// Allocate tightly packed arrays for sections and notes
- 	size_t sections_size = sections * sizeof(Section);
-	size_t notes_size = notes * sizeof(Note);
- 	size_t notes_off = MEM_ALIGN(sections_size);
- 	u8 *nchart = Mem_Alloc(notes_off + notes_size);
- 		
-	// Copy sections
- 	Section *nsection_p = stage.sections = (Section*)nchart;
-	for (size_t i = 0; i < sections; i++, nsection_p++)
- 	{
-		u8 *sp = section_p + i * 6;
-		nsection_p->end = (u32)sp[0] | ((u32)sp[1] << 8) | ((u32)sp[2] << 16) | ((u32)sp[3] << 24);
-		nsection_p->flag = (u16)(sp[4] | (sp[5] << 8));
+
+		// Allocate and copy into tightly packed array
+		if (stage.event_events != NULL)
+			Mem_Free(stage.event_events);
+		ChartEvent *eevents = (ChartEvent*)Mem_Alloc(events_cnt * sizeof(ChartEvent));
+		for (size_t i = 0; i < events_cnt; i++)
+		{
+			u8 *ep = event_p + i * 16;
+			eevents[i].pos    = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
+			eevents[i].event  = (u32)ep[4] | ((u32)ep[5] << 8) | ((u32)ep[6] << 16) | ((u32)ep[7] << 24);
+			eevents[i].value1 = (u32)ep[8] | ((u32)ep[9] << 8) | ((u32)ep[10] << 16) | ((u32)ep[11] << 24);
+			eevents[i].value2 = (u32)ep[12] | ((u32)ep[13] << 8) | ((u32)ep[14] << 16) | ((u32)ep[15] << 24);
+		}
+
+		// Store and set current pointer
+		stage.event_events = eevents;
+		stage.event_cur_event = stage.event_events;
+
+		// Free raw event chart data to save memory
+		Mem_Free(stage.event_chart_data);
+		stage.event_chart_data = NULL;
 	}
- 		
-	// Copy notes
- 	Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
-	for (size_t i = 0; i < notes; i++, nnote_p++)
-	{
-		u8 *np = note_p + i * 8;
-		nnote_p->pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
-		nnote_p->type = (u16)(np[4] | (np[5] << 8));
-		nnote_p->is_opponent = (u16)(np[6] | (np[7] << 8));
-	}
-	
-	// Finalize
-	stage.num_notes = notes;
-	stage.keys = keys;
-	stage.max_keys = stage.keys * 2;
- 		
- 	// Use reformatted chart
- 	Mem_Free(stage.chart_data);
- 	stage.chart_data = (IO_Data)nchart;
- 	
- 	// Swap chart
- 	if (stage.prefs.mode == StageMode_Swap)
- 	{
-		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
- 			note->is_opponent = !note->is_opponent;
- 	}
- 	
- 	// Count max scores
- 	stage.player_state[0].max_score = 0;
- 	stage.player_state[1].max_score = 0;
-	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
- 	{
- 		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
- 			continue;
- 		if (note->is_opponent)
- 			stage.player_state[1].max_score += 35;
- 		else
- 			stage.player_state[0].max_score += 35;
- 	}
- 	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
- 		stage.max_score = stage.player_state[1].max_score;
- 	else
- 		stage.max_score = stage.player_state[0].max_score;
- 	
- 	stage.cur_section = stage.sections;
- 	stage.cur_note = stage.notes;
- 	
- 	stage.speed = stage.stage_def->speed[stage.stage_diff];
- 	
- 	stage.step_crochet = 0;
- 	stage.time_base = 0;
- 	stage.step_base = 0;
- 	stage.section_base = stage.cur_section;
- 	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, (u32)0);
 }
 
 static void Stage_LoadSFX(void)
@@ -3538,7 +3611,14 @@ static void Stage_LoadState(void)
 				}
 				// Set opponent Y positions to match player positions
 				for (int i = 0; i < 4; i++) {
-					stage.note.y[i + 4] = FIXED_DEC(32 - SCREEN_HEIGHT2, 1);
+					if (stage.prefs.downscroll)
+					{
+						stage.note.y[i + 4] = FIXED_DEC(12, 1);
+					}
+					else
+					{
+						stage.note.y[i + 4] = FIXED_DEC(-126, 1);
+					}
 				}
 				note_anims = note_anims4k;
 				note_key = note_key4k;
@@ -3872,6 +3952,9 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Load music
 	stage.note_scroll = 0;
 	Stage_LoadMusic();
+
+	//Load Psych events
+	Events_Load();
 	
 	//Test offset
 	stage.offset = 0;
@@ -4023,6 +4106,9 @@ static boolean Stage_NextLoad(void)
 		
 		//Load music
 		Stage_LoadMusic();
+		
+		//Load Psych events
+		Events_Load();
 		
 		//Reset timer
 		Timer_Reset();
@@ -5005,7 +5091,9 @@ void Stage_Tick(void)
 				break;
 			}
 			
-			Events();
+			Events_Start();
+			//Psych events
+			Events_StartEvents();
 			
 			//Handle bump
 			if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))

@@ -16,6 +16,8 @@
 #include "player.h"
 #include "object.h"
 #include "font.h"
+#include "event.h"
+#include "events.h"
 #include "debug.h"
 #include "tween.h"
 
@@ -254,11 +256,17 @@ typedef struct
 	IO_Data chart_data;
 	Section *sections;
 	Note *notes;
+	ChartEvent* events;
 	size_t num_notes;
 	u16 keys;
 	u16 max_keys;
+
+	IO_Data event_chart_data;
+	Section *event_sections;
+	Note *event_notes;
+	ChartEvent* event_events;
 	
-	fixed_t speed;
+	fixed_t speed, ogspeed;
 	fixed_t step_crochet, step_time;
 	fixed_t early_safe, late_safe, early_sus_safe, late_sus_safe;
 	fixed_t flash, flashspd;
@@ -312,7 +320,13 @@ typedef struct
 	
 	Section *cur_section; //Current section
 	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
+	ChartEvent* cur_event; //Current event
 	
+	// For event.json
+	Section *event_cur_section; //Current section
+	Note *event_cur_note; //First visible and hittable note, used for drawing and hit detection
+	ChartEvent* event_cur_event; //Current event
+
 	fixed_t note_scroll, song_time, interp_time, interp_ms, interp_speed;
 
 	struct

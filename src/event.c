@@ -22,7 +22,7 @@ void Load_Events()
 	event.fadebehind = false;
 }
 
-void Events()
+void Events_Start()
 {
 	event.shake = lerp(event.shake,0,FIXED_DEC(2,10));
 	FollowCharCamera();
