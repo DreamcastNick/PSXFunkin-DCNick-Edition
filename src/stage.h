@@ -187,7 +187,7 @@ typedef struct
 	fixed_t arrow_hitan[9]; //Arrow hit animation for presses
 
 	s16 health;
-	u16 combo;
+	u32 combo;
 	
 	boolean refresh_score;
 	int score, max_score;
@@ -324,7 +324,7 @@ typedef struct
 	
 	u16 last_bpm;
 
-	int timerlength, timermin, timersec, timepassed;
+	u32 timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
 	u32 step_base;

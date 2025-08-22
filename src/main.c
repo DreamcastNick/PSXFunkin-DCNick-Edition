@@ -42,7 +42,7 @@ void ErrorLock(void)
 	}
 }
 
-#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
+//#define MEM_STAT //This will enable the Mem_GetStat function which returns information about available memory in the heap
 #define MEM_POOL //Enable memory pool for frequently allocated objects (optimized to 24 entries)
 
 #define MEM_IMPLEMENTATION

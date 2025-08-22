@@ -172,7 +172,7 @@ Character *Char_Jerry_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(165,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\JERRY.ARC;1");
+	this->arc_main = IO_Read("\\OCHAR\\JERRY.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"jerry0.tim",

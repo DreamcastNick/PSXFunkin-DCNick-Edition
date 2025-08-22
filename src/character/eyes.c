@@ -15,7 +15,7 @@
 void Eyes_Init(Eyes *this)
 {
     // Load eyes graphics
-    Gfx_LoadTex(&this->tex, IO_Read("\\CHAR\\EYES.TIM;1"), GFX_LOADTEX_FREE);
+    Gfx_LoadTex(&this->tex, IO_Read("\\GCHAR\\EYES.TIM;1"), GFX_LOADTEX_FREE);
 }
 
 void Eyes_Tick(Eyes *this, fixed_t x, fixed_t y)

@@ -160,7 +160,7 @@ Character *Char_MenuGF_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\MENUGF.ARC;1");
+	this->arc_main = IO_Read("\\GCHAR\\MENUGF.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"gf0.tim", //MenuGF_ArcMain_MenuGF0

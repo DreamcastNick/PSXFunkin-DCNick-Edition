@@ -151,7 +151,7 @@ Character *Char_Pico_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\PICO.ARC;1");
+	this->arc_main = IO_Read("\\OCHAR\\PICO.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"idle.tim", //Pico_ArcMain_Idle0

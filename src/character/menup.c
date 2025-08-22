@@ -142,7 +142,7 @@ Character *Char_MenuP_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\MENUP.ARC;1");
+	this->arc_main = IO_Read("\\PCHAR\\MENUP.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"bf.tim",   //MenuP_ArcMain_MenuP0

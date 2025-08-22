@@ -195,12 +195,12 @@ int main(int argc, char *argv[])
             if (j[3] == "magic")
                 new_note.type |= NOTE_FLAG_MAGIC;
 
-            // if (note_fudge.count(*((uint32_t*)&new_note)))
-            //{
-            //    dups += 1;
-            //    continue;
-            //}
-            //note_fudge.insert(*((uint32_t*)&new_note));
+            if (note_fudge.count(*((uint32_t*)&new_note)))
+            {
+                dups += 1;
+                continue;
+            }
+            note_fudge.insert(*((uint32_t*)&new_note));
 
             notes.push_back(new_note);
             if (!new_note.is_opponent)

@@ -46,7 +46,7 @@ boolean Obj_Combo_Tick(Object *obj)
 	this->ht += timer_dt;
 	
 	//Tick combo
-	if (this->num[4] != 0xFF && this->ct < (FIXED_DEC(16,1) / 60))
+	if (this->num_count > 0 && this->ct < (FIXED_DEC(16,1) / 60))
 	{
 		//Get hit src and dst
 		u8 clipp = 16;
@@ -78,7 +78,7 @@ boolean Obj_Combo_Tick(Object *obj)
 	//Tick numbers
 	if (this->numt < (FIXED_DEC(16,1) / 60))
 	{
-		for (u8 i = 0; i < 5; i++)
+		for (u8 i = 0; i < this->num_count; i++)
 		{
 			u8 num = this->num[i];
 			if (num == 0xFF)
@@ -95,8 +95,10 @@ boolean Obj_Combo_Tick(Object *obj)
 				32,
 				clipp << 1
 			};
+			// Center the digit strip around the original 5-digit anchor
+			fixed_t start_offset = FIXED_DEC((int)((5 - (int)this->num_count) * 8),1);
 			RECT_FIXED num_dst = {
-				this->x - FIXED_DEC(32,1) + (i * FIXED_DEC(16,1)) - FIXED_DEC(12,1),
+				this->x - FIXED_DEC(32,1) + (i * FIXED_DEC(16,1)) - FIXED_DEC(12,1) + start_offset,
 				this->numy[i] - FIXED_DEC(12,1),
 				FIXED_DEC(24,1),
 				(FIXED_DEC(24,1) * clipp) >> 4
@@ -150,7 +152,7 @@ boolean Obj_Combo_Tick_Weeb(Object *obj)
 	this->ht += timer_dt;
 	
 	//Tick combo
-	if (this->num[4] != 0xFF && this->ct < (FIXED_DEC(16,1) / 60))
+	if (this->num_count > 0 && this->ct < (FIXED_DEC(16,1) / 60))
 	{
 		//Get hit src and dst
 		u8 clipp = 16;
@@ -182,7 +184,7 @@ boolean Obj_Combo_Tick_Weeb(Object *obj)
 	//Tick numbers
 	if (this->numt < (FIXED_DEC(16,1) / 60))
 	{
-		for (u8 i = 0; i < 5; i++)
+		for (u8 i = 0; i < this->num_count; i++)
 		{
 			u8 num = this->num[i];
 			if (num == 0xFF)
@@ -199,8 +201,10 @@ boolean Obj_Combo_Tick_Weeb(Object *obj)
 				11,
 				(12 * clipp) >> 4
 			};
+			// Center the digit strip around the original 5-digit anchor (Weeb font narrower spacing)
+			fixed_t start_offset_w = FIXED_DEC((int)((5 - (int)this->num_count) * 4),1);
 			RECT_FIXED num_dst = {
-				this->x - FIXED_DEC(32,1) + (i * FIXED_DEC(8,1)) + FIXED_DEC(16,1),
+				this->x - FIXED_DEC(32,1) + (i * FIXED_DEC(8,1)) + FIXED_DEC(16,1) + start_offset_w,
 				this->numy[i] - FIXED_DEC(12,1),
 				FIXED_DEC(11,1),
 				(FIXED_DEC(12,1) * clipp) >> 4
@@ -224,7 +228,7 @@ void Obj_Combo_Free(Object *obj)
 	(void)obj;
 }
 
-Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u16 combo)
+Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u32 combo)
 {
 	(void)x;
 	
@@ -253,37 +257,33 @@ Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u16 combo)
 	}
 	
 	//Setup numbers
-	if (combo != 0xFFFF)
+	if (combo != 0xFFFFFFFF)
 	{
-		//Initial numbers
-		this->num[0] = this->num[1] = 0xFF;
-		this->num[2] = this->num[3] = this->num[4] = 0; //MEH
-		
-		//Write numbers
-		static const u16 dig[5] = {10000, 1000, 100, 10, 1};
+		//Clear all digits
+		for (u8 i = 0; i < 10; i++)
+			this->num[i] = 0xFF;
+		this->num_count = 0;
+			
+		//Write numbers (up to 10 digits)
+		static const u32 dig[10] = {1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1};
 		boolean hit = false;
-		
-		const u16 *digp = dig;
-		for (u8 i = 0; i < 5; i++, digp++)
+		for (u8 d = 0; d < 10; d++)
 		{
-			//Get digit value
 			u8 v = 0;
-			while (combo >= *digp)
+			while (combo >= dig[d])
 			{
-				combo -= *digp;
+				combo -= dig[d];
 				v++;
 			}
-			
-			//Write digit value
 			if (v || hit)
 			{
 				hit = true;
-				this->num[i] = v;
+				this->num[this->num_count++] = v;
 			}
 		}
 		
 		//Initialize number positions
-		for (u8 i = 0; i < 5; i++)
+		for (u8 i = 0; i < this->num_count; i++)
 		{
 			if (this->num[i] == 0xFF)
 				continue;
@@ -298,7 +298,8 @@ Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u16 combo)
 	else
 	{
 		//Write null numbers
-		this->num[0] = this->num[1] = this->num[2] = this->num[3] = this->num[4] = 0xFF;
+		for (u8 i = 0; i < 10; i++) this->num[i] = 0xFF;
+		this->num_count = 0;
 	}
 	
 	//Initialize timers

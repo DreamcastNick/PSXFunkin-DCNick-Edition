@@ -291,7 +291,7 @@ Character *Char_Orange_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(50,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\ORANGE.ARC;1");
+	this->arc_main = IO_Read("\\OCHAR\\ORANGE.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"orange0.tim",

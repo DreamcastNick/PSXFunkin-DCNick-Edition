@@ -443,9 +443,9 @@ Character *Char_BFY_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(133,100);
 
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\BFY.ARC;1");
+	this->arc_main = IO_Read("\\PCHAR\\BFY.ARC;1");
 	this->arc_dead = NULL;
-	IO_FindFile(&this->file_dead_arc, "\\CHAR\\BFDEAD.ARC;1");
+	IO_FindFile(&this->file_dead_arc, "\\PCHAR\\BFDEAD.ARC;1");
 
 	const char **pathp = (const char *[]){
 		"idle0.tim",   //BFY_ArcMain_BFY0

@@ -519,9 +519,9 @@ Character *Char_Apple_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(50,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\APPLE.ARC;1");
+	this->arc_main = IO_Read("\\PCHAR\\APPLE.ARC;1");
 	this->arc_dead = NULL;
-	IO_FindFile(&this->file_dead_arc, "\\CHAR\\APPDED.ARC;1");
+	IO_FindFile(&this->file_dead_arc, "\\PCHAR\\APPDED.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"apple0.tim",   //Apple_ArcMain_Apple0

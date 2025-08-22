@@ -696,9 +696,9 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\BF.ARC;1");
+	this->arc_main = IO_Read("\\PCHAR\\BF.ARC;1");
 	this->arc_dead = NULL;
-	IO_FindFile(&this->file_dead_arc, "\\CHAR\\BFDEAD.ARC;1");
+	IO_FindFile(&this->file_dead_arc, "\\PCHAR\\BFDEAD.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"bf0.tim",   //BF_ArcMain_BF0

@@ -238,7 +238,7 @@ Character *Char_Paps_New(fixed_t x, fixed_t y)
 	this->character.size = FIXED_DEC(100,100);
 	
 	//Load art
-	this->arc_main = IO_Read("\\CHAR\\PAPS.ARC;1");
+	this->arc_main = IO_Read("\\OCHAR\\PAPS.ARC;1");
 	
 	const char **pathp = (const char *[]){
 		"papsa0.tim",

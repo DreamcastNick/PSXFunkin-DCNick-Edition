@@ -739,7 +739,7 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 		this->character->focus_x,
 		this->character->focus_y,
 		hit_type,
-		this->combo >= 10 ? this->combo : 0xFFFF
+		this->combo >= 10 ? (u32)this->combo : 0xFFFFFFFF
 	);
 	if (combo != NULL)
 		ObjectList_Add(&stage.objlist_fg, (Object*)combo);
@@ -747,6 +747,11 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	//Create note splashes if SICK
 	if (hit_type == 0)
 	{
+		if (stage.stage_id <= StageId_5_8)
+		{
+			return;
+		}
+		
 		for (int i = 0; i < 3; i++)
 		{
 			//Create splash object - determine background based on player's hud field
@@ -3792,21 +3797,21 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	char type_text[32];
 	char type2_text[32];
 
-	sprintf(note_text, "\\STAGE\\NOTE%dK.TIM;1", stage.keys);
+	sprintf(note_text, "\\NOTE\\NOTE%dK.TIM;1", stage.keys);
 	Gfx_LoadTex(&stage.tex_note, IO_Read(note_text), GFX_LOADTEX_FREE);
 	if (stage.stage_def->has_note_types)
 	{
 		if (stage.stage_id == StageId_4_4)
 		{
-			sprintf(type_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
+			sprintf(type_text, "\\NOTE\\TYPE%dK1.TIM;1", stage.keys);
 			Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
-			sprintf(type2_text, "\\STAGE\\TYPE%dK0.TIM;1", stage.keys);
+			sprintf(type2_text, "\\NOTE\\TYPE%dK0.TIM;1", stage.keys);
 			Gfx_LoadTex(&stage.tex_type2, IO_Read(type2_text), GFX_LOADTEX_FREE);
 			Gfx_LoadTex(&stage.tex_static, IO_Read("\\STAGE\\STATIC.TIM;1"), GFX_LOADTEX_FREE);
 		}
 		else
 		{
-			sprintf(type_text, "\\STAGE\\TYPE%dK1.TIM;1", stage.keys);
+			sprintf(type_text, "\\NOTE\\TYPE%dK1.TIM;1", stage.keys);
 			Gfx_LoadTex(&stage.tex_type, IO_Read(type_text), GFX_LOADTEX_FREE);
 			Gfx_LoadTex(&stage.tex_static, IO_Read("\\STAGE\\STATIC.TIM;1"), GFX_LOADTEX_FREE);
 		}

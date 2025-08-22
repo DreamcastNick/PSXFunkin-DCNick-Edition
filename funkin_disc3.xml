@@ -36,6 +36,17 @@
 			
 			<!-- Stage assets -->
 			<dir name = "stage">
+				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
+				<file name = "grid0.tim" type = "data" source = "iso/stage/grid0.tim"/>
+				<file name = "grid1.tim" type = "data" source = "iso/stage/grid1.tim"/>
+				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
+				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
+				<file name = "static.tim" type = "data" source = "iso/stage/static.tim"/>
+				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
+			</dir>
+			
+			<!-- Note assets -->
+			<dir name = "note">
 				<file name = "note4k.tim" type = "data" source = "iso/stage/note4k.tim"/>
 				<file name = "note5k.tim" type = "data" source = "iso/stage/note5k.tim"/>
 				<file name = "note6k.tim" type = "data" source = "iso/stage/note6k.tim"/>
@@ -51,15 +62,9 @@
 				<file name = "type6k1.tim" type = "data" source = "iso/stage/type6k1.tim"/>
 				<file name = "type7k1.tim" type = "data" source = "iso/stage/type7k1.tim"/>
 				<file name = "type9k1.tim" type = "data" source = "iso/stage/type9k1.tim"/>
-				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
-				<file name = "grid0.tim" type = "data" source = "iso/stage/grid0.tim"/>
-				<file name = "grid1.tim" type = "data" source = "iso/stage/grid1.tim"/>
-				<file name = "hude.tim" type = "data" source = "iso/stage/hudextra.tim"/>
-				<file name = "phase3.tim" type = "data" source = "iso/stage/phase3.tim"/>
-				<file name = "static.tim" type = "data" source = "iso/stage/static.tim"/>
-				<file name = "pause.tim" type = "data" source = "iso/stage/pause.tim"/>
 			</dir>
 			
+			<!-- Movie assets -->
 			<dir name = "str">
 				<file name = "grace.str" type = "str" source = "iso/movie/grace.str"/>
 				<file name = "intro.str" type = "str" source = "iso/movie/intro.str"/>
@@ -72,6 +77,7 @@
 				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
 			</dir>
 			
+			<!-- Kitchen assets -->
 			<dir name = "kitchen">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/kitchen/back.arc"/>
@@ -80,11 +86,10 @@
 				<file name = "handc.arc" type = "data" source = "iso/kitchen/handc.arc"/>
 			</dir>
 			
+			<!-- Billy assets -->
 			<dir name = "billy">
 				<!-- Background art -->
 				<file name = "back.arc" type = "data" source = "iso/sillybg/back.arc"/>
-				<file name = "intro.str" type = "str" source = "iso/movie/intro.str"/>
-				<file name = "final.str" type = "str" source = "iso/movie/final.str"/>
 			</dir>
 				
 			<!-- Aethos Mods assets -->
@@ -118,9 +123,9 @@
 				<file name = "5.7n.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
 				<file name = "5.7h.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
 			</dir>
-		
-			<!-- Character assets -->
-			<dir name = "char">
+			
+			<!-- Player Character assets -->
+			<dir name = "pchar">
 				<!-- Boyfriend assets -->
 				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
 				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
@@ -129,34 +134,46 @@
 				<file name = "apple.arc" type = "data" source = "iso/apple/main.arc"/>
 				<file name = "appded.arc" type = "data" source = "iso/apple/dead.arc"/>
 				
+				<!-- BF Yourself assets -->
+				<file name = "bfy.arc" type = "data" source = "iso/bfy/main.arc"/>
+				
+				<!-- Menu Characters assets -->
+				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
+			</dir>
+			
+			<!-- Opponent Character assets -->
+			<dir name = "ochar">
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
-				
+
 				<!-- Orange assets -->
 				<file name = "orange.arc" type = "data" source = "iso/orange/main.arc"/>
 				
 				<!-- Silly Billy assets -->
 				<file name = "billy.arc" type = "data" source = "iso/sillybilly/main.arc"/>
-				<file name = "bfy.arc" type = "data" source = "iso/bfy/main.arc"/>
 				
+				<!-- Jerry assets -->
+				<file name = "jerry.arc" type = "data" source = "iso/jerry/main.arc"/>
+				
+				<!-- Menu Characters assets -->
+				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
+			</dir>
+			
+			<!-- Girlfriend Character assets -->
+			<dir name = "gchar">
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
 				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
 				
-				<!-- Menu Characters assets -->
-				<file name = "menuo.arc" type = "data" source = "iso/menuo/main.arc"/>
-				<file name = "menup.arc" type = "data" source = "iso/menup/main.arc"/>
-				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
-				
-				<!-- Jerry assets -->
-				<file name = "jerry.arc" type = "data" source = "iso/jerry/main.arc"/>
-				
 				<!-- Logan Head assets -->
 				<file name = "logan.arc" type = "data" source = "iso/logan/main.arc"/>
 				<file name = "eyes.tim" type = "data" source = "iso/logan/eyes.tim"/>
+				
+				<!-- Menu Characters assets -->
+				<file name = "menugf.arc" type = "data" source = "iso/menugf/main.arc"/>
 			</dir>
-		    
+			
 			<!-- Sound effects -->
 			<dir name = "sounds">
 				<!-- Menu Sounds -->
