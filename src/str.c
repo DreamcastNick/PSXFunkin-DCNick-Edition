@@ -115,7 +115,7 @@ void cd_sector_handler(void)
 
 	if (sector_header->magic != 0x0160) 
 	{
-		str_ctx->frame_ready = -1;
+		// Not a video sector (likely XA audio or other data). Ignore and continue.
 		return;
 	}
 

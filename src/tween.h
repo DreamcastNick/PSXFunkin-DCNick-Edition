@@ -32,7 +32,7 @@ typedef struct
 	fixed_t final_value; 			//Final value of the tween
 	fixed_t current_value; 			//Current value of the tween
 	Eases ease;  					//Easing method used for the tween
-	fixed_t duration; 				//Total duration of the tween in seconds
+	fixed_t duration; 				//Total duration of the tween in milliseconds
 	u8 flags;						//The flags of the tween
 	
 	//"Private" members (You probably not will need use these members)

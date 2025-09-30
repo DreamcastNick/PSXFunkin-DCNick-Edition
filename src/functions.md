@@ -5,7 +5,7 @@ Initializes the necessary values for the tween
 - `tween` - The tween structure that will store the values
 - `initial_value` - The initial value of the Tween
 - `final_value` - The final value of the Tween
-- `duration` - The duration of the tween in seconds. For example, `FIXED_DEC(5,10)` represents 0.5 seconds.
+- `duration` - The duration of the tween in milliseconds. For example, `500` represents 500 milliseconds (0.5 seconds).
 - `ease` - The easing method used, such as `EASING_LINEAR`
 - `flags` -  The flags used, for example, `TWEEN_FLAGS_LOOP`. This indicates that the tween will run in a loop.
 
@@ -14,7 +14,7 @@ Initializes the necessary values for the tween and stores the initial value in a
 - `tween` - The tween structure that will store the values
 - `valuep` - A pointer to the initial value of the tween. This allows direct manipulation of the variable instead of using the `Tween_GetValue()` function.
 - `final_value` - The final value of the Tween
-- `duration` - The duration of the tween in seconds. For example, `FIXED_DEC(5,10)` represents 0.5 seconds.
+- `duration` - The duration of the tween in milliseconds. For example, `500` represents 500 milliseconds (0.5 seconds).
 - `ease` - The easing method used, such as `EASING_LINEAR`
 - `flags` -  The flags used, for example, `TWEEN_FLAGS_LOOP`. This indicates that the tween will run in a loop.
 

@@ -10,18 +10,17 @@
 #include <algorithm>
 #include <unordered_set>
 #include <cmath>
-#include <string>
 
 #include "json.hpp"
 using json = nlohmann::json;
 
-#define SECTION_FLAG_OPPFOCUS (1ULL << 15) // Focus on opponent
-#define SECTION_FLAG_BPM_MASK 0x7FFF       // 1/24
+#define SECTION_FLAG_OPPFOCUS (1U << 15)  // Focus on opponent
+#define SECTION_FLAG_BPM_MASK 0x7FFFU // 1/24
 
 struct Section
 {
     uint32_t end;
-    uint16_t flag = 0;
+    uint32_t flag = 0;
 };
 
 #define NOTE_FLAG_SUSTAIN (1 << 5)       // Note is a sustain note
@@ -41,75 +40,6 @@ struct Note
     uint16_t type;
     uint8_t is_opponent, pad = 0;
 };
-
-// Events (Psych Engine compatible subset)
-#define EVENTS_FLAG_VARIANT 0xFFFC
-#define EVENTS_FLAG_SPEED (1 << 2)
-#define EVENTS_FLAG_GF (1 << 3)
-#define EVENTS_FLAG_CAMZOOM (1 << 4)
-#define EVENTS_FLAG_PLAYED (1 << 15)
-
-typedef int32_t fixed_t;
-#define FIXED_SHIFT (10)
-#define FIXED_UNIT (1 << FIXED_SHIFT)
-
-struct Event
-{
-    uint32_t pos = 0;    // 1/12 steps
-    uint32_t event = 0;  // flags/variant
-    uint32_t value1 = 0; // fixed 22.10
-    uint32_t value2 = 0; // fixed 22.10
-};
-
-void Events_Read(json& i, Event& event_src, std::vector<Event>& event_target)
-{
-    if (i[0] == "Change Scroll Speed")
-		event_src.event |= EVENTS_FLAG_SPEED;
-
-	if (i[0] == "Set GF Speed")
-		event_src.event |= EVENTS_FLAG_GF;
-
-	if (i[0] == "Add Camera Zoom")
-		event_src.event |= EVENTS_FLAG_CAMZOOM;
-	
-	if (event_src.event & EVENTS_FLAG_VARIANT)
-	{
-		// Check if Change speed event flag is set
-		if (event_src.event & EVENTS_FLAG_SPEED)
-		{
-			// Set default values for the first and second values if they are empty strings
-		    i[1] = (i[1] == "") ? "1" : i[1];
-		    i[2] = (i[2] == "") ? "0" : i[2];
-		}
-
-		// Check if GF event flag is set
-		if (event_src.event & EVENTS_FLAG_GF)
-		{
-		    // Set default values for the first and second values if they are empty strings
-		    i[1] = (i[1] == "") ? "1" : i[1];
-		    i[2] = (i[2] == "") ? "0" : i[2];
-		}
-
-		// Check if CAMZOOM event flag is set
-		if (event_src.event & EVENTS_FLAG_CAMZOOM)
-		{
-		    // Set default values for the first and second values if they are empty strings
-		    i[1] = (i[1] == "") ? "0.015" : i[1]; // cam zoom
-		    i[2] = (i[2] == "") ? "0.03" : i[2]; // hud zoom
-		}
-
-		//Get values information
-		std::string value1 =  i[1];
-		std::string value2 =  i[2];
-
-		//fixed values by 1024
-		event_src.value1 = static_cast<uint32_t>(std::stof(value1) * FIXED_UNIT);
-		event_src.value2 = static_cast<uint32_t>(std::stof(value2) * FIXED_UNIT);
-		std::cout << "Found event!: " << i[0] << '\n';
-
-		event_target.push_back(event_src);
-	}
-}
 
 uint16_t ChartKey(json &j)
 {
@@ -176,7 +106,7 @@ int main(int argc, char *argv[])
     double crochet = (60.0 / bpm) * 1000.0;
     double step_crochet = crochet / 4;
 
-    double speed = song_info.value("speed", 0.0);
+    double speed = song_info["speed"];
     uint16_t keys = ChartKey(song_info);
     uint16_t max_keys = keys * 2;
 
@@ -187,7 +117,6 @@ int main(int argc, char *argv[])
 
     std::vector<Section> sections;
     std::vector<Note> notes;
-    std::vector<Event> events;
 
     uint32_t section_end = 0;
     int score = 0, dups = 0;
@@ -265,8 +194,13 @@ int main(int argc, char *argv[])
 
             if (j[3] == "magic")
                 new_note.type |= NOTE_FLAG_MAGIC;
-			
-            note_fudge.insert(*((uint32_t*)&new_note));
+
+            //if (note_fudge.count(*((uint32_t*)&new_note)))
+            //{
+            //    dups += 1;
+            //    continue;
+            //}
+           // note_fudge.insert(*((uint32_t*)&new_note));
 
             notes.push_back(new_note);
             if (!new_note.is_opponent)
@@ -296,21 +230,6 @@ int main(int argc, char *argv[])
             return a.pos < b.pos;
     });
 
-    // Read Events from JSON (Psych Engine format)
-    for (auto &i : song_info["events"]) //Iterate through sections
-	{
-		for (auto &j : i[1])
-		{
-			//Push main event
-			Event new_event;
-
-			new_event.pos = (step_base * 12) + PosRound(((double)i[0] - milli_base) * 12.0, step_crochet);
-			//Newer psych engine events version
-			Events_Read(j, new_event, events);
-		}
-	}
-
-
     // Push dummy section and note
     Section dum_section;
     dum_section.end = 0xFFFFFFFF; // Changed to use a larger value
@@ -323,13 +242,6 @@ int main(int argc, char *argv[])
     dum_note.is_opponent = false;
     notes.push_back(dum_note);
 
-    Event dum_event;
-    dum_event.pos = 0xFFFFFFFF;
-    dum_event.event = EVENTS_FLAG_PLAYED;
-    dum_event.value1 = 0;
-    dum_event.value2 = 0;
-    events.push_back(dum_event);
-
     // Write to output
     std::ofstream out(std::string(argv[1]) + ".cht", std::ostream::binary);
     if (!out.is_open())
@@ -338,34 +250,25 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write headers (u32 speed_fixed, u16 keys, u32 note offset)
-    // note_offset = header(10) + sections_count * section_size(6)
-    WriteDWord(out, static_cast<fixed_t>(speed * FIXED_UNIT));
+    // Write headers (u16 keys, u32 note offset)
+    // note_offset = header(6) + sections_count * section_size(8)
     WriteWord(out, keys);
-    WriteDWord(out, 10 + static_cast<uint32_t>(sections.size()) * 6);
+    WriteDWord(out, (6 + static_cast<uint32_t>(sections.size()) * 8) << 2);
 
-    // Write sections (u32 end, u16 flag)
+    // Write sections (u32 end, u32 flag)
     for (auto &i : sections)
     {
-        WriteDWord(out, i.end);
-        WriteWord(out, i.flag);
+        WriteDWord(out, static_cast<uint32_t>(i.end));
+        WriteDWord(out, static_cast<uint32_t>(i.flag));
     }
 
     // Write notes (u32 pos, u16 type, u16 is_opponent)
     for (auto &i : notes)
     {
-        WriteDWord(out, i.pos);
+        WriteDWord(out, static_cast<uint32_t>(i.pos));
         WriteWord(out, i.type);
-        WriteWord(out, static_cast<uint16_t>(i.is_opponent ? 1 : 0));
-    }
-
-    // Write events (u32 pos, u32 event, u32 value1, u32 value2)
-    for (auto &e : events)
-    {
-        WriteDWord(out, e.pos);
-        WriteDWord(out, e.event);
-        WriteDWord(out, e.value1);
-        WriteDWord(out, e.value2);
+        out.put(i.is_opponent);
+        out.put(0);
     }
     return 0;
 }

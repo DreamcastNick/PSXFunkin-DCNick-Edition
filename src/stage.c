@@ -10,7 +10,6 @@
 #include "timer.h"
 #include "audio.h"
 #include "event.h"
-#include "events.h"
 #include "pad.h"
 #include "main.h"
 #include "random.h"
@@ -644,6 +643,10 @@ static void Stage_ChangeBPM(u16 bpm, u32 step)
 	if (stage.step_crochet)
 		stage.time_base += FIXED_DIV(((fixed_t)step - (fixed_t)stage.step_base) << FIXED_SHIFT, stage.step_crochet);
 	stage.step_base = step;
+	
+	//Ensure minimum BPM to prevent step_crochet from being 0
+	if (bpm < 60)
+		bpm = 60; // Minimum BPM of 60
 	
 	//Get new crochet and times
 	stage.step_crochet = ((fixed_t)bpm << FIXED_SHIFT) * 8 / 240; //15/12/24
@@ -1539,200 +1542,9 @@ static void Stage_DrawHealth(s16 health, u16 health_i[2][4], s8 ox)
 		dst.w = -dst.w;
 	}
 
-    // Apply icon bounce transformations if enabled
-    if (stage.uses_bounce) {
-        fixed_t scale_x, scale_y, angle;
-        if (ox == 1) {
-            // Player 1 icon (ox = 1)
-            scale_x = Tween_GetValue(&stage.icon_scale_tween_p1_x);
-            scale_y = Tween_GetValue(&stage.icon_scale_tween_p1_y);
-            angle = Tween_GetValue(&stage.icon_angle_tween_p1);
-        } else if (ox == -1) {
-            // Player 2/Opponent icon (ox = -1)
-            scale_x = Tween_GetValue(&stage.icon_scale_tween_p2_x);
-            scale_y = Tween_GetValue(&stage.icon_scale_tween_p2_y);
-            angle = Tween_GetValue(&stage.icon_angle_tween_p2);
-        } else {
-            // No bounce effect for other ox values
-            scale_x = FIXED_UNIT;
-            scale_y = FIXED_UNIT;
-            angle = 0;
-        }
-        
-        // Apply scaling
-        dst.x = FIXED_MUL(dst.x, scale_x);
-        dst.y = FIXED_MUL(dst.y, scale_y);
-        dst.w = FIXED_MUL(dst.w, scale_x);
-        dst.h = FIXED_MUL(dst.h, scale_y);
-
-        // Draw health icon with rotation
-        // Convert fixed-point angle to rotation parameter (in degrees)
-        // angle is FIXED_DEC(15, 1000) = 15, so we need to convert to exactly 0.015 degrees
-        Stage_DrawTexRotate(&stage.tex_hud1, &src, &dst, angle / 10000, 0, 0, FIXED_MUL(stage.bump, stage.sbump), stage.camera.hudangle);
-    } else {
-        // Draw health icon without bounce effects
-        Stage_DrawTex(&stage.tex_hud1, &src, &dst, FIXED_MUL(stage.bump, stage.sbump), stage.camera.hudangle);
-    }
+	// Draw health icon without bounce effects
+	Stage_DrawTex(&stage.tex_hud1, &src, &dst, FIXED_MUL(stage.bump, stage.sbump), stage.camera.hudangle);
 }
-
-void Stage_UpdateIconBounce(void)
-{
-    static u8 bounce_state = 0; // 0 = normal, 1 = bouncing TO, 2 = returning FROM
-    u8 bounce_speed = 1 >> 1;
-	
-    // Don't update icon bounce when stage is paused
-    if (stage.paused)
-        return;
-    
-    // Check if we should trigger icon bounce (every bounce_speed beats)
-    if (stage.song_beat % bounce_speed == 0 && bounce_state == 0) {
-        bounce_state = 1; // Start bouncing TO the bounce state
-        
-        // Determine which icon gets which animation based on beat pattern
-        if ((stage.song_beat % (bounce_speed * 2)) == 0) {
-            // Player 1 gets squash, Player 2 gets stretch
-            stage.icon_scale_p1_x = ICON_BOUNCE_SCALE_X;
-            stage.icon_scale_p1_y = ICON_BOUNCE_SCALE_Y_SQUASH;
-            stage.icon_scale_p2_x = ICON_BOUNCE_SCALE_X;
-            stage.icon_scale_p2_y = ICON_BOUNCE_SCALE_Y_STRETCH;
-            stage.icon_angle_p1 = -ICON_BOUNCE_ANGLE;
-            stage.icon_angle_p2 = ICON_BOUNCE_ANGLE;
-        } else {
-            // Player 1 gets stretch, Player 2 gets squash
-            stage.icon_scale_p1_x = ICON_BOUNCE_SCALE_X;
-            stage.icon_scale_p1_y = ICON_BOUNCE_SCALE_Y_STRETCH;
-            stage.icon_scale_p2_x = ICON_BOUNCE_SCALE_X;
-            stage.icon_scale_p2_y = ICON_BOUNCE_SCALE_Y_SQUASH;
-            stage.icon_angle_p1 = ICON_BOUNCE_ANGLE;
-            stage.icon_angle_p2 = -ICON_BOUNCE_ANGLE;
-        }
-        
-        // Start ALL tweens TO the bounce state (from current tween values to bounce values)
-        Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), stage.icon_scale_p1_x, 
-                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), stage.icon_scale_p1_y, 
-                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), stage.icon_scale_p2_x, 
-                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), stage.icon_scale_p2_y, 
-                          ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-        Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), stage.icon_angle_p1, 
-                          ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
-        Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), stage.icon_angle_p2, 
-                          ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
-    }
-    
-    // Update all tweens
-    if (!stage.paused) {
-        Tween_Tick(&stage.icon_scale_tween_p1_x);
-        Tween_Tick(&stage.icon_scale_tween_p1_y);
-        Tween_Tick(&stage.icon_scale_tween_p2_x);
-        Tween_Tick(&stage.icon_scale_tween_p2_y);
-        Tween_Tick(&stage.icon_angle_tween_p1);
-        Tween_Tick(&stage.icon_angle_tween_p2);
-    }
-    
-    // Check if bounce TO state is complete, then start return animation
-    if (bounce_state == 1) {
-        if (stage.icon_scale_tween_p1_x.elapsed_time >= stage.icon_scale_tween_p1_x.duration &&
-            stage.icon_scale_tween_p1_y.elapsed_time >= stage.icon_scale_tween_p1_y.duration &&
-            stage.icon_scale_tween_p2_x.elapsed_time >= stage.icon_scale_tween_p2_x.duration &&
-            stage.icon_scale_tween_p2_y.elapsed_time >= stage.icon_scale_tween_p2_y.duration &&
-            stage.icon_angle_tween_p1.elapsed_time >= stage.icon_angle_tween_p1.duration &&
-            stage.icon_angle_tween_p2.elapsed_time >= stage.icon_angle_tween_p2.duration) {
-            
-            bounce_state = 2; // Start return animation
-            
-            // Start ALL return tweens to animate back to normal
-            Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-            Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-            Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-            Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), FIXED_UNIT, 
-                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-            Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), 0, 
-                              ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-            Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), 0, 
-                              ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
-        }
-    }
-    
-    // Check if return animation is complete
-    if (bounce_state == 2) {
-        if (stage.icon_scale_tween_p1_x.elapsed_time >= stage.icon_scale_tween_p1_x.duration &&
-            stage.icon_scale_tween_p1_y.elapsed_time >= stage.icon_scale_tween_p1_y.duration &&
-            stage.icon_scale_tween_p2_x.elapsed_time >= stage.icon_scale_tween_p2_x.duration &&
-            stage.icon_scale_tween_p2_y.elapsed_time >= stage.icon_scale_tween_p2_y.duration &&
-            stage.icon_angle_tween_p1.elapsed_time >= stage.icon_angle_tween_p1.duration &&
-            stage.icon_angle_tween_p2.elapsed_time >= stage.icon_angle_tween_p2.duration) {
-            bounce_state = 0; // Reset to normal state
-        }
-    }
-}
-
-void Stage_SetIconBounce(boolean enabled)
-{
-    stage.uses_bounce = enabled;
-    
-    // If disabling bounce, reset icon transforms to normal
-    if (!enabled) {
-        // Reset scale values
-        stage.icon_scale_p1_x = FIXED_UNIT;
-        stage.icon_scale_p1_y = FIXED_UNIT;
-        stage.icon_scale_p2_x = FIXED_UNIT;
-        stage.icon_scale_p2_y = FIXED_UNIT;
-        
-        // Reset angle values
-        stage.icon_angle_p1 = 0;
-        stage.icon_angle_p2 = 0;
-        
-        // Reset all tweens to prevent ongoing animations
-        Tween_InitWithValue(&stage.icon_scale_tween_p1_x, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p1_y, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p2_x, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-        Tween_InitWithValue(&stage.icon_scale_tween_p2_y, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-        Tween_InitWithValue(&stage.icon_angle_tween_p1, 0, 0, 0, EASING_LINEAR, 0);
-        Tween_InitWithValue(&stage.icon_angle_tween_p2, 0, 0, 0, EASING_LINEAR, 0);
-    }
-}
-
-boolean Stage_GetIconBounce(void)
-{
-    return stage.uses_bounce;
-}
-
-void Stage_TriggerIconBounce(void)
-{
-	u8 bounce_speed = 1 >> 1;
-    if (!stage.uses_bounce) return;
-    
-    // Set all initial values first to ensure synchronized start
-    // Player 1 gets squash, Player 2 gets stretch
-    stage.icon_scale_p1_x = ICON_BOUNCE_SCALE_X;
-    stage.icon_scale_p1_y = ICON_BOUNCE_SCALE_Y_SQUASH;
-    stage.icon_scale_p2_x = ICON_BOUNCE_SCALE_X;
-    stage.icon_scale_p2_y = ICON_BOUNCE_SCALE_Y_STRETCH;
-    stage.icon_angle_p1 = -ICON_BOUNCE_ANGLE;
-    stage.icon_angle_p2 = ICON_BOUNCE_ANGLE;
-    
-    // Initialize all tweens simultaneously to return to normal
-    Tween_InitWithValue(&stage.icon_scale_tween_p1_x, Tween_GetValue(&stage.icon_scale_tween_p1_x), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-    Tween_InitWithValue(&stage.icon_scale_tween_p1_y, Tween_GetValue(&stage.icon_scale_tween_p1_y), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-    Tween_InitWithValue(&stage.icon_scale_tween_p2_x, Tween_GetValue(&stage.icon_scale_tween_p2_x), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-    Tween_InitWithValue(&stage.icon_scale_tween_p2_y, Tween_GetValue(&stage.icon_scale_tween_p2_y), FIXED_UNIT, 
-                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-    Tween_InitWithValue(&stage.icon_angle_tween_p1, Tween_GetValue(&stage.icon_angle_tween_p1), 0, 
-                       ICON_BOUNCE_DURATION_SCALE * bounce_speed, EASING_QUAD_OUT, 0);
-    Tween_InitWithValue(&stage.icon_angle_tween_p2, Tween_GetValue(&stage.icon_angle_tween_p2), 0, 
-                       ICON_BOUNCE_DURATION_ANGLE * bounce_speed, EASING_QUAD_OUT, 0);
-}
-
-
 
 static void Stage_DrawOrangeHealth(s16 health, u16 health_i[2][4], s8 ox) 
 {
@@ -1798,7 +1610,7 @@ static void Stage_DrawHealthBar(s16 x, s32 color)
 	if (stage.prefs.downscroll)
 		dst.y = -dst.y - dst.h;
 	
-	Stage_DrawTexCol(&stage.tex_hude, &src, &dst, stage.bump, stage.camera.hudangle, red >> 1, blue >> 1, green >> 1);
+	Stage_DrawTexCol(&stage.tex_hud0, &src, &dst, stage.bump, stage.camera.hudangle, red >> 1, blue >> 1, green >> 1);
 }
 
 static void Stage_DrawStrum(u8 i, RECT *note_src, RECT_FIXED *note_dst)
@@ -2009,35 +1821,35 @@ static void Stage_DrawNotes(boolean back)
 		{
 			//Wait for note to exit late time
 			if (note_fp + stage.late_safe >= stage.note_scroll)
+			{
 				continue;
-			
-				if ((note->type == NOTE_FLAG_DANGER) && !bot)
-				{
+			}
+			if ((note->type == NOTE_FLAG_DANGER) && !bot)
+			{
 				this->health -= 4750;
-					Stage_CutVocal();
-					Stage_MissNote(this);
-				}
-
-				if ((note->type == NOTE_FLAG_STATIC) && !bot)
-				{
-					Audio_PlaySound(Sounds[4], 0x3fff);
-					this->health -= 2000;
-					stage.hitstatic = 10;
-					Stage_CutVocal();
-					Stage_MissNote(this);
-				}
-
-				if (!(note->type & (NOTE_FLAG_HIT | NOTE_FLAG_MINE | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC)) && !bot)
-				{
-					if (stage.prefs.mode < StageMode_Net1 || i == ((stage.prefs.mode == StageMode_Net1) ? 0 : 1))
-					{
-						// Missed note
-						this->health -= 475;
-						Stage_CutVocal();
-						Stage_MissNote(this);
-				}
+				Stage_CutVocal();
+				Stage_MissNote(this);
 			}
 
+			if ((note->type == NOTE_FLAG_STATIC) && !bot)
+			{
+				Audio_PlaySound(Sounds[4], 0x3fff);
+				this->health -= 2000;
+				stage.hitstatic = 10;
+				Stage_CutVocal();
+				Stage_MissNote(this);
+			}
+
+			if (!(note->type & (NOTE_FLAG_HIT | NOTE_FLAG_MINE | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC)) && !bot)
+			{
+				if (stage.prefs.mode < StageMode_Net1 || i == ((stage.prefs.mode == StageMode_Net1) ? 0 : 1))
+				{
+					// Missed note
+					this->health -= 475;
+					Stage_CutVocal();
+					Stage_MissNote(this);
+				}
+			}
 			//Update current note
 			stage.cur_note++;
 		}
@@ -2725,17 +2537,17 @@ static void Stage_TimerTick(void)
 		FIXED_DEC(-56,1),
 		FIXED_DEC(-110,1),
 		0,
-		FIXED_DEC(10,1)
+		FIXED_DEC(4,1)
 	};
 
 		if (stage.prefs.downscroll)
 			square_dst.y = -square_dst.y - square_dst.h + FIXED_DEC(1,1);
 
 		square_dst.w = square_fill.w << FIXED_SHIFT;
-		Stage_DrawTex(&stage.tex_hud1, &square_fill, &square_dst, stage.bump, stage.camera.hudangle);
+		Stage_DrawTex(&stage.tex_hud0, &square_fill, &square_dst, stage.bump, stage.camera.hudangle);
 		
 		square_dst.w = square_black.w << FIXED_SHIFT;
-		Stage_DrawTexCol(&stage.tex_hud1, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
+		Stage_DrawTexCol(&stage.tex_hud0, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
 	}
 }
 
@@ -2802,10 +2614,10 @@ static void Stage_OrangeTimerTick(void)
 			square_dst.y = -square_dst.y - square_dst.h + FIXED_DEC(1,1);
 
 		square_dst.w = square_fill.w << FIXED_SHIFT;
-		Stage_DrawTexCol(&stage.tex_hude, &square_fill, &square_dst, stage.bump, stage.camera.hudangle, 255 >> 1, 128 >> 1, 0 >> 1);
+		Stage_DrawTexCol(&stage.tex_hud0, &square_fill, &square_dst, stage.bump, stage.camera.hudangle, 255 >> 1, 128 >> 1, 0 >> 1);
 		
 		square_dst.w = square_black.w << FIXED_SHIFT;
-		Stage_DrawTexCol(&stage.tex_hude, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
+		Stage_DrawTexCol(&stage.tex_hud0, &square_black, &square_dst, stage.bump, stage.camera.hudangle,  0,  0,  0);
 	}
 }
 
@@ -2947,82 +2759,18 @@ static void Stage_LoadChart(void)
  	stage.chart_data = IO_Read(chart_path);
  	u8 *chart_byte = (u8*)stage.chart_data;
  	
- 	// Parse 32-bit chart format: [u32 speed_fixed][u16 keys][u32 note_offset]
- 	fixed_t speed_fixed = (fixed_t)((u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24));
- 	u16 keys = (u16)(chart_byte[4] | (chart_byte[5] << 8));
- 	u32 note_off = (u32)chart_byte[6] | ((u32)chart_byte[7] << 8) | ((u32)chart_byte[8] << 16) | ((u32)chart_byte[9] << 24);
- 	
- 	u8 *section_p = chart_byte + 10;
- 	u8 *note_p = chart_byte + note_off;
- 	u8 *event_p = NULL; // events immediately follow notes in file
+	// Parse chart format: [u16 keys][u32 note_offset]
+	u16 keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
+	u32 note_off = ((u32)chart_byte[2] | ((u32)chart_byte[3] << 8) | ((u32)chart_byte[4] << 16) | ((u32)chart_byte[5] << 24)) >> 2;
+	
+	// Directly use pointers into the loaded buffer (skip parsing/copying)
+	stage.sections = (Section*)(chart_byte + 6);
+	stage.notes = (Note*)(chart_byte + note_off);
  		
- 	// Count sections and notes
- 	size_t sections = (note_off - 10) / 6; // each section is 6 bytes (u32 end, u16 flag)
- 	size_t notes = 0;
- 	for (u8 *np = note_p;; np += 8) // each note is 8 bytes (u32 pos, u16 type, u16 is_opponent)
- 	{
- 		u32 pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
- 		notes++;
- 		if (pos == 0xFFFFFFFF)
- 			break;
- 	}
- 	// Events start right after notes block
- 	event_p = note_p + notes * 8;
- 	size_t events_cnt = 0;
- 	for (u8 *ep = event_p;; ep += 16) // each event is 16 bytes (u32 pos, u32 event, u32 v1, u32 v2)
- 	{
- 		u32 pos = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
- 		events_cnt++;
- 		if (pos == 0xFFFFFFFF)
- 			break;
- 	}
- 		
- 	// Allocate tightly packed arrays for sections, notes and events
- 	 size_t sections_size = sections * sizeof(Section);
- 	 size_t notes_size = notes * sizeof(Note);
- 	 size_t events_size = events_cnt * sizeof(ChartEvent);
- 	 size_t notes_off = MEM_ALIGN(sections_size);
- 	 size_t events_off = notes_off + MEM_ALIGN(notes_size);
- 	u8 *nchart = Mem_Alloc(events_off + events_size);
- 		
- 	// Copy sections
- 	 Section *nsection_p = stage.sections = (Section*)nchart;
- 	for (size_t i = 0; i < sections; i++, nsection_p++)
- 	 {
- 		u8 *sp = section_p + i * 6;
- 		nsection_p->end = (u32)sp[0] | ((u32)sp[1] << 8) | ((u32)sp[2] << 16) | ((u32)sp[3] << 24);
- 		nsection_p->flag = (u16)(sp[4] | (sp[5] << 8));
- 	}
- 		
- 	// Copy notes
- 	 Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
- 	for (size_t i = 0; i < notes; i++, nnote_p++)
- 	{
- 		u8 *np = note_p + i * 8;
- 		nnote_p->pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
- 		nnote_p->type = (u16)(np[4] | (np[5] << 8));
- 		nnote_p->is_opponent = (u16)(np[6] | (np[7] << 8));
- 	}
-
- 	// Copy events
- 	 ChartEvent *nevent_p = stage.events = (ChartEvent*)(nchart + events_off);
- 	for (size_t i = 0; i < events_cnt; i++, nevent_p++)
- 	{
- 		u8 *ep = event_p + i * 16;
- 		nevent_p->pos    = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
- 		nevent_p->event  = (u32)ep[4] | ((u32)ep[5] << 8) | ((u32)ep[6] << 16) | ((u32)ep[7] << 24);
- 		nevent_p->value1 = (u32)ep[8] | ((u32)ep[9] << 8) | ((u32)ep[10] << 16) | ((u32)ep[11] << 24);
- 		nevent_p->value2 = (u32)ep[12] | ((u32)ep[13] << 8) | ((u32)ep[14] << 16) | ((u32)ep[15] << 24);
- 	}
- 	
- 	// Finalize
- 	stage.num_notes = notes;
- 	stage.keys = keys;
- 	stage.max_keys = stage.keys * 2;
- 		
- 	 // Use reformatted chart
- 	 Mem_Free(stage.chart_data);
- 	 stage.chart_data = (IO_Data)nchart;
+	// Count notes until 0xFFFFFFFF sentinel
+	stage.num_notes = 0;
+	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+		stage.num_notes++;
  	
  	 // Swap chart
  	 if (stage.prefs.mode == StageMode_Swap)
@@ -3050,65 +2798,24 @@ static void Stage_LoadChart(void)
  	
  	 stage.cur_section = stage.sections;
  	 stage.cur_note = stage.notes;
- 	stage.cur_event = stage.events;
 	
- 	// Use speed from chart header
- 	stage.speed = stage.ogspeed = speed_fixed;
+	stage.speed = stage.stage_def->speed[stage.stage_diff];
+	stage.keys = keys;
+	stage.max_keys = stage.keys * 2;
  	 
  	 stage.step_crochet = 0;
  	 stage.time_base = 0;
  	 stage.step_base = 0;
  	 stage.section_base = stage.cur_section;
- 	 Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, (u32)0);
-
-
-	char event_path[64];
-	sprintf(event_path, "\\CHART\\%d.%dEVENT.CHT;1", stage.stage_def->week, stage.stage_def->week_song);
-	if (IO_ExistFile(event_path) == true)
-	{
-		if (stage.event_chart_data != NULL)
-			Mem_Free(stage.event_chart_data);
-		stage.event_chart_data = IO_Read(event_path);
-	}
-	else
-	{
-		stage.event_chart_data = NULL;
-	}
+	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, (u32)0);
 	
-	// Parse external events if present
-	if (stage.event_chart_data != NULL)
-	{
-		// Count events (16 bytes each, terminated by pos == 0xFFFFFFFF)
-		u8 *event_p = (u8*)stage.event_chart_data;
-		size_t events_cnt = 0;
-		for (u8 *ep = event_p;; ep += 16)
-		{
-			u32 pos = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
-			events_cnt++;
-			if (pos == 0xFFFFFFFF)
-				break;
-		}
-
-		// Allocate and copy into tightly packed array
-		if (stage.event_events != NULL)
-			Mem_Free(stage.event_events);
-		ChartEvent *eevents = (ChartEvent*)Mem_Alloc(events_cnt * sizeof(ChartEvent));
-		for (size_t i = 0; i < events_cnt; i++)
-		{
-			u8 *ep = event_p + i * 16;
-			eevents[i].pos    = (u32)ep[0] | ((u32)ep[1] << 8) | ((u32)ep[2] << 16) | ((u32)ep[3] << 24);
-			eevents[i].event  = (u32)ep[4] | ((u32)ep[5] << 8) | ((u32)ep[6] << 16) | ((u32)ep[7] << 24);
-			eevents[i].value1 = (u32)ep[8] | ((u32)ep[9] << 8) | ((u32)ep[10] << 16) | ((u32)ep[11] << 24);
-			eevents[i].value2 = (u32)ep[12] | ((u32)ep[13] << 8) | ((u32)ep[14] << 16) | ((u32)ep[15] << 24);
-		}
-
-		// Store and set current pointer
-		stage.event_events = eevents;
-		stage.event_cur_event = stage.event_events;
-
-		// Free raw event chart data to save memory
-		Mem_Free(stage.event_chart_data);
-		stage.event_chart_data = NULL;
+	// Ensure step_crochet is never 0 after BPM change
+	if (stage.step_crochet == 0) {
+		stage.step_crochet = ((fixed_t)60 << FIXED_SHIFT) * 8 / 240; // Default to 60 BPM
+		stage.step_time = FIXED_DIV(FIXED_DEC(12,1), stage.step_crochet);
+		stage.early_safe = stage.late_safe = stage.step_crochet / 6;
+		stage.late_sus_safe = stage.late_safe;
+		stage.early_sus_safe = stage.early_safe * 2 / 5;
 	}
 }
 
@@ -3931,32 +3638,12 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.bump = FIXED_UNIT;
 	stage.sbump = FIXED_UNIT;
 	
-	//Initialize icon bounce fields
-	stage.uses_bounce = true; // Enable icon bounce by default
-	stage.icon_scale_p1_x = FIXED_UNIT;
-	stage.icon_scale_p1_y = FIXED_UNIT;
-	stage.icon_scale_p2_x = FIXED_UNIT;
-	stage.icon_scale_p2_y = FIXED_UNIT;
-	stage.icon_angle_p1 = 0;
-	stage.icon_angle_p2 = 0;
-	
-	//Initialize icon bounce tweens to normal values
-	Tween_InitWithValue(&stage.icon_scale_tween_p1_x, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-	Tween_InitWithValue(&stage.icon_scale_tween_p1_y, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-	Tween_InitWithValue(&stage.icon_scale_tween_p2_x, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-	Tween_InitWithValue(&stage.icon_scale_tween_p2_y, FIXED_UNIT, FIXED_UNIT, 0, EASING_LINEAR, 0);
-	Tween_InitWithValue(&stage.icon_angle_tween_p1, 0, 0, 0, EASING_LINEAR, 0);
-	Tween_InitWithValue(&stage.icon_angle_tween_p2, 0, 0, 0, EASING_LINEAR, 0);
-	
 	//Initialize stage according to mode
 	stage.note_swap = (stage.prefs.mode == StageMode_Swap) ? 4 : 0;
 	
 	//Load music
 	stage.note_scroll = 0;
 	Stage_LoadMusic();
-
-	//Load Psych events
-	Events_Load();
 	
 	//Test offset
 	stage.offset = 0;
@@ -4108,9 +3795,6 @@ static boolean Stage_NextLoad(void)
 		
 		//Load music
 		Stage_LoadMusic();
-		
-		//Load Psych events
-		Events_Load();
 		
 		//Reset timer
 		Timer_Reset();
@@ -4330,11 +4014,8 @@ void Stage_Tick(void)
 			if (stage.startscreen > 0)
 				Stage_DrawStartScreen();
 			
-			Static_tick();
-			
-			// Update icon bounce animations
-			Stage_UpdateIconBounce();
-			
+			Static_tick();			
+
 			if (stage.song_step >= 0)
 			{
 				if (stage.paused == false && pad_state.press & PAD_START && !stage.movie_is_playing)
@@ -4833,50 +4514,71 @@ void Stage_Tick(void)
 				stage.swap_grace_frames--;
 
 			//Get song position
-			boolean playing;
+			boolean playing = false;
 			fixed_t next_scroll;
 			
 			const fixed_t interp_int = FIXED_UNIT * 8 / 75;
 
-			if (!stage.paused)
-			{
-				if (stage.note_scroll < 0)
-				{
-					stage.song_time += timer_dt;
-						
-					//Update song
-					if (stage.song_time >= 0)
-					{
-						//Song has started
-						playing = true;
+	        if (!stage.paused)
+            {
+                if (stage.note_scroll < 0)
+                {
+                    stage.song_time += timer_dt;
+                        
+                    //Update song
+                    if (stage.song_time >= 0)
+                    {
+                        //Song has started
+                        playing = true;
 
-						if (currentDisc == 1) {
-							Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
+                        // --- FIX: Always start XA after countdown, even for slow BPM songs ---
+                        if (stage.song_step < 0 && stage.song_step >= -1 && !Audio_PlayingXA()) 
+						{
+							// If the countdown is over but XA is not playing, force start
+							if (currentDisc == 1) {
+								Audio_PlayXA_TrackDisc1(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
+							}
+							if (currentDisc == 2) {
+								Audio_PlayXA_TrackDisc2(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
+							}
+							if (currentDisc == 3) {
+								Audio_PlayXA_TrackDisc3(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
+							}
+							// Force scroll and step to 0 to begin the song
+							stage.note_scroll = 0;
+							stage.song_step = 0;
+							stage.song_beat = 0;
+							stage.song_time = 0;
+							stage.cur_section = stage.sections;
 						}
-						if (currentDisc == 2) {
-							Audio_PlayXA_TrackDisc2(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
+                        // --- END FIX ---
+
+                        //Update song time
+                        fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
+                        if (audio_time < 0)
+                            audio_time = 0;
+                        stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
+                        stage.interp_time = 0;
+                        stage.song_time = stage.interp_ms;
+						
+						// --- CRITICAL FIX: Force scroll and step to 0 after countdown ---
+						if (stage.note_scroll < 0) {
+							stage.note_scroll = 0;
+							stage.song_step = 0;
+							stage.song_beat = 0;
+							// Also reset section pointer if needed
+							stage.cur_section = stage.sections;
 						}
-						if (currentDisc == 3) {
-							Audio_PlayXA_TrackDisc3(stage.stage_def->music_track, 0x40, stage.stage_def->music_channel, false, 0);
-						}
-							
-						//Update song time
-						fixed_t audio_time = (fixed_t)Audio_TellXA_Milli() - stage.offset;
-						if (audio_time < 0)
-							audio_time = 0;
-						stage.interp_ms = (audio_time << FIXED_SHIFT) / 1000;
-						stage.interp_time = 0;
-						stage.song_time = stage.interp_ms;
 					}
-					else
-					{
-						//Still scrolling
-						playing = false;
-					}
-					
-					//Update scroll
-					next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
-				}
+                    else
+                    {
+                        //Still scrolling
+                        playing = false;
+                    }
+                    
+                    //Update scroll
+                    next_scroll = FIXED_MUL(stage.song_time, stage.step_crochet);
+                }
 				else if (Audio_PlayingXA())
 				{
 					fixed_t audio_time_pof;
@@ -4931,6 +4633,24 @@ void Stage_Tick(void)
 					//Update scroll
 					next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
 				}
+				if (stage.song_step >= 0) 
+				{
+					// Find last note position
+					u32 last_note_pos = 0;
+					for (Note *n = stage.notes; n->pos != 0xFFFFFFFF; n++)
+						last_note_pos = n->pos;
+					// If we've passed the last note and XA is not playing, force transition
+					if (((stage.note_scroll >> FIXED_SHIFT) > (fixed_t)last_note_pos) && !Audio_PlayingXA()) {
+						if (stage.story && stage.stage_def->next_stage != stage.stage_id) {
+							if (Stage_NextLoad())
+								goto SeamLoad;
+						} else {
+							CheckNewScore();
+							stage.trans = StageTrans_Menu;
+							Trans_Start();
+						}
+					}
+				}
                 else
                 {
                     // XA not playing; continue local timing for botplay/scroll until chart ends
@@ -4939,7 +4659,7 @@ void Stage_Tick(void)
                         last_note_pos = n->pos;
 
                     // Keep playing true while chart hasn't ended yet
-                    playing = ((stage.note_scroll >> FIXED_SHIFT) < last_note_pos);
+                    playing = ((stage.note_scroll >> FIXED_SHIFT) < (fixed_t)last_note_pos);
 
                     // Advance local song_time using timer to keep scroll going
                     stage.song_time += timer_dt;
@@ -4968,7 +4688,7 @@ void Stage_Tick(void)
 					if (((stage.note_scroll / 12) & FIXED_UAND) != ((next_scroll / 12) & FIXED_UAND))
 						stage.flag |= STAGE_FLAG_JUST_STEP;
 					stage.note_scroll = next_scroll;
-					stage.song_step = (stage.note_scroll >> FIXED_SHIFT);
+					stage.song_step = (u32)(stage.note_scroll >> FIXED_SHIFT);
 					if (stage.note_scroll < 0)
 						stage.song_step -= 11;
 					stage.song_step /= 12;
@@ -5094,8 +4814,6 @@ void Stage_Tick(void)
 			}
 			
 			Events_Start();
-			//Psych events
-			Events_StartEvents();
 			
 			//Handle bump
 			if ((stage.bump = FIXED_UNIT + FIXED_MUL(stage.bump - FIXED_UNIT, FIXED_DEC(95,100))) <= FIXED_DEC(1003,1000))
@@ -5286,8 +5004,8 @@ void Stage_Tick(void)
 					
 					for (Note *note = stage.cur_note;; note++)
 					{
-						if (note->pos > (stage.note_scroll >> FIXED_SHIFT))
-							break;
+						if (note->pos > (u32)(stage.note_scroll >> FIXED_SHIFT))
+                            break;
 						
 						//Opponent note hits
 						if (playing && !(note->type & NOTE_FLAG_HIT) && note->is_opponent)
@@ -5438,8 +5156,6 @@ void Stage_Tick(void)
 			
 			//Draw stage notes (background)
 			Stage_DrawNotes(false);
-
-			Stage_SetIconBounce(true);
 
 			//Tick girlfriend
 			if (stage.gf != NULL)
