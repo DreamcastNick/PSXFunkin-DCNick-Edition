@@ -16,9 +16,7 @@
 #include "player.h"
 #include "object.h"
 #include "font.h"
-#include "event.h"
 #include "debug.h"
-#include "tween.h"
 
 //Stage constants
 #define INPUT_LEFT  (PAD_LEFT  | PAD_SQUARE | PAD_L2)
@@ -146,13 +144,13 @@ typedef struct
 } StageDef;
 
 //Stage state
-#define SECTION_FLAG_OPPFOCUS (1U << 15) //Focus on opponent
-#define SECTION_FLAG_BPM_MASK 0x7FFFU //1/24
+#define SECTION_FLAG_OPPFOCUS (1ULL << 15) //Focus on opponent
+#define SECTION_FLAG_BPM_MASK 0x7FFF //1/24
 
 typedef struct
 {
-	u32 end; //1/12 steps (was u16)
-	u32 flag;
+	u16 end; //1/12 steps
+	u16 flag;
 } Section;
 
 #define NOTE_FLAG_SUSTAIN     (1 << 5) //Note is a sustain note
@@ -168,7 +166,7 @@ typedef struct
 
 typedef struct
 {
-	u32 pos; //1/12 steps (was u16)
+	u16 pos; //1/12 steps
 	u16 type;
 	u16 is_opponent;
 } Note;
@@ -180,7 +178,7 @@ typedef struct
 	fixed_t arrow_hitan[9]; //Arrow hit animation for presses
 
 	s16 health;
-	u32 combo;
+	u16 combo;
 	
 	boolean refresh_score;
 	int score, max_score;
@@ -248,10 +246,9 @@ typedef struct
 	Section *sections;
 	Note *notes;
 	size_t num_notes;
-	size_t num_sections;
 	u16 keys;
 	u16 max_keys;
-
+	
 	fixed_t speed;
 	fixed_t step_crochet, step_time;
 	fixed_t early_safe, late_safe, early_sus_safe, late_sus_safe;
@@ -306,7 +303,7 @@ typedef struct
 	
 	Section *cur_section; //Current section
 	Note *cur_note; //First visible and hittable note, used for drawing and hit detection
-
+	
 	fixed_t note_scroll, song_time, interp_time, interp_ms, interp_speed;
 
 	struct
@@ -318,10 +315,10 @@ typedef struct
 	
 	u16 last_bpm;
 
-	s32 timerlength, timermin, timersec, timepassed;
+	int timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
-	u32 step_base;
+	u16 step_base;
 	Section *section_base;
 
 	// Grace period after swaps to avoid false misses
@@ -354,7 +351,7 @@ typedef struct
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
-
+	
 	//Animations
 	u16 startscreen;
 } Stage;
@@ -376,6 +373,7 @@ void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, 
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 mode);
 void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
 void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 mode, u8 opacity);
+
 
 //Stage functions
 void Stage_Load(StageId id, StageDiff difficulty, boolean story);

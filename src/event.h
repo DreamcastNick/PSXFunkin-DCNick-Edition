@@ -30,7 +30,7 @@ extern Event event;
 void FollowCharCamera();
 void Load_Events();
 void Events_Front();
-void Events_Start();
+void Events();
 void Events_Back();
 
 #endif

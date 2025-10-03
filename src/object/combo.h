@@ -27,15 +27,13 @@ typedef struct
 	fixed_t cy, cv; //COMBO
 	fixed_t ct;
 	
-	// Support up to 10 digits (hundreds of millions and beyond)
-	u8 num[10]; //0-9 per digit; 0xFF means unused
-	fixed_t numy[10];
-	fixed_t numv[10];
+	u8 num[5]; //0-9
+	fixed_t numy[5];
+	fixed_t numv[5];
 	fixed_t numt;
-	u8 num_count; //active digit count
 } Obj_Combo;
 
 //Combo object functions
-Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u32 combo);
+Obj_Combo *Obj_Combo_New(fixed_t x, fixed_t y, u8 hit_type, u16 combo);
 
 #endif

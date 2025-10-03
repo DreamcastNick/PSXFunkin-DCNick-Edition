@@ -22,7 +22,7 @@ void Load_Events()
 	event.fadebehind = false;
 }
 
-void Events_Start()
+void Events()
 {
 	event.shake = lerp(event.shake,0,FIXED_DEC(2,10));
 	FollowCharCamera();
@@ -46,32 +46,18 @@ void FollowCharCamera()
     fixed_t char_dx = 0;
     fixed_t char_dy = 0;
     
-    if (stage.cur_section != NULL && stage.cur_section < stage.sections + stage.num_sections)
+    if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
     {
-        if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
+        switch (stage.opponent->animatable.anim)
         {
-            switch (stage.opponent->animatable.anim)
-            {
-                case CharAnim_Up: char_dy = -camera_speed; break;
-                case CharAnim_Down: char_dy = camera_speed; break;
-                case CharAnim_Left: char_dx = -camera_speed; break;
-                case CharAnim_Right: char_dx = camera_speed; break;
-            }
-        }
-        else
-        {
-            switch (stage.player->animatable.anim)
-            {
-                case CharAnim_Up: char_dy = -camera_speed; break;
-                case CharAnim_Down: char_dy = camera_speed; break;
-                case CharAnim_Left: char_dx = -camera_speed; break;
-                case CharAnim_Right: char_dx = camera_speed; break;
-            }
+            case CharAnim_Up: char_dy = -camera_speed; break;
+            case CharAnim_Down: char_dy = camera_speed; break;
+            case CharAnim_Left: char_dx = -camera_speed; break;
+            case CharAnim_Right: char_dx = camera_speed; break;
         }
     }
     else
     {
-        // Fallback to player focus if section is invalid
         switch (stage.player->animatable.anim)
         {
             case CharAnim_Up: char_dy = -camera_speed; break;

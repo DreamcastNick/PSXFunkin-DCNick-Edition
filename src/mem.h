@@ -64,7 +64,7 @@ static Mem_Header *mem = NULL;
 #endif
 
 #ifdef MEM_POOL
-/* Memory pool for frequently allocated objects - Optimized for full 2MB usage */
+/* Memory pool for frequently allocated objects */
 #define MEM_POOL_SIZE 16
 #define MEM_POOL_MAX_ENTRIES 32
 
@@ -92,7 +92,7 @@ void Mem_PoolInit(void)
 void *Mem_PoolAlloc(size_t size)
 {
 	//Try to find an existing pool entry of the right size
-	for (size_t i = 0; i < mem_pool_count; i++)
+	for (int i = 0; i < mem_pool_count; i++)
 	{
 		if (!mem_pool[i].in_use && mem_pool[i].size >= size)
 		{
@@ -122,7 +122,7 @@ void *Mem_PoolAlloc(size_t size)
 void Mem_PoolFree(void *ptr)
 {
 	//Find and mark as free
-	for (size_t i = 0; i < mem_pool_count; i++)
+	for (int i = 0; i < mem_pool_count; i++)
 	{
 		if (mem_pool[i].ptr == ptr && mem_pool[i].in_use)
 		{
@@ -137,7 +137,7 @@ void Mem_PoolFree(void *ptr)
 
 void Mem_PoolCleanup(void)
 {
-	for (size_t i = 0; i < mem_pool_count; i++)
+	for (int i = 0; i < mem_pool_count; i++)
 	{
 		if (mem_pool[i].ptr != NULL)
 		{

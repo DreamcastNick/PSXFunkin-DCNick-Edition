@@ -77,7 +77,6 @@ void Tween_Tick(Tween* tween)
 		tween->current_value = tween->initial_value + FIXED_MUL((tween->final_value - tween->initial_value), Easing_CalculateValue(tween));
 	
 	//Update the elapsed time since the tween started
-	// Use timer_dt directly since duration is now properly scaled
 	if (tween->elapsed_time != tween->duration)
 		tween->elapsed_time += timer_dt;
 	

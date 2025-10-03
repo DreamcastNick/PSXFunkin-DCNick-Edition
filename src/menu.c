@@ -81,7 +81,7 @@ static const char *funny_messages[][2] = {
 static struct
 {
 	//Menu state
-	u8 page, next_page, previous_page;
+	u8 page, next_page;
 	boolean page_swap;
 	u8 select, next_select;
 
@@ -344,7 +344,6 @@ void Menu_Load(MenuPage page)
 	
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
-	menu.previous_page = MenuPage_Main; // Default previous page
 	
 	switch (menu.page = menu.next_page = page)
 	{
@@ -410,7 +409,6 @@ void Menu_Unload(void)
 
 void Menu_ToStage(StageId id, StageDiff diff, boolean story)
 {
-	menu.previous_page = menu.page;
 	menu.next_page = MenuPage_Stage;
 	menu.page_param.stage.id = id;
 	menu.page_param.stage.story = story;
@@ -452,7 +450,6 @@ void Menu_Tick(void)
 			//Start title screen if opening ended
 			if (beat >= 16)
 			{
-				menu.previous_page = MenuPage_Opening;
 				menu.page = menu.next_page = MenuPage_Title;
 				menu.page_swap = true;
 				//Fallthrough
@@ -461,19 +458,7 @@ void Menu_Tick(void)
 			{
 				//Start title screen if start pressed
 				if (pad_state.held & PAD_START)
-				{
-					menu.previous_page = MenuPage_Opening;
 					menu.page = menu.next_page = MenuPage_Title;
-				}
-				
-				//Go back to previous page if circle is pressed (though this shouldn't happen on opening)
-				if (pad_state.press & PAD_CIRCLE && menu.previous_page != MenuPage_Opening)
-				{
-					//play cancel sound
-					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
-					Trans_Start();
-				}
 				
 				//Draw different text depending on beat
 				RECT src_ng = {0, 0, 128, 128};
@@ -551,7 +536,6 @@ void Menu_Tick(void)
 				menu.trans_time = FIXED_UNIT;
 				menu.page_state.title.fade = FIXED_DEC(255,1);
 				menu.page_state.title.fadespd = FIXED_DEC(300,1);
-				menu.previous_page = MenuPage_Title;
 				menu.next_page = MenuPage_Main;
 				menu.next_select = 0;
 			}
@@ -665,19 +649,15 @@ void Menu_Tick(void)
 					switch (menu.select)
 					{
 						case 0: //Story Mode
-							menu.previous_page = MenuPage_Main;
 							menu.next_page = MenuPage_Story;
 							break;
 						case 1: //Freeplay
-							menu.previous_page = MenuPage_Main;
 							menu.next_page = MenuPage_Freeplay;
 							break;
 						case 2: //Credits
-							menu.previous_page = MenuPage_Main;
 							menu.next_page = MenuPage_Credits;
 							break;
 						case 3: //Options
-							menu.previous_page = MenuPage_Main;
 							menu.next_page = MenuPage_Options;
 							break;
 					}
@@ -685,12 +665,12 @@ void Menu_Tick(void)
 					menu.trans_time = FIXED_UNIT;
 				}
 				
-				//Return to previous page if circle is pressed
+				//Return to title screen if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					//play cancel sound
 					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
+					menu.next_page = MenuPage_Title;
 					Trans_Start();
 				}
 			}
@@ -873,7 +853,6 @@ void Menu_Tick(void)
 				{
 					//play confirm sound
 					Audio_PlaySound(Sounds[1], 0x3fff);
-					menu.previous_page = MenuPage_Story;
 					menu.next_page = MenuPage_Stage;
 					menu.page_param.stage.id = menu_options[menu.select].stage;
 					menu.page_param.stage.story = true;
@@ -882,12 +861,12 @@ void Menu_Tick(void)
 					menu.page_state.title.fadespd = FIXED_DEC(510,1);
 					menu.mbf->set_anim(menu.mbf, CharAnim_Left);
 				}
-				//Return to previous menu if circle is pressed
+				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					//play cancel sound
 					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
+					menu.next_page = MenuPage_Main;
 					menu.next_select = 0; //Story Mode
 					Trans_Start();
 				}
@@ -1064,19 +1043,18 @@ void Menu_Tick(void)
 				{
 					//play confirm sound
 					Audio_PlaySound(Sounds[1], 0x3fff);
-					menu.previous_page = MenuPage_Freeplay;
 					menu.next_page = MenuPage_Stage;
 					menu.page_param.stage.id = menu_options[menu.select].stage;
 					menu.page_param.stage.story = false;
 					Trans_Start();
 				}
 				
-				//Return to previous menu if circle is pressed
+				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					//play cancel sound
 					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
+					menu.next_page = MenuPage_Main;
 					menu.next_select = 1; //Freeplay
 					Trans_Start();
 				}
@@ -1203,12 +1181,12 @@ void Menu_Tick(void)
 						menu.select = 0;
 				}
 				
-				//Return to previous menu if circle is pressed
+				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					//play cancel sound
 					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
+					menu.next_page = MenuPage_Main;
 					menu.next_select = 2; //Credits
 					Trans_Start();
 				}
@@ -1342,12 +1320,12 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_SELECT)
 					WriteSave();
 
-				//Return to previous menu if circle is pressed
+				//Return to main menu if circle is pressed
 				if (pad_state.press & PAD_CIRCLE)
 				{
 					//play cancel sound
 					Audio_PlaySound(Sounds[2], 0x3fff);
-					menu.next_page = menu.previous_page;
+					menu.next_page = MenuPage_Main;
 					menu.next_select = 3; //Options
 					Trans_Start();
 				}
@@ -1396,115 +1374,117 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Stage:
 		{
-			// Check if disc swap is needed based on the selected stage
-			boolean disc_swap_needed = false;
-			int required_disc = 0;
-			
-			// Determine which disc is required for the selected stage
-			if (menu.page_param.stage.id <= StageId_3_3)
+			char discIndicator[32];
+
+			if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
 			{
-				required_disc = 1;
-			}
-			else if (menu.page_param.stage.id <= StageId_4_7)
-			{
-				required_disc = 2;
-			}
-			else if (menu.page_param.stage.id <= StageId_5_7)
-			{
-				required_disc = 3;
-			}
-			
-			// Check if current disc matches required disc
-			if (currentDisc != required_disc)
-			{
-				disc_swap_needed = true;
-				char message[100];
-				sprintf(message, "Please insert disc %d and press X to continue.", required_disc);
-				DisplayMessage(message);
-			}
-			
-			// If disc swap is needed, handle the swap process
-			if (disc_swap_needed)
-			{
-				// Wait for user to press X to confirm they've inserted the correct disc
-				while (!(pad_state.press & PAD_CROSS))
+				if (sprintf(discIndicator, "\\DISC1.ID;1") == 0)
 				{
-					Pad_Update();
-				}
-				
-				// Handle the disc swap
-				HandleDiscSwap();
-				
-				// After disc swap, verify the correct disc is now inserted
-				// and show appropriate message
-				if (currentDisc == required_disc)
-				{
-					char message[100];
-					sprintf(message, "Disc %d detected. Press X to continue.", currentDisc);
-					DisplayMessage(message);
-				}
-				else
-				{
-					// Wrong disc still inserted, show error message
-					char message[100];
-					sprintf(message, "Wrong disc inserted. Please insert disc %d and press X.", required_disc);
-					DisplayMessage(message);
+					DisplayMessage("Disc 1 is already inserted. Press X to continue.");
 					while (!(pad_state.press & PAD_CROSS))
 					{
 						Pad_Update();
 					}
-					// Try to handle disc swap again
+				}
+			}
+			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") == 0)
+				{
+					DisplayMessage("Disc 2 is already inserted. Press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+				}
+			}
+			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
+			{
+				if (sprintf(discIndicator, "\\DISC3.ID;1") == 0)
+				{
+					DisplayMessage("Disc 3 is already inserted. Press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+				}
+			}
+
+			if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 2 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
 					HandleDiscSwap();
-					
-					// Final verification
-					if (currentDisc == required_disc)
-					{
-						char message[100];
-						sprintf(message, "Disc %d detected. Press X to continue.", currentDisc);
-						DisplayMessage(message);
-					}
-					else
-					{
-						char message[100];
-						sprintf(message, "Still wrong disc. Please insert disc %d and press X.", required_disc);
-						DisplayMessage(message);
-						while (!(pad_state.press & PAD_CROSS))
-						{
-							Pad_Update();
-						}
-					}
-				}
-				
-				// Wait for final confirmation
-				while (!(pad_state.press & PAD_CROSS))
-				{
-					Pad_Update();
 				}
 			}
-			else
+			else if ((currentDisc == 1) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
 			{
-				// Correct disc is already inserted, show confirmation message
-				char message[100];
-				sprintf(message, "Disc %d is already inserted. Press X to continue.", currentDisc);
-				DisplayMessage(message);
-				
-				// Wait for user confirmation
-				while (!(pad_state.press & PAD_CROSS))
+				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
 				{
-					Pad_Update();
+					DisplayMessage("Please insert disc 3 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
 				}
 			}
-			
-			// Check if user wants to go back to previous menu
-			if (pad_state.press & PAD_CIRCLE)
+
+			if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
 			{
-				//play cancel sound
-				Audio_PlaySound(Sounds[2], 0x3fff);
-				menu.next_page = menu.previous_page;
-				Trans_Start();
-				break; // Exit the stage case and go back to previous menu
+				if (sprintf(discIndicator, "\\DISC1.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 1 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
 			}
-			
+			else if ((currentDisc == 2) && (menu.page_param.stage.id >= StageId_5_1 && menu.page_param.stage.id <= StageId_5_7))
+			{
+				if (sprintf(discIndicator, "\\DISC3.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 3 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+
+			if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_1_1 && menu.page_param.stage.id <= StageId_3_3))
+			{
+				if (sprintf(discIndicator, "\\DISC1.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 1 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+			else if ((currentDisc == 3) && (menu.page_param.stage.id >= StageId_4_1 && menu.page_param.stage.id <= StageId_4_7))
+			{
+				if (sprintf(discIndicator, "\\DISC2.ID;1") != 0)
+				{
+					DisplayMessage("Please insert disc 2 and press X to continue.");
+					while (!(pad_state.press & PAD_CROSS))
+					{
+						Pad_Update();
+					}
+					HandleDiscSwap();
+				}
+			}
+
 			Menu_Unload();
 			LoadScr_Start();
 			Stage_Load(menu.page_param.stage.id, menu.page_param.stage.diff, menu.page_param.stage.story);

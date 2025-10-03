@@ -130,7 +130,7 @@ static const XA_Mp3_1 xa_mp3s1[] = {
 	{"fresh", true},   //XA_Fresh
 	//WEEK1B.XA
 	{"dadbattle", true}, //XA_Dadbattle
-	{"tutorial", true}, //XA_Tutorial
+	{"tutorial", false}, //XA_Tutorial
 	//WEEK2A.XA
 	{"spookeez", true}, //XA_Spookeez
 	{"south", true},    //XA_South
