@@ -149,7 +149,7 @@ typedef struct
 
 typedef struct
 {
-	u16 end; //1/12 steps
+	u32 end; //1/12 steps
 	u16 flag;
 } Section;
 
@@ -166,7 +166,7 @@ typedef struct
 
 typedef struct
 {
-	u16 pos; //1/12 steps
+	u32 pos; //1/12 steps
 	u16 type;
 	u16 is_opponent;
 } Note;
@@ -318,7 +318,7 @@ typedef struct
 	int timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
-	u16 step_base;
+	u32 step_base;
 	Section *section_base;
 
 	// Grace period after swaps to avoid false misses
