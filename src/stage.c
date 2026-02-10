@@ -26,9 +26,7 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
-#include "disc_swap_disc1.h"
-#include "disc_swap_disc2.h"
-#include "disc_swap_disc3.h"
+#include "disc_swap.h"
 
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
@@ -1062,6 +1060,41 @@ static void CheckNewScore()
 	}
 }
 
+static Pad *Stage_GetPadBySlot(u8 slot)
+{
+	switch (slot)
+	{
+		case 0: return &pad_state;
+		case 1: return &pad_state_2;
+		case 2: return &pad_state_3;
+		case 3: return &pad_state_4;
+		case 4: return &pad_state_5;
+		case 5: return &pad_state_6;
+		case 6: return &pad_state_7;
+		default: return &pad_state_8;
+	}
+}
+
+static void Stage_ProcessSide(PlayerState *this, u8 side, boolean playing)
+{
+	if (side >= STAGE_SIDES)
+		return;
+
+	Pad agg = {0};
+	u8 slots = stage.side_player_count[side];
+	if (slots == 0)
+		slots = 1;
+
+	for (u8 i = 0; i < slots && i < STAGE_SIDE_PLAYERS_MAX; i++)
+	{
+		Pad *pad = Stage_GetPadBySlot(stage.side_pad_slot[side][i]);
+		agg.held |= pad->held;
+		agg.press |= pad->press;
+	}
+
+	Stage_ProcessPlayer(this, &agg, playing);
+}
+
 static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 {
 	//Handle player note presses
@@ -1721,6 +1754,7 @@ static void Stage_DrawHUDNotes(boolean back)
 	RECT note_src = {0, 0, stage.note.size, stage.note.size};
 	RECT_FIXED note_dst = {0, 0, FIXED_DEC(stage.note.size,1), FIXED_DEC(stage.note.size,1)};
 
+	boolean force_back = (stage.strum_layout == StageStrumLayout_Background || stage.strum_layout == StageStrumLayout_ThreeWay);
 	for (u8 i = 0; i < stage.keys; i++)
 	{
 		//BF
@@ -1731,7 +1765,7 @@ static void Stage_DrawHUDNotes(boolean back)
 		
 		Stage_DrawStrum(i, &note_src, &note_dst);
 		
-		if (back == stage.player_state[0].hud)
+		if (back == stage.player_state[0].hud || force_back)
 			Stage_DrawNote(&note_src, &note_dst, stage.player_state[0].hud, &stage.tex_note);
 		
 		//Opponent
@@ -1743,8 +1777,17 @@ static void Stage_DrawHUDNotes(boolean back)
 		
 		Stage_DrawStrum(i + stage.keys, &note_src, &note_dst);
 		
-		if (back == stage.player_state[1].hud)
+		if (back == stage.player_state[1].hud || force_back)
 			Stage_DrawNote(&note_src, &note_dst, stage.player_state[1].hud, &stage.tex_note);
+
+		if (stage.strum_layout == StageStrumLayout_ThreeWay)
+		{
+			note_dst.x = FIXED_DEC(-52 + (i * 34), 1);
+			note_dst.y = FIXED_DEC(20,1);
+			if (stage.prefs.downscroll)
+				note_dst.y = -note_dst.y - note_dst.h;
+			Stage_DrawNote(&note_src, &note_dst, false, &stage.tex_note);
+		}
 	}
 }
 
@@ -2681,66 +2724,155 @@ static void Stage_CountDown(void)
 }
 
 //Stage loads
+typedef Character* (*CharNewFn)();
+typedef StageBack* (*BackNewFn)();
+
+#define STAGE_CHAR_CACHE_MAX 64
+#define STAGE_BACK_CACHE_MAX 32
+
+typedef struct
+{
+	CharNewFn ctor;
+	Character *instance;
+} StageCharCacheEntry;
+
+typedef struct
+{
+	BackNewFn ctor;
+	StageBack *instance;
+} StageBackCacheEntry;
+
+static StageCharCacheEntry g_char_cache[STAGE_CHAR_CACHE_MAX];
+static StageBackCacheEntry g_back_cache[STAGE_BACK_CACHE_MAX];
+static boolean g_universal_preloaded = false;
+
+static Character *Stage_AcquireCharacter(CharNewFn ctor, fixed_t x, fixed_t y)
+{
+	if (ctor == NULL)
+		return NULL;
+
+	for (u8 i = 0; i < STAGE_CHAR_CACHE_MAX; i++)
+	{
+		if (g_char_cache[i].ctor == ctor)
+		{
+			Character *c = g_char_cache[i].instance;
+			if (c != NULL)
+			{
+				c->x = x;
+				c->y = y;
+				c->sing_end = 0;
+				c->pad_held = 0;
+				c->set_anim(c, CharAnim_Idle);
+			}
+			return c;
+		}
+	}
+
+	for (u8 i = 0; i < STAGE_CHAR_CACHE_MAX; i++)
+	{
+		if (g_char_cache[i].ctor == NULL)
+		{
+			g_char_cache[i].ctor = ctor;
+			g_char_cache[i].instance = ctor(x, y);
+			return g_char_cache[i].instance;
+		}
+	}
+
+	return ctor(x, y);
+}
+
+static StageBack *Stage_AcquireBack(BackNewFn ctor)
+{
+	if (ctor == NULL)
+		return NULL;
+
+	for (u8 i = 0; i < STAGE_BACK_CACHE_MAX; i++)
+	{
+		if (g_back_cache[i].ctor == ctor)
+			return g_back_cache[i].instance;
+	}
+
+	for (u8 i = 0; i < STAGE_BACK_CACHE_MAX; i++)
+	{
+		if (g_back_cache[i].ctor == NULL)
+		{
+			g_back_cache[i].ctor = ctor;
+			g_back_cache[i].instance = ctor();
+			return g_back_cache[i].instance;
+		}
+	}
+
+	return ctor();
+}
+
+static void Stage_ClearUniversalCaches(void)
+{
+	for (u8 i = 0; i < STAGE_CHAR_CACHE_MAX; i++)
+	{
+		if (g_char_cache[i].instance != NULL)
+			Character_Free(g_char_cache[i].instance);
+		g_char_cache[i].instance = NULL;
+		g_char_cache[i].ctor = NULL;
+	}
+
+	for (u8 i = 0; i < STAGE_BACK_CACHE_MAX; i++)
+	{
+		if (g_back_cache[i].instance != NULL)
+			g_back_cache[i].instance->free(g_back_cache[i].instance);
+		g_back_cache[i].instance = NULL;
+		g_back_cache[i].ctor = NULL;
+	}
+}
+
+static void Stage_PreloadUniversalAssets(void)
+{
+	if (g_universal_preloaded)
+		return;
+
+	for (u8 i = 0; i < StageId_Max; i++)
+	{
+		const StageDef *def = &stage_defs[i];
+		(void)Stage_AcquireBack(def->back);
+		(void)Stage_AcquireCharacter(def->pchar.new, def->pchar.x, def->pchar.y);
+		(void)Stage_AcquireCharacter(def->pchar2.new, def->pchar2.x, def->pchar2.y);
+		(void)Stage_AcquireCharacter(def->ochar.new, def->ochar.x, def->ochar.y);
+		(void)Stage_AcquireCharacter(def->ochar2.new, def->ochar2.x, def->ochar2.y);
+		(void)Stage_AcquireCharacter(def->gchar.new, def->gchar.x, def->gchar.y);
+	}
+
+	g_universal_preloaded = true;
+}
+
 static void Stage_LoadPlayer(void)
 {
-	//Load player character
-	Character_Free(stage.player);
-	if (stage.stage_def->pchar.new != NULL) {
-		stage.player = stage.stage_def->pchar.new(stage.stage_def->pchar.x, stage.stage_def->pchar.y);
-	}
-	else
-		stage.player = NULL;
+	//Load player character through universal cache
+	stage.player = Stage_AcquireCharacter(stage.stage_def->pchar.new, stage.stage_def->pchar.x, stage.stage_def->pchar.y);
 }
 
 static void Stage_LoadPlayer2(void)
 {
-	//Load player character
-	Character_Free(stage.player2);
-	if (stage.stage_def->pchar2.new != NULL) {
-		stage.player2 = stage.stage_def->pchar2.new(stage.stage_def->pchar2.x, stage.stage_def->pchar2.y);
-	}
-	else
-		stage.player2 = NULL;
+	stage.player2 = Stage_AcquireCharacter(stage.stage_def->pchar2.new, stage.stage_def->pchar2.x, stage.stage_def->pchar2.y);
 }
 
 static void Stage_LoadOpponent(void)
 {
-	//Load opponent character
-	Character_Free(stage.opponent);
-	if (stage.stage_def->ochar.new != NULL) {
-		stage.opponent = stage.stage_def->ochar.new(stage.stage_def->ochar.x, stage.stage_def->ochar.y);
-	}
-	else
-		stage.opponent = NULL;
+	stage.opponent = Stage_AcquireCharacter(stage.stage_def->ochar.new, stage.stage_def->ochar.x, stage.stage_def->ochar.y);
 }
 
 static void Stage_LoadOpponent2(void)
 {
-	//Load opponent character
-	Character_Free(stage.opponent2);
-	if (stage.stage_def->ochar2.new != NULL) {
-		stage.opponent2 = stage.stage_def->ochar2.new(stage.stage_def->ochar2.x, stage.stage_def->ochar2.y);
-	}
-	else
-		stage.opponent2 = NULL;
+	stage.opponent2 = Stage_AcquireCharacter(stage.stage_def->ochar2.new, stage.stage_def->ochar2.x, stage.stage_def->ochar2.y);
 }
 
 static void Stage_LoadGirlfriend(void)
 {
-	//Load girlfriend character
-	Character_Free(stage.gf);
-	if (stage.stage_def->gchar.new != NULL)
-		stage.gf = stage.stage_def->gchar.new(stage.stage_def->gchar.x, stage.stage_def->gchar.y);
-	else
-		stage.gf = NULL;
+	stage.gf = Stage_AcquireCharacter(stage.stage_def->gchar.new, stage.stage_def->gchar.x, stage.stage_def->gchar.y);
 }
 
 static void Stage_LoadStage(void)
 {
-	//Load back
-	if (stage.back != NULL)
-		stage.back->free(stage.back);
-	stage.back = stage.stage_def->back();
+	//Load background through universal cache
+	stage.back = Stage_AcquireBack(stage.stage_def->back);
 }
 
 static void Stage_LoadChart(void)
@@ -2755,6 +2887,55 @@ static void Stage_LoadChart(void)
 	stage.chart_data = IO_Read(chart_path);
 	u8 *chart_byte = (u8*)stage.chart_data;
 	
+	//Get lengths
+	u32 note_off = chart_byte[4] | (chart_byte[5] << 8) | (chart_byte[6] << 16) | (chart_byte[7] << 24);
+	
+	u8 *section_p = chart_byte + 8;
+	u8 *note_p = chart_byte + note_off;
+	
+	u8 *section_pp;
+	u8 *note_pp;
+	
+	size_t sections = (note_off - 8) >> 3;
+	size_t notes = 0;
+	
+	for (note_pp = note_p;; note_pp += 8)
+	{
+		notes++;
+		u32 pos = note_pp[0] | (note_pp[1] << 8) | (note_pp[2] << 16) | (note_pp[3] << 24);
+		if (pos == 0xFFFFFFFF)
+			break;
+	}
+	
+	stage.num_notes = notes ? (notes - 1) : 0;
+	
+	//Realloc for separate structs
+	size_t sections_size = sections * sizeof(Section);
+	size_t notes_size = notes * sizeof(Note);
+	size_t notes_off = MEM_ALIGN(sections_size);
+	
+	u8 *nchart = Mem_Alloc(notes_off + notes_size);
+	
+	Section *nsection_p = stage.sections = (Section*)nchart;
+	section_pp = section_p;
+	for (size_t i = 0; i < sections; i++, section_pp += 8, nsection_p++)
+	{
+		nsection_p->end = section_pp[0] | (section_pp[1] << 8) | (section_pp[2] << 16) | (section_pp[3] << 24);
+		nsection_p->flag = section_pp[4] | (section_pp[5] << 8);
+	}
+	
+	Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
+	note_pp = note_p;
+	for (size_t i = 0; i < notes; i++, note_pp += 8, nnote_p++)
+	{
+		nnote_p->pos = note_pp[0] | (note_pp[1] << 8) | (note_pp[2] << 16) | (note_pp[3] << 24);
+		nnote_p->type = note_pp[4] | (note_pp[5] << 8);
+		nnote_p->is_opponent = note_pp[6] | (note_pp[7] << 8);
+	}
+	
+	// Use reformatted chart
+	Mem_Free(stage.chart_data);
+	stage.chart_data = (IO_Data)nchart;
 #ifdef PSXF_PC
 		//Get lengths
 		u32 note_off = chart_byte[4] | (chart_byte[5] << 8) | (chart_byte[6] << 16) | (chart_byte[7] << 24);
@@ -2953,6 +3134,16 @@ static void Stage_LoadState(void)
 	drain = 0;
 	
 	stage.state = StageState_Play;
+	stage.strum_layout = StageStrumLayout_Default;
+	for (u8 s = 0; s < STAGE_SIDES; s++)
+	{
+		stage.side_player_count[s] = 4;
+		for (u8 i = 0; i < STAGE_SIDE_PLAYERS_MAX; i++)
+			stage.side_pad_slot[s][i] = (s == 0) ? i : (i + 4);
+	}
+
+	if (stage.stage_id == StageId_5_7)
+		stage.strum_layout = StageStrumLayout_ThreeWay;
 	
 	if (stage.prefs.mode == StageMode_Swap)
 	{
@@ -3392,8 +3583,7 @@ static void Stage_PerformMidSwap(StageId target, u8 load_flags)
 			stage.player->y = stage.stage_def->pchar.y;
 		}
 	} else if (stage.player != NULL) {
-		// Unload player if target stage doesn't have one
-		Character_Free(stage.player);
+		// Detach player if target stage doesn't have one
 		stage.player = NULL;
 	}
 
@@ -3406,8 +3596,7 @@ static void Stage_PerformMidSwap(StageId target, u8 load_flags)
 			stage.player2->y = stage.stage_def->pchar2.y;
 		}
 	} else if (stage.player2 != NULL) {
-		// Unload player2 if target stage doesn't have one
-		Character_Free(stage.player2);
+		// Detach player2 if target stage doesn't have one
 		stage.player2 = NULL;
 	}
 
@@ -3420,8 +3609,7 @@ static void Stage_PerformMidSwap(StageId target, u8 load_flags)
 			stage.opponent->y = stage.stage_def->ochar.y;
 		}
 	} else if (stage.opponent != NULL) {
-		// Unload opponent if target stage doesn't have one
-		Character_Free(stage.opponent);
+		// Detach opponent if target stage doesn't have one
 		stage.opponent = NULL;
 	}
 
@@ -3434,8 +3622,7 @@ static void Stage_PerformMidSwap(StageId target, u8 load_flags)
 			stage.opponent2->y = stage.stage_def->ochar2.y;
 		}
 	} else if (stage.opponent2 != NULL) {
-		// Unload opponent2 if target stage doesn't have one
-		Character_Free(stage.opponent2);
+		// Detach opponent2 if target stage doesn't have one
 		stage.opponent2 = NULL;
 	}
 
@@ -3448,8 +3635,7 @@ static void Stage_PerformMidSwap(StageId target, u8 load_flags)
 			stage.gf->y = stage.stage_def->gchar.y;
 		}
 	} else if (stage.gf != NULL) {
-		// Unload girlfriend if target stage doesn't have one
-		Character_Free(stage.gf);
+		// Detach girlfriend if target stage doesn't have one
 		stage.gf = NULL;
 	}
 
@@ -3541,6 +3727,9 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	stage.music_channel_active = stage.stage_def->music_channel;
 	stage.next_stage_active = stage.stage_def->next_stage;
 	stage.next_load_active = stage.stage_def->next_load;
+
+	// Preload all stage backgrounds + characters once for instant swaps.
+	Stage_PreloadUniversalAssets();
 	
 	if (stage.stage_id == StageId_5_2)
 	{
@@ -3685,8 +3874,6 @@ void Stage_Unload(void)
 		stage.prefs.mode = StageMode_Normal;
 	
 	//Unload stage background
-	if (stage.back != NULL)
-		stage.back->free(stage.back);
 	stage.back = NULL;
 	
 	//Unload stage data
@@ -3698,17 +3885,15 @@ void Stage_Unload(void)
 	ObjectList_Free(&stage.objlist_fg);
 	ObjectList_Free(&stage.objlist_bg);
 	
-	//Free characters
-	Character_Free(stage.player);
+	//Detach characters (universal cache owns them)
 	stage.player = NULL;
-	Character_Free(stage.player2);
 	stage.player2 = NULL;
-	Character_Free(stage.opponent);
 	stage.opponent = NULL;
-	Character_Free(stage.opponent2);
 	stage.opponent2 = NULL;
-	Character_Free(stage.gf);
 	stage.gf = NULL;
+
+	//Release cached universal assets
+	Stage_ClearUniversalCaches();
 }
 
 static boolean Stage_NextLoad(void)
@@ -3747,8 +3932,7 @@ static boolean Stage_NextLoad(void)
 				stage.player->y = stage.stage_def->pchar.y;
 			}
 		} else if (stage.player != NULL) {
-			// Unload player if target stage doesn't have one
-			Character_Free(stage.player);
+			// Detach player if target stage doesn't have one
 			stage.player = NULL;
 		}
 		
@@ -3763,8 +3947,7 @@ static boolean Stage_NextLoad(void)
 				stage.player2->y = stage.stage_def->pchar2.y;
 			}
 		} else if (stage.player2 != NULL) {
-			// Unload player2 if target stage doesn't have one
-			Character_Free(stage.player2);
+			// Detach player2 if target stage doesn't have one
 			stage.player2 = NULL;
 		}
 		
@@ -3779,8 +3962,7 @@ static boolean Stage_NextLoad(void)
 				stage.opponent->y = stage.stage_def->ochar.y;
 			}
 		} else if (stage.opponent != NULL) {
-			// Unload opponent if target stage doesn't have one
-			Character_Free(stage.opponent);
+			// Detach opponent if target stage doesn't have one
 			stage.opponent = NULL;
 		}
 		
@@ -3795,8 +3977,7 @@ static boolean Stage_NextLoad(void)
 				stage.opponent2->y = stage.stage_def->ochar2.y;
 			}
 		} else if (stage.opponent2 != NULL) {
-			// Unload opponent2 if target stage doesn't have one
-			Character_Free(stage.opponent2);
+			// Detach opponent2 if target stage doesn't have one
 			stage.opponent2 = NULL;
 		}
 		
@@ -3811,8 +3992,7 @@ static boolean Stage_NextLoad(void)
 				stage.gf->y = stage.stage_def->gchar.y;
 			}
 		} else if (stage.gf != NULL) {
-			// Unload girlfriend if target stage doesn't have one
-			Character_Free(stage.gf);
+			// Detach girlfriend if target stage doesn't have one
 			stage.gf = NULL;
 		}
 		
@@ -4985,8 +5165,8 @@ void Stage_Tick(void)
 				case StageMode_Normal:
 				case StageMode_Swap:
 				{
-					//Handle player 1 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
+					//Handle side 0 (can aggregate up to 4 players)
+					Stage_ProcessSide(&stage.player_state[0], 0, playing);
 					
 					//Handle opponent notes
 					u8 opponent_anote = CharAnim_Idle;
@@ -5019,9 +5199,9 @@ void Stage_Tick(void)
 				}
 				case StageMode_2P:
 				{
-					//Handle player 1 and 2 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
-					Stage_ProcessPlayer(&stage.player_state[1], &pad_state_2, playing);
+					//Handle both sides (each side can aggregate up to 4 players)
+					Stage_ProcessSide(&stage.player_state[0], 0, playing);
+					Stage_ProcessSide(&stage.player_state[1], 1, playing);
 					break;
 				}
 			}
@@ -5170,22 +5350,17 @@ void Stage_Tick(void)
 			Mem_Free(stage.chart_data);
 			stage.chart_data = NULL;
 			
-			//Free background
-			stage.back->free(stage.back);
+			//Detach background (cache-owned)
 			stage.back = NULL;
 			
 				//Free objects
 	ObjectList_Free(&stage.objlist_fg);
 	ObjectList_Free(&stage.objlist_bg);
 	
-	//Free opponent and girlfriend
-			Character_Free(stage.player2);
+	//Detach opponent and girlfriend
 			stage.player2 = NULL;
-			Character_Free(stage.opponent);
 			stage.opponent = NULL;
-			Character_Free(stage.opponent2);
 			stage.opponent2 = NULL;
-			Character_Free(stage.gf);
 			stage.gf = NULL;
 			
 			//Reset stage state

@@ -97,6 +97,17 @@ typedef enum
 	StageMode_Net2,
 } StageMode;
 
+#define STAGE_SIDES 2
+// Up to 8 controllers per side (two full multitaps worth per team)
+#define STAGE_SIDE_PLAYERS_MAX 8
+
+typedef enum
+{
+	StageStrumLayout_Default,
+	StageStrumLayout_Background,
+	StageStrumLayout_ThreeWay,
+} StageStrumLayout;
+
 typedef enum
 {
 	StageTrans_Menu,
@@ -348,6 +359,9 @@ typedef struct
 	} state;
 	
 	u8 note_swap;
+	u8 strum_layout;
+	u8 side_player_count[STAGE_SIDES];
+	u8 side_pad_slot[STAGE_SIDES][STAGE_SIDE_PLAYERS_MAX];
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;

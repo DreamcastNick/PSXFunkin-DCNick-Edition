@@ -18,9 +18,7 @@
 #include "stage.h"
 #include "pause.h"
 
-#include "disc_swap_disc1.h"
-#include "disc_swap_disc2.h"
-#include "disc_swap_disc3.h"
+#include "disc_swap.h"
 
 //Game loop
 GameLoop gameloop;

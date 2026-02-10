@@ -8,9 +8,7 @@
 #include "trans.h"
 #include "audio.h"
 
-#include "disc_swap_disc1.h"
-#include "disc_swap_disc2.h"
-#include "disc_swap_disc3.h"
+#include "disc_swap.h"
 
 void PausedState()
 {
