@@ -19,6 +19,7 @@ typedef struct
 
 static u16 pad_buff[2][34/2];
 Pad pad_state, pad_state_2;
+Pad pad_state_3, pad_state_4, pad_state_5, pad_state_6, pad_state_7, pad_state_8;
 
 //Internal pad functions
 static void Pad_UpdateState(Pad *this, PADTYPE *pad)
@@ -50,6 +51,13 @@ void Pad_Init(void)
 	
 	pad_state_2.held = pad_state_2.press = 0;
 	pad_state_2.left_x = pad_state_2.left_y = pad_state_2.right_x = pad_state_2.right_y = 0;
+
+	pad_state_3 = pad_state;
+	pad_state_4 = pad_state;
+	pad_state_5 = pad_state;
+	pad_state_6 = pad_state;
+	pad_state_7 = pad_state;
+	pad_state_8 = pad_state;
 	
 	//Initialize system pads
 	InitPAD((char*)pad_buff[0], 34, (char*)pad_buff[1], 34);
@@ -67,4 +75,12 @@ void Pad_Update(void)
 	//Read pad states
 	Pad_UpdateState(&pad_state,   (PADTYPE*)pad_buff[0]);
 	Pad_UpdateState(&pad_state_2, (PADTYPE*)pad_buff[1]);
+
+	// Mirror into additional logical states for song-side routing.
+	pad_state_3 = pad_state;
+	pad_state_4 = pad_state_2;
+	pad_state_5 = pad_state;
+	pad_state_6 = pad_state_2;
+	pad_state_7 = pad_state;
+	pad_state_8 = pad_state_2;
 }

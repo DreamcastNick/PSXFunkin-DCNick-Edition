@@ -14,7 +14,7 @@ SRCS = src/main.c \
        src/debug.c \
        src/save.c \
        src/psx.c \
-	src/disc_swap_disc1.c \
+	src/disc_swap.c \
 	src/str.c \
        src/io.c \
        src/gfx.c \

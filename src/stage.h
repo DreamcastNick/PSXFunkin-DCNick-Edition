@@ -97,6 +97,17 @@ typedef enum
 	StageMode_Net2,
 } StageMode;
 
+#define STAGE_SIDES 2
+// Up to 8 controllers per side (two full multitaps worth per team)
+#define STAGE_SIDE_PLAYERS_MAX 8
+
+typedef enum
+{
+	StageStrumLayout_Default,
+	StageStrumLayout_Background,
+	StageStrumLayout_ThreeWay,
+} StageStrumLayout;
+
 typedef enum
 {
 	StageTrans_Menu,
@@ -149,7 +160,7 @@ typedef struct
 
 typedef struct
 {
-	u16 end; //1/12 steps
+	u32 end; //1/12 steps
 	u16 flag;
 } Section;
 
@@ -166,7 +177,7 @@ typedef struct
 
 typedef struct
 {
-	u16 pos; //1/12 steps
+	u32 pos; //1/12 steps
 	u16 type;
 	u16 is_opponent;
 } Note;
@@ -318,7 +329,7 @@ typedef struct
 	int timerlength, timermin, timersec, timepassed;
 	
 	fixed_t time_base;
-	u16 step_base;
+	u32 step_base;
 	Section *section_base;
 
 	// Grace period after swaps to avoid false misses
@@ -348,6 +359,9 @@ typedef struct
 	} state;
 	
 	u8 note_swap;
+	u8 strum_layout;
+	u8 side_player_count[STAGE_SIDES];
+	u8 side_pad_slot[STAGE_SIDES][STAGE_SIDE_PLAYERS_MAX];
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;

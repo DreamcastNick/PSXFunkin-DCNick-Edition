@@ -36,6 +36,7 @@ typedef struct
 } Pad;
 
 extern Pad pad_state, pad_state_2;
+extern Pad pad_state_3, pad_state_4, pad_state_5, pad_state_6, pad_state_7, pad_state_8;
 
 #ifdef PSXF_NETWORK
 	#define PAD_TYPE_CHARS 0x20
