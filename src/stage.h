@@ -110,6 +110,13 @@ typedef enum
 
 typedef enum
 {
+	StageStrumLayout_Default,
+	StageStrumLayout_Background,
+	StageStrumLayout_ThreeWay,
+} StageStrumLayout;
+
+typedef enum
+{
 	StageTrans_Menu,
 	StageTrans_NextSong,
 	StageTrans_Reload,
@@ -360,8 +367,6 @@ typedef struct
 	
 	u8 note_swap;
 	u8 strum_layout;
-	u8 side_player_count[STAGE_SIDES];
-	u8 side_pad_slot[STAGE_SIDES][STAGE_SIDE_PLAYERS_MAX];
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;

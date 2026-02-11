@@ -2936,67 +2936,6 @@ static void Stage_LoadChart(void)
 	// Use reformatted chart
 	Mem_Free(stage.chart_data);
 	stage.chart_data = (IO_Data)nchart;
-#ifdef PSXF_PC
-		//Get lengths
-		u32 note_off = chart_byte[4] | (chart_byte[5] << 8) | (chart_byte[6] << 16) | (chart_byte[7] << 24);
-		
-		u8 *section_p = chart_byte + 8;
-		u8 *note_p = chart_byte + note_off;
-		
-		u8 *section_pp;
-		u8 *note_pp;
-		
-		size_t sections = (note_off - 8) >> 3;
-		size_t notes = 0;
-		
-		for (note_pp = note_p;; note_pp += 8)
-		{
-			notes++;
-			u32 pos = note_pp[0] | (note_pp[1] << 8) | (note_pp[2] << 16) | (note_pp[3] << 24);
-			if (pos == 0xFFFFFFFF)
-				break;
-		}
-		
- 		if (notes)
- 			stage.num_notes = (notes - 1) * 2; // Double the number of notes
- 		else
- 			stage.num_notes = 0;
- 		
- 		//Realloc for separate structs
- 		size_t sections_size = sections * sizeof(Section);
- 		size_t notes_size = stage.num_notes * sizeof(Note); // Adjusted for double notes
- 		size_t notes_off = MEM_ALIGN(sections_size);
- 		
- 		u8 *nchart = Mem_Alloc(notes_off + notes_size);
- 		
- 		Section *nsection_p = stage.sections = (Section*)nchart;
- 		section_pp = section_p;
- 		for (size_t i = 0; i < sections; i++, section_pp += 8, nsection_p++)
- 		{
- 			nsection_p->end = section_pp[0] | (section_pp[1] << 8) | (section_pp[2] << 16) | (section_pp[3] << 24);
- 			nsection_p->flag = section_pp[4] | (section_pp[5] << 8);
- 		}
- 		
- 		Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
- 		note_pp = note_p;
- 		for (size_t i = 0; i < notes; i++, note_pp += 8, nnote_p++)
- 		{
- 			nnote_p->pos = note_pp[0] | (note_pp[1] << 8) | (note_pp[2] << 16) | (note_pp[3] << 24);
- 			nnote_p->type = note_pp[4] | (note_pp[5] << 8);
- 			nnote_p->is_opponent = note_pp[6] | (note_pp[7] << 8);
- 		}
- 		
- 		// Use reformatted chart
- 		Mem_Free(stage.chart_data);
- 		stage.chart_data = (IO_Data)nchart;
- 	#else
-		// Directly use section and notes pointers
-		stage.sections = (Section*)(chart_byte + 8);
-		stage.notes = (Note*)(chart_byte + ((u32*)stage.chart_data)[1]);
-		
-		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
-			stage.num_notes++;
-	#endif
  	
  	// Swap chart
  	if (stage.prefs.mode == StageMode_Swap)
@@ -3135,12 +3074,6 @@ static void Stage_LoadState(void)
 	
 	stage.state = StageState_Play;
 	stage.strum_layout = StageStrumLayout_Default;
-	for (u8 s = 0; s < STAGE_SIDES; s++)
-	{
-		stage.side_player_count[s] = 4;
-		for (u8 i = 0; i < STAGE_SIDE_PLAYERS_MAX; i++)
-			stage.side_pad_slot[s][i] = (s == 0) ? i : (i + 4);
-	}
 
 	if (stage.stage_id == StageId_5_7)
 		stage.strum_layout = StageStrumLayout_ThreeWay;
