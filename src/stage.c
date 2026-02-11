@@ -634,8 +634,23 @@ static void Stage_DrawStartScreen(void)
 }
 
 //Stage section functions
+static u16 Stage_NormalizeBPM(u16 bpm)
+{
+	// Charts are expected to store BPM in 1/24 units.
+	// Some JSON conversion pipelines may leave raw BPM values (e.g. 90 instead of 2160).
+	if (bpm > 0 && bpm <= 1000)
+		return bpm * 24;
+
+	return bpm;
+}
+
 static void Stage_ChangeBPM(u16 bpm, u32 step)
 {
+	bpm = Stage_NormalizeBPM(bpm);
+
+	if (bpm == 0)
+		bpm = stage.last_bpm ? stage.last_bpm : 2400; //100 BPM fallback
+
 	//Update last BPM
 	stage.last_bpm = bpm;
 	
@@ -683,7 +698,9 @@ typedef struct
 static void Stage_GetSectionScroll(SectionScroll *scroll, Section *section)
 {
 	//Get BPM
-	u16 bpm = section->flag & SECTION_FLAG_BPM_MASK;
+	u16 bpm = Stage_NormalizeBPM(section->flag & SECTION_FLAG_BPM_MASK);
+	if (bpm == 0)
+		bpm = stage.last_bpm ? stage.last_bpm : 2400;
 	
 	//Get section step info
 	scroll->start_step = Stage_GetSectionStart(section);

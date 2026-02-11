@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <unordered_set>
+#include <string>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -67,6 +68,31 @@ uint64_t PosRound(double pos, double crochet)
     return static_cast<uint64_t>(std::floor(pos / crochet + 0.5));
 }
 
+double ReadJsonNumber(const json &obj, const char *key, double fallback)
+{
+    auto it = obj.find(key);
+    if (it == obj.end() || it->is_null())
+        return fallback;
+
+    if (it->is_number())
+        return it->get<double>();
+
+    if (it->is_string())
+    {
+        const std::string str = it->get<std::string>();
+        try
+        {
+            return std::stod(str);
+        }
+        catch (...)
+        {
+            return fallback;
+        }
+    }
+
+    return fallback;
+}
+
 void WriteWord(std::ostream &out, uint16_t word)
 {
     out.put(word >> 0);
@@ -101,11 +127,13 @@ int main(int argc, char *argv[])
 
     auto song_info = j["song"];
 
-    double bpm = song_info["bpm"];
+    double bpm = ReadJsonNumber(song_info, "bpm", 100.0);
+    if (bpm <= 0.0)
+        bpm = 100.0;
     double crochet = (60.0 / bpm) * 1000.0;
     double step_crochet = crochet / 4;
 
-    double speed = song_info["speed"];
+    double speed = ReadJsonNumber(song_info, "speed", 1.0);
     uint16_t keys = ChartKey(song_info);
     uint16_t max_keys = keys * 2;
 
@@ -132,7 +160,9 @@ int main(int argc, char *argv[])
             milli_base += step_crochet * (section_end - step_base);
             step_base = section_end;
 
-            bpm = i["bpm"];
+            bpm = ReadJsonNumber(i, "bpm", bpm);
+            if (bpm <= 0.0)
+                bpm = 100.0;
             crochet = (60.0 / bpm) * 1000.0;
             step_crochet = crochet / 4;
 
