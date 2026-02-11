@@ -2786,18 +2786,48 @@ static void Stage_PreloadUniversalAssets(void)
 	if (g_universal_preloaded)
 		return;
 
-	for (u8 i = 0; i < StageId_Max; i++)
+	if (currentDisc = 1)
 	{
-		const StageDef *def = &stage_defs[i];
-		(void)Stage_AcquireBack(def->back);
-		(void)Stage_AcquireCharacter(def->pchar.new, def->pchar.x, def->pchar.y);
-		(void)Stage_AcquireCharacter(def->pchar2.new, def->pchar2.x, def->pchar2.y);
-		(void)Stage_AcquireCharacter(def->ochar.new, def->ochar.x, def->ochar.y);
-		(void)Stage_AcquireCharacter(def->ochar2.new, def->ochar2.x, def->ochar2.y);
-		(void)Stage_AcquireCharacter(def->gchar.new, def->gchar.x, def->gchar.y);
+		for (u8 i = 0; i < 9; i++)
+		{
+			const StageDef *def = &stage_defs[i];
+			(void)Stage_AcquireBack(def->back);
+			(void)Stage_AcquireCharacter(def->pchar.new, def->pchar.x, def->pchar.y);
+			(void)Stage_AcquireCharacter(def->pchar2.new, def->pchar2.x, def->pchar2.y);
+			(void)Stage_AcquireCharacter(def->ochar.new, def->ochar.x, def->ochar.y);
+			(void)Stage_AcquireCharacter(def->ochar2.new, def->ochar2.x, def->ochar2.y);
+			(void)Stage_AcquireCharacter(def->gchar.new, def->gchar.x, def->gchar.y);
+		}
+		g_universal_preloaded = true;
 	}
-
-	g_universal_preloaded = true;
+	else if (currentDisc = 2)
+	{
+		for (u8 i = 10; i < 16; i++)
+		{
+			const StageDef *def = &stage_defs[i];
+			(void)Stage_AcquireBack(def->back);
+			(void)Stage_AcquireCharacter(def->pchar.new, def->pchar.x, def->pchar.y);
+			(void)Stage_AcquireCharacter(def->pchar2.new, def->pchar2.x, def->pchar2.y);
+			(void)Stage_AcquireCharacter(def->ochar.new, def->ochar.x, def->ochar.y);
+			(void)Stage_AcquireCharacter(def->ochar2.new, def->ochar2.x, def->ochar2.y);
+			(void)Stage_AcquireCharacter(def->gchar.new, def->gchar.x, def->gchar.y);
+		}
+		g_universal_preloaded = true;
+	}
+	else if (currentDisc = 3)
+	{
+		for (u8 i = 17; i < 23; i++)
+		{
+			const StageDef *def = &stage_defs[i];
+			(void)Stage_AcquireBack(def->back);
+			(void)Stage_AcquireCharacter(def->pchar.new, def->pchar.x, def->pchar.y);
+			(void)Stage_AcquireCharacter(def->pchar2.new, def->pchar2.x, def->pchar2.y);
+			(void)Stage_AcquireCharacter(def->ochar.new, def->ochar.x, def->ochar.y);
+			(void)Stage_AcquireCharacter(def->ochar2.new, def->ochar2.x, def->ochar2.y);
+			(void)Stage_AcquireCharacter(def->gchar.new, def->gchar.x, def->gchar.y);
+		}
+		g_universal_preloaded = true;
+	}
 }
 
 static void Stage_LoadPlayer(void)
