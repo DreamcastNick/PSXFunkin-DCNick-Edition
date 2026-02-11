@@ -2873,6 +2873,7 @@ static void Stage_LoadChart(void)
 		Mem_Free(stage.chart_data);
 	stage.chart_data = IO_Read(chart_path);
 	u8 *chart_byte = (u8*)stage.chart_data;
+	u16 chart_keys = chart_byte[0] | (chart_byte[1] << 8);
 	
 	//Get lengths
 	u32 note_off = chart_byte[4] | (chart_byte[5] << 8) | (chart_byte[6] << 16) | (chart_byte[7] << 24);
@@ -2952,7 +2953,7 @@ static void Stage_LoadChart(void)
  	stage.cur_note = stage.notes;
  	
  	stage.speed = stage.stage_def->speed[stage.stage_diff];
- 	stage.keys = *((u16*)stage.chart_data);
+ 	stage.keys = chart_keys;
  	stage.max_keys = stage.keys * 2;
  	
  	stage.step_crochet = 0;
