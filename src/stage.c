@@ -1060,6 +1060,41 @@ static void CheckNewScore()
 	}
 }
 
+static Pad *Stage_GetPadBySlot(u8 slot)
+{
+	switch (slot)
+	{
+		case 0: return &pad_state;
+		case 1: return &pad_state_2;
+		case 2: return &pad_state_3;
+		case 3: return &pad_state_4;
+		case 4: return &pad_state_5;
+		case 5: return &pad_state_6;
+		case 6: return &pad_state_7;
+		default: return &pad_state_8;
+	}
+}
+
+static void Stage_ProcessSide(PlayerState *this, u8 side, boolean playing)
+{
+	if (side >= STAGE_SIDES)
+		return;
+
+	Pad agg = {0};
+	u8 slots = stage.side_player_count[side];
+	if (slots == 0)
+		slots = 1;
+
+	for (u8 i = 0; i < slots && i < STAGE_SIDE_PLAYERS_MAX; i++)
+	{
+		Pad *pad = Stage_GetPadBySlot(stage.side_pad_slot[side][i]);
+		agg.held |= pad->held;
+		agg.press |= pad->press;
+	}
+
+	Stage_ProcessPlayer(this, &agg, playing);
+}
+
 static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 {
 	//Handle player note presses
@@ -5063,8 +5098,8 @@ void Stage_Tick(void)
 				case StageMode_Normal:
 				case StageMode_Swap:
 				{
-					//Handle player 1 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
+					//Handle side 0 (can aggregate up to 4 players)
+					Stage_ProcessSide(&stage.player_state[0], 0, playing);
 					
 					//Handle opponent notes
 					u8 opponent_anote = CharAnim_Idle;
@@ -5097,9 +5132,9 @@ void Stage_Tick(void)
 				}
 				case StageMode_2P:
 				{
-					//Handle player 1 and 2 inputs
-					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
-					Stage_ProcessPlayer(&stage.player_state[1], &pad_state_2, playing);
+					//Handle both sides (each side can aggregate up to 4 players)
+					Stage_ProcessSide(&stage.player_state[0], 0, playing);
+					Stage_ProcessSide(&stage.player_state[1], 1, playing);
 					break;
 				}
 			}

@@ -97,6 +97,17 @@ typedef enum
 	StageMode_Net2,
 } StageMode;
 
+#define STAGE_SIDES 2
+// Up to 8 controllers per side (two full multitaps worth per team)
+#define STAGE_SIDE_PLAYERS_MAX 8
+
+typedef enum
+{
+	StageStrumLayout_Default,
+	StageStrumLayout_Background,
+	StageStrumLayout_ThreeWay,
+} StageStrumLayout;
+
 typedef enum
 {
 	StageStrumLayout_Default,
