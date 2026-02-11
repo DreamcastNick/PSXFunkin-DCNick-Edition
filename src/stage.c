@@ -26,7 +26,9 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
-#include "disc_swap.h"
+#include "disc_swap_disc1.h"
+#include "disc_swap_disc2.h"
+#include "disc_swap_disc3.h"
 
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
@@ -1060,41 +1062,6 @@ static void CheckNewScore()
 	}
 }
 
-static Pad *Stage_GetPadBySlot(u8 slot)
-{
-	switch (slot)
-	{
-		case 0: return &pad_state;
-		case 1: return &pad_state_2;
-		case 2: return &pad_state_3;
-		case 3: return &pad_state_4;
-		case 4: return &pad_state_5;
-		case 5: return &pad_state_6;
-		case 6: return &pad_state_7;
-		default: return &pad_state_8;
-	}
-}
-
-static void Stage_ProcessSide(PlayerState *this, u8 side, boolean playing)
-{
-	if (side >= STAGE_SIDES)
-		return;
-
-	Pad agg = {0};
-	u8 slots = stage.side_player_count[side];
-	if (slots == 0)
-		slots = 1;
-
-	for (u8 i = 0; i < slots && i < STAGE_SIDE_PLAYERS_MAX; i++)
-	{
-		Pad *pad = Stage_GetPadBySlot(stage.side_pad_slot[side][i]);
-		agg.held |= pad->held;
-		agg.press |= pad->press;
-	}
-
-	Stage_ProcessPlayer(this, &agg, playing);
-}
-
 static void Stage_ProcessPlayer(PlayerState *this, Pad *pad, boolean playing)
 {
 	//Handle player note presses
@@ -1754,7 +1721,6 @@ static void Stage_DrawHUDNotes(boolean back)
 	RECT note_src = {0, 0, stage.note.size, stage.note.size};
 	RECT_FIXED note_dst = {0, 0, FIXED_DEC(stage.note.size,1), FIXED_DEC(stage.note.size,1)};
 
-	boolean force_back = (stage.strum_layout == StageStrumLayout_Background || stage.strum_layout == StageStrumLayout_ThreeWay);
 	for (u8 i = 0; i < stage.keys; i++)
 	{
 		//BF
@@ -1765,7 +1731,7 @@ static void Stage_DrawHUDNotes(boolean back)
 		
 		Stage_DrawStrum(i, &note_src, &note_dst);
 		
-		if (back == stage.player_state[0].hud || force_back)
+		if (back == stage.player_state[0].hud)
 			Stage_DrawNote(&note_src, &note_dst, stage.player_state[0].hud, &stage.tex_note);
 		
 		//Opponent
@@ -1777,17 +1743,8 @@ static void Stage_DrawHUDNotes(boolean back)
 		
 		Stage_DrawStrum(i + stage.keys, &note_src, &note_dst);
 		
-		if (back == stage.player_state[1].hud || force_back)
+		if (back == stage.player_state[1].hud)
 			Stage_DrawNote(&note_src, &note_dst, stage.player_state[1].hud, &stage.tex_note);
-
-		if (stage.strum_layout == StageStrumLayout_ThreeWay)
-		{
-			note_dst.x = FIXED_DEC(-52 + (i * 34), 1);
-			note_dst.y = FIXED_DEC(20,1);
-			if (stage.prefs.downscroll)
-				note_dst.y = -note_dst.y - note_dst.h;
-			Stage_DrawNote(&note_src, &note_dst, false, &stage.tex_note);
-		}
 	}
 }
 
@@ -3073,10 +3030,6 @@ static void Stage_LoadState(void)
 	drain = 0;
 	
 	stage.state = StageState_Play;
-	stage.strum_layout = StageStrumLayout_Default;
-
-	if (stage.stage_id == StageId_5_7)
-		stage.strum_layout = StageStrumLayout_ThreeWay;
 	
 	if (stage.prefs.mode == StageMode_Swap)
 	{
@@ -5099,7 +5052,7 @@ void Stage_Tick(void)
 				case StageMode_Swap:
 				{
 					//Handle side 0 (can aggregate up to 4 players)
-					Stage_ProcessSide(&stage.player_state[0], 0, playing);
+					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
 					
 					//Handle opponent notes
 					u8 opponent_anote = CharAnim_Idle;
@@ -5133,8 +5086,8 @@ void Stage_Tick(void)
 				case StageMode_2P:
 				{
 					//Handle both sides (each side can aggregate up to 4 players)
-					Stage_ProcessSide(&stage.player_state[0], 0, playing);
-					Stage_ProcessSide(&stage.player_state[1], 1, playing);
+					Stage_ProcessPlayer(&stage.player_state[0], &pad_state, playing);
+					Stage_ProcessPlayer(&stage.player_state[1], &pad_state_2, playing);
 					break;
 				}
 			}

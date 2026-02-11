@@ -18,7 +18,9 @@
 #include "stage.h"
 #include "pause.h"
 
-#include "disc_swap.h"
+#include "disc_swap_disc1.h"
+#include "disc_swap_disc2.h"
+#include "disc_swap_disc3.h"
 
 //Game loop
 GameLoop gameloop;
@@ -49,7 +51,7 @@ void ErrorLock(void)
 #undef MEM_IMPLEMENTATION
 
 #ifndef PSXF_STDMEM
-static u8 malloc_heap[0x1A2000];
+static u8 malloc_heap[0x1A1000];
 #endif
 
 //Entry point

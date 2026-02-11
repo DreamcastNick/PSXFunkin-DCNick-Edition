@@ -31,7 +31,9 @@
 #include "character/menuo.h"
 #include "character/menugf.h"
 
-#include "disc_swap.h"
+#include "disc_swap_disc1.h"
+#include "disc_swap_disc2.h"
+#include "disc_swap_disc3.h"
 
 static u32 Sounds[3];
 //Menu messages
