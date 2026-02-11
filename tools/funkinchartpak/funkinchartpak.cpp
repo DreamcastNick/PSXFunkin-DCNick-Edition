@@ -18,7 +18,7 @@ using json = nlohmann::json;
 
 struct Section
 {
-    uint64_t end;
+    uint32_t end;
     uint16_t flag = 0;
 };
 
@@ -35,9 +35,9 @@ struct Section
 
 struct Note
 {
-    uint64_t pos; // 1/12 steps
+    uint32_t pos; // 1/12 steps
     uint16_t type;
-    uint8_t is_opponent, pad = 0;
+    uint16_t is_opponent;
 };
 
 uint16_t ChartKey(json &j)
@@ -71,6 +71,14 @@ void WriteWord(std::ostream &out, uint16_t word)
 {
     out.put(word >> 0);
     out.put(word >> 8);
+}
+
+void WriteDword(std::ostream &out, uint32_t dword)
+{
+    out.put(dword >> 0);
+    out.put(dword >> 8);
+    out.put(dword >> 16);
+    out.put(dword >> 24);
 }
 
 int main(int argc, char *argv[])
@@ -146,10 +154,10 @@ int main(int argc, char *argv[])
             new_note.pos = (step_base * 12) + PosRound(((uint64_t)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;
 
-            new_note.is_opponent = false;
+            new_note.is_opponent = 0;
 
             if ((!is_opponent && new_note.type >= keys) || (is_opponent && new_note.type < keys))
-                new_note.is_opponent = true;
+                new_note.is_opponent = 1;
 
             if (is_opponent)
                 new_note.type = (new_note.type + keys) % max_keys;
@@ -218,14 +226,14 @@ int main(int argc, char *argv[])
 
     // Push dummy section and note
     Section dum_section;
-    dum_section.end = 0xFFFFFFFFFFFFFFFFULL; // Changed to use a larger value
+    dum_section.end = 0xFFFFFFFF;
     dum_section.flag = sections[sections.size() - 1].flag;
     sections.push_back(dum_section);
 
     Note dum_note;
-    dum_note.pos = 0xFFFFFFFFFFFFFFFFULL; // Changed to use a larger value
+    dum_note.pos = 0xFFFFFFFF;
     dum_note.type = NOTE_FLAG_HIT;
-    dum_note.is_opponent = false;
+    dum_note.is_opponent = 0;
     notes.push_back(dum_note);
 
     // Write to output
@@ -237,23 +245,25 @@ int main(int argc, char *argv[])
     }
 
     // Write headers
+    const uint32_t note_offset = static_cast<uint32_t>(8 + (sections.size() << 3));
     WriteWord(out, keys);
-    WriteWord(out, 4 + (sections.size() << 2));
+    WriteWord(out, 0);
+    WriteDword(out, note_offset);
 
     // Write sections
     for (auto &i : sections)
     {
-        WriteWord(out, static_cast<uint16_t>(i.end));
+        WriteDword(out, i.end);
         WriteWord(out, i.flag);
+        WriteWord(out, 0);
     }
 
     // Write notes
     for (auto &i : notes)
     {
-        WriteWord(out, static_cast<uint16_t>(i.pos));
+        WriteDword(out, i.pos);
         WriteWord(out, i.type);
-        out.put(i.is_opponent);
-        out.put(0);
+        WriteWord(out, i.is_opponent);
     }
     return 0;
 }
