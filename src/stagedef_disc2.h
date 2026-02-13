@@ -93,7 +93,7 @@
 		false,
 		true,
 		
-		StageId_4_4, 0
+		StageId_4_4, 0, STAGE_CHART_FORMAT_BIG
 	},
 	{ //StageId_4_5 (Monochrome)
 		//Characters
@@ -162,5 +162,5 @@
 		false,
 		false,
 		
-		StageId_4_7, 0
+		StageId_4_7, 0, STAGE_CHART_FORMAT_BIG
 	},
