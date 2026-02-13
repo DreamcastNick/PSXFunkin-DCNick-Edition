@@ -141,7 +141,11 @@ typedef struct
 	
 	StageId next_stage;
 	u8 next_load;
+	u8 chart_format;
 } StageDef;
+
+#define STAGE_CHART_FORMAT_SMALL 0
+#define STAGE_CHART_FORMAT_BIG   1
 
 //Stage state
 #define SECTION_FLAG_OPPFOCUS (1ULL << 15) //Focus on opponent

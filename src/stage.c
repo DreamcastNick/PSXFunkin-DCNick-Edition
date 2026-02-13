@@ -2882,12 +2882,12 @@ static void Stage_LoadStage(void)
 	stage.back = Stage_AcquireBack(stage.stage_def->back);
 }
 
-static void Stage_LoadChart(void)
+static void Stage_LoadBigChart(void)
 {
 	//Load stage data
 	char chart_path[64];
 	//Use standard path convention
-	sprintf(chart_path, "\\CHART\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+	sprintf(chart_path, "\\CHART\\BIG\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
 	
 	if (stage.chart_data != NULL)
 		Mem_Free(stage.chart_data);
@@ -2939,6 +2939,110 @@ static void Stage_LoadChart(void)
 		nnote_p->pos = note_pp[0] | (note_pp[1] << 8) | (note_pp[2] << 16) | (note_pp[3] << 24);
 		nnote_p->type = note_pp[4] | (note_pp[5] << 8);
 		nnote_p->is_opponent = note_pp[6] | (note_pp[7] << 8);
+	}
+	
+	// Use reformatted chart
+	Mem_Free(stage.chart_data);
+	stage.chart_data = (IO_Data)nchart;
+ 	
+ 	// Swap chart
+ 	if (stage.prefs.mode == StageMode_Swap)
+ 	{
+		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+			note->is_opponent = !note->is_opponent;
+ 	}
+ 	
+ 	// Count max scores
+ 	stage.player_state[0].max_score = 0;
+ 	stage.player_state[1].max_score = 0;
+	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+	{
+ 		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
+ 			continue;
+ 		if (note->is_opponent)
+ 			stage.player_state[1].max_score += 35;
+ 		else
+ 			stage.player_state[0].max_score += 35;
+ 	}
+ 	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
+ 		stage.max_score = stage.player_state[1].max_score;
+ 	else
+ 		stage.max_score = stage.player_state[0].max_score;
+ 	
+ 	stage.cur_section = stage.sections;
+ 	stage.cur_note = stage.notes;
+ 	
+ 	stage.speed = stage.stage_def->speed[stage.stage_diff];
+ 	stage.keys = chart_keys;
+ 	stage.max_keys = stage.keys * 2;
+ 	
+ 	stage.step_crochet = 0;
+ 	stage.time_base = 0;
+ 	stage.step_base = 0;
+ 	stage.section_base = stage.cur_section;
+ 	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, 0);
+}
+
+
+static void Stage_LoadSmallChart(void)
+{
+	//Load stage data
+	char chart_path[64];
+	//Use standard path convention
+	sprintf(chart_path, "\\CHART\\SMALL\\%d.%d%c.CHS;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
+	
+	if (stage.chart_data != NULL)
+		Mem_Free(stage.chart_data);
+	stage.chart_data = IO_Read(chart_path);
+	u8 *chart_byte = (u8*)stage.chart_data;
+	u16 chart_keys = chart_byte[0] | (chart_byte[1] << 8);
+	
+	//Get lengths
+	u16 note_off = chart_byte[2] | (chart_byte[3] << 8);
+	
+	u8 *section_p = chart_byte + 4;
+	u8 *note_p = chart_byte + note_off;
+	
+	u8 *section_pp;
+	u8 *note_pp;
+	
+	size_t sections = (note_off - 4) >> 2;
+	size_t notes = 0;
+	
+	for (note_pp = note_p;; note_pp += 6)
+	{
+		notes++;
+		u16 pos = note_pp[0] | (note_pp[1] << 8);
+		if (pos == 0xFFFF)
+			break;
+	}
+	
+	stage.num_notes = notes ? (notes - 1) : 0;
+	
+	//Realloc for separate structs
+	size_t sections_size = sections * sizeof(Section);
+	size_t notes_size = notes * sizeof(Note);
+	size_t notes_off = MEM_ALIGN(sections_size);
+	
+	u8 *nchart = Mem_Alloc(notes_off + notes_size);
+	
+	Section *nsection_p = stage.sections = (Section*)nchart;
+	section_pp = section_p;
+	for (size_t i = 0; i < sections; i++, section_pp += 4, nsection_p++)
+	{
+		u16 section_end = section_pp[0] | (section_pp[1] << 8);
+		nsection_p->end = (section_end == 0xFFFF) ? 0xFFFFFFFF : section_end;
+		nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
+	}
+	
+	Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
+	note_pp = note_p;
+	for (size_t i = 0; i < notes; i++, note_pp += 6, nnote_p++)
+	{
+		u16 note_pos = note_pp[0] | (note_pp[1] << 8);
+		nnote_p->pos = (note_pos == 0xFFFF) ? 0xFFFFFFFF : note_pos;
+		nnote_p->type = note_pp[2] | (note_pp[3] << 8);
+		nnote_p->is_opponent = note_pp[4] | (note_pp[5] << 8);
 	}
 	
 	// Use reformatted chart
@@ -3735,7 +3839,10 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	Stage_LoadGirlfriend();
 	
 	//Load stage chart
-	Stage_LoadChart();
+	if (stage.stage_def->chart_format == STAGE_CHART_FORMAT_SMALL)
+		Stage_LoadSmallChart();
+	else
+		Stage_LoadBigChart();
 	
 	char note_text[32];
 	char type_text[32];
@@ -3934,7 +4041,10 @@ static boolean Stage_NextLoad(void)
 		}
 		
 		//Load stage chart
-		Stage_LoadChart();
+		if (stage.stage_def->chart_format == STAGE_CHART_FORMAT_SMALL)
+			Stage_LoadSmallChart();
+		else
+			Stage_LoadBigChart();
 		
 		//Initialize stage state
 		Stage_LoadState();

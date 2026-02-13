@@ -1,4 +1,4 @@
-TOOLS = tools/funkinisopak tools/funkinarcpak tools/funkinchartpak \
+TOOLS = tools/funkinisopak tools/funkinarcpak tools/funkinchartpak tools/funkinsmallchartpak \
 	tools/funkinpicopak tools/funkintimconv tools/funkinchrpak \
 	tools/psxavenc tools/xainterleave tools/funkinmultitool
 

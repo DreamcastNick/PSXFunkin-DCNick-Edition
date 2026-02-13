@@ -1,10 +1,24 @@
-all: \
-  $(addsuffix .cht, $(wildcard iso/chart/*.json)) \
+CHART_JSON := $(wildcard iso/chart/*.json)
+CHART_NAMES := $(basename $(notdir $(CHART_JSON)))
 
-iso/chart/%.json.cht: iso/chart/%.json
+BIG_CHART_NAMES := ferocious unbeatable
+SMALL_CHART_NAMES := $(filter-out $(BIG_CHART_NAMES),$(CHART_NAMES))
+
+CHART_BIG_OUT := $(addprefix iso/chart/big/,$(addsuffix .cht,$(BIG_CHART_NAMES)))
+CHART_SMALL_OUT := $(addprefix iso/chart/small/,$(addsuffix .chs,$(SMALL_CHART_NAMES)))
+
+all: $(CHART_BIG_OUT) $(CHART_SMALL_OUT)
+
+iso/chart/big/%.cht: iso/chart/%.json
+	mkdir -p $(@D)
 	tools/funkinchartpak/funkinchartpak $<
-	
-# Rule to clean all .cht files
+	mv -f $<.cht $@
+
+iso/chart/small/%.chs: iso/chart/%.json
+	mkdir -p $(@D)
+	tools/funkinsmallchartpak/funkinsmallchartpak $<
+	mv -f $<.chs $@
+
 clean:
-	echo "Cleaning .cht files:"
-	find iso -type f \( -name "*.cht" \) -print -delete
+	echo "Cleaning .cht/.chs files:"
+	find iso/chart -type f \( -name "*.cht" -o -name "*.chs" \) -print -delete
