@@ -638,7 +638,11 @@ static u16 Stage_NormalizeBPM(u16 bpm)
 {
 	// Charts are expected to store BPM in 1/24 units.
 	// Some JSON conversion pipelines may leave raw BPM values (e.g. 90 instead of 2160).
-	if (bpm > 0 && bpm <= 1000)
+	//
+	// Treat only plausible raw-BPM values as unscaled. A higher cutoff can mis-detect
+	// legitimately scaled low-BPM charts (e.g. 40 BPM -> 960 in 1/24 units), which
+	// breaks scroll timing and can stall progression around the countdown steps.
+	if (bpm > 0 && bpm <= 400)
 		return bpm * 24;
 
 	return bpm;
