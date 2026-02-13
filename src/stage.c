@@ -637,11 +637,11 @@ static void Stage_DrawStartScreen(void)
 static u16 Stage_NormalizeBPM(u16 bpm)
 {
 	// Charts are expected to store BPM in 1/24 units.
-	// Some JSON conversion pipelines may leave raw BPM values (e.g. 90 instead of 2160).
+	// Some legacy/JSON conversion pipelines may leave raw BPM values.
 	//
-	// Detect legacy raw BPM values in a broad range (including ultra-low values like 1 BPM)
-	// and convert them to the chart's 1/24 representation.
-	if (bpm > 0 && bpm <= 1000)
+	// Raw BPM values in the 1..119 range must be converted to 1/24 units,
+	// while already-scaled low BPM values (e.g. 40 BPM -> 960) must stay untouched.
+	if (bpm > 0 && bpm < 120)
 		return bpm * 24;
 
 	return bpm;
