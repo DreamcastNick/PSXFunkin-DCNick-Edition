@@ -83,46 +83,48 @@
 			</dir>
 			
 			<dir name = "chart">
-				<!-- Bopeebo charts -->
-				<file name = "1.1e.cht" type = "data" source = "iso/chart/bopeebo-easy.json.cht"/>
-				<file name = "1.1n.cht" type = "data" source = "iso/chart/bopeebo.json.cht"/>
-				<file name = "1.1h.cht" type = "data" source = "iso/chart/bopeebo-hard.json.cht"/>
-				<!-- Fresh charts -->
-				<file name = "1.2e.cht" type = "data" source = "iso/chart/fresh-easy.json.cht"/>
-				<file name = "1.2n.cht" type = "data" source = "iso/chart/fresh.json.cht"/>
-				<file name = "1.2h.cht" type = "data" source = "iso/chart/fresh-hard.json.cht"/>
-				<!-- Dadbattle charts -->
-				<file name = "1.3e.cht" type = "data" source = "iso/chart/dadbattle-easy.json.cht"/>
-				<file name = "1.3n.cht" type = "data" source = "iso/chart/dadbattle.json.cht"/>
-				<file name = "1.3h.cht" type = "data" source = "iso/chart/dadbattle-hard.json.cht"/>
-				<!-- Tutorial charts -->
-				<file name = "1.4e.cht" type = "data" source = "iso/chart/tutorial-easy.json.cht"/>
-				<file name = "1.4n.cht" type = "data" source = "iso/chart/tutorial.json.cht"/>
-				<file name = "1.4h.cht" type = "data" source = "iso/chart/tutorial-hard.json.cht"/>
-				<!-- Spookeez charts -->
-				<file name = "2.1e.cht" type = "data" source = "iso/chart/spookeez-easy.json.cht"/>
-				<file name = "2.1n.cht" type = "data" source = "iso/chart/spookeez.json.cht"/>
-				<file name = "2.1h.cht" type = "data" source = "iso/chart/spookeez-hard.json.cht"/>
-				<!-- South charts -->
-				<file name = "2.2e.cht" type = "data" source = "iso/chart/south-easy.json.cht"/>
-				<file name = "2.2n.cht" type = "data" source = "iso/chart/south.json.cht"/>
-				<file name = "2.2h.cht" type = "data" source = "iso/chart/south-hard.json.cht"/>
-				<!-- Monster charts -->
-				<file name = "2.3e.cht" type = "data" source = "iso/chart/monster-easy.json.cht"/>
-				<file name = "2.3n.cht" type = "data" source = "iso/chart/monster.json.cht"/>
-				<file name = "2.3h.cht" type = "data" source = "iso/chart/monster-hard.json.cht"/>
-				<!-- Pico charts -->
-				<file name = "3.1e.cht" type = "data" source = "iso/chart/pico-easy.json.cht"/>
-				<file name = "3.1n.cht" type = "data" source = "iso/chart/pico.json.cht"/>
-				<file name = "3.1h.cht" type = "data" source = "iso/chart/pico-hard.json.cht"/>
-				<!-- Philly charts -->
-				<file name = "3.2e.cht" type = "data" source = "iso/chart/philly-easy.json.cht"/>
-				<file name = "3.2n.cht" type = "data" source = "iso/chart/philly.json.cht"/>
-				<file name = "3.2h.cht" type = "data" source = "iso/chart/philly-hard.json.cht"/>
-				<!-- Blammed charts -->
-				<file name = "3.3e.cht" type = "data" source = "iso/chart/blammed-easy.json.cht"/>
-				<file name = "3.3n.cht" type = "data" source = "iso/chart/blammed.json.cht"/>
-				<file name = "3.3h.cht" type = "data" source = "iso/chart/blammed-hard.json.cht"/>
+				<dir name = "small">
+					<!-- Bopeebo charts -->
+					<file name = "1.1e.chs" type = "data" source = "iso/chart/small/bopeebo-easy.json.chs"/>
+					<file name = "1.1n.chs" type = "data" source = "iso/chart/small/bopeebo.json.chs"/>
+					<file name = "1.1h.chs" type = "data" source = "iso/chart/small/bopeebo-hard.json.chs"/>
+					<!-- Fresh charts -->
+					<file name = "1.2e.chs" type = "data" source = "iso/chart/small/fresh-easy.json.chs"/>
+					<file name = "1.2n.chs" type = "data" source = "iso/chart/small/fresh.json.chs"/>
+					<file name = "1.2h.chs" type = "data" source = "iso/chart/small/fresh-hard.json.chs"/>
+					<!-- Dadbattle charts -->
+					<file name = "1.3e.chs" type = "data" source = "iso/chart/small/dadbattle-easy.json.chs"/>
+					<file name = "1.3n.chs" type = "data" source = "iso/chart/small/dadbattle.json.chs"/>
+					<file name = "1.3h.chs" type = "data" source = "iso/chart/small/dadbattle-hard.json.chs"/>
+					<!-- Tutorial charts -->
+					<file name = "1.4e.chs" type = "data" source = "iso/chart/small/tutorial-easy.json.chs"/>
+					<file name = "1.4n.chs" type = "data" source = "iso/chart/small/tutorial.json.chs"/>
+					<file name = "1.4h.chs" type = "data" source = "iso/chart/small/tutorial-hard.json.chs"/>
+					<!-- Spookeez charts -->
+					<file name = "2.1e.chs" type = "data" source = "iso/chart/small/spookeez-easy.json.chs"/>
+					<file name = "2.1n.chs" type = "data" source = "iso/chart/small/spookeez.json.chs"/>
+					<file name = "2.1h.chs" type = "data" source = "iso/chart/small/spookeez-hard.json.chs"/>
+					<!-- South charts -->
+					<file name = "2.2e.chs" type = "data" source = "iso/chart/small/south-easy.json.chs"/>
+					<file name = "2.2n.chs" type = "data" source = "iso/chart/small/south.json.chs"/>
+					<file name = "2.2h.chs" type = "data" source = "iso/chart/small/south-hard.json.chs"/>
+					<!-- Monster charts -->
+					<file name = "2.3e.chs" type = "data" source = "iso/chart/small/monster-easy.json.chs"/>
+					<file name = "2.3n.chs" type = "data" source = "iso/chart/small/monster.json.chs"/>
+					<file name = "2.3h.chs" type = "data" source = "iso/chart/small/monster-hard.json.chs"/>
+					<!-- Pico charts -->
+					<file name = "3.1e.chs" type = "data" source = "iso/chart/small/pico-easy.json.chs"/>
+					<file name = "3.1n.chs" type = "data" source = "iso/chart/small/pico.json.chs"/>
+					<file name = "3.1h.chs" type = "data" source = "iso/chart/small/pico-hard.json.chs"/>
+					<!-- Philly charts -->
+					<file name = "3.2e.chs" type = "data" source = "iso/chart/small/philly-easy.json.chs"/>
+					<file name = "3.2n.chs" type = "data" source = "iso/chart/small/philly.json.chs"/>
+					<file name = "3.2h.chs" type = "data" source = "iso/chart/small/philly-hard.json.chs"/>
+					<!-- Blammed charts -->
+					<file name = "3.3e.chs" type = "data" source = "iso/chart/small/blammed-easy.json.chs"/>
+					<file name = "3.3n.chs" type = "data" source = "iso/chart/small/blammed.json.chs"/>
+					<file name = "3.3h.chs" type = "data" source = "iso/chart/small/blammed-hard.json.chs"/>
+				</dir>
 			</dir>
 		
 			<!-- Player Character assets -->

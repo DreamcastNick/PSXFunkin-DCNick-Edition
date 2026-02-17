@@ -94,34 +94,36 @@
 				
 			<!-- Aethos Mods assets -->
 			<dir name = "chart">
-				<!-- Aethos charts -->
-				<file name = "5.1e.cht" type = "data" source = "iso/chart/aethos.json.cht"/>
-				<file name = "5.1n.cht" type = "data" source = "iso/chart/aethos.json.cht"/>
-				<file name = "5.1h.cht" type = "data" source = "iso/chart/aethos.json.cht"/>
-				<!-- Rotten Smoothie charts -->
-				<file name = "5.2e.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
-				<file name = "5.2n.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
-				<file name = "5.2h.cht" type = "data" source = "iso/chart/rotten-smoothie.json.cht"/>
-				<!-- Twiddlefinger charts -->
-				<file name = "5.3e.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
-				<file name = "5.3n.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
-				<file name = "5.3h.cht" type = "data" source = "iso/chart/twiddlefinger.json.cht"/>
-				<!-- Crimson Awakening charts -->
-				<file name = "5.4e.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
-				<file name = "5.4n.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
-				<file name = "5.4h.cht" type = "data" source = "iso/chart/crimson-awakening.json.cht"/>
-				<!-- Well Done charts -->
-				<file name = "5.5e.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
-				<file name = "5.5n.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
-				<file name = "5.5h.cht" type = "data" source = "iso/chart/well-done.json.cht"/>
-				<!-- Hate Boner charts -->
-				<file name = "5.6e.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
-				<file name = "5.6n.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
-				<file name = "5.6h.cht" type = "data" source = "iso/chart/hate-boner.json.cht"/>
-				<!-- Silly Billy charts -->
-				<file name = "5.7e.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
-				<file name = "5.7n.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
-				<file name = "5.7h.cht" type = "data" source = "iso/chart/silly-billy-hard.json.cht"/>
+				<dir name = "small">
+					<!-- Aethos charts -->
+					<file name = "5.1e.chs" type = "data" source = "iso/chart/small/aethos.json.chs"/>
+					<file name = "5.1n.chs" type = "data" source = "iso/chart/small/aethos.json.chs"/>
+					<file name = "5.1h.chs" type = "data" source = "iso/chart/small/aethos.json.chs"/>
+					<!-- Rotten Smoothie charts -->
+					<file name = "5.2e.chs" type = "data" source = "iso/chart/small/rotten-smoothie.json.chs"/>
+					<file name = "5.2n.chs" type = "data" source = "iso/chart/small/rotten-smoothie.json.chs"/>
+					<file name = "5.2h.chs" type = "data" source = "iso/chart/small/rotten-smoothie.json.chs"/>
+					<!-- Twiddlefinger charts -->
+					<file name = "5.3e.chs" type = "data" source = "iso/chart/small/twiddlefinger.json.chs"/>
+					<file name = "5.3n.chs" type = "data" source = "iso/chart/small/twiddlefinger.json.chs"/>
+					<file name = "5.3h.chs" type = "data" source = "iso/chart/small/twiddlefinger.json.chs"/>
+					<!-- Crimson Awakening charts -->
+					<file name = "5.4e.chs" type = "data" source = "iso/chart/small/crimson-awakening.json.chs"/>
+					<file name = "5.4n.chs" type = "data" source = "iso/chart/small/crimson-awakening.json.chs"/>
+					<file name = "5.4h.chs" type = "data" source = "iso/chart/small/crimson-awakening.json.chs"/>
+					<!-- Well Done charts -->
+					<file name = "5.5e.chs" type = "data" source = "iso/chart/small/well-done.json.chs"/>
+					<file name = "5.5n.chs" type = "data" source = "iso/chart/small/well-done.json.chs"/>
+					<file name = "5.5h.chs" type = "data" source = "iso/chart/small/well-done.json.chs"/>
+					<!-- Hate Boner charts -->
+					<file name = "5.6e.chs" type = "data" source = "iso/chart/small/hate-boner.json.chs"/>
+					<file name = "5.6n.chs" type = "data" source = "iso/chart/small/hate-boner.json.chs"/>
+					<file name = "5.6h.chs" type = "data" source = "iso/chart/small/hate-boner.json.chs"/>
+					<!-- Silly Billy charts -->
+					<file name = "5.7e.chs" type = "data" source = "iso/chart/small/silly-billy-hard.json.chs"/>
+					<file name = "5.7n.chs" type = "data" source = "iso/chart/small/silly-billy-hard.json.chs"/>
+					<file name = "5.7h.chs" type = "data" source = "iso/chart/small/silly-billy-hard.json.chs"/>
+				</dir>
 			</dir>
 			
 			<!-- Player Character assets -->

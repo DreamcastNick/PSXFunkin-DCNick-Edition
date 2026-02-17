@@ -77,34 +77,38 @@
 			
 			<!-- Extra Mods assets -->
 			<dir name = "chart">
-				<!-- Where Are You charts -->
-				<file name = "4.1e.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
-				<file name = "4.1n.cht" type = "data" source = "iso/chart/where-are-you.json.cht"/>
-				<file name = "4.1h.cht" type = "data" source = "iso/chart/where-are-you-hard.json.cht"/>
-				<!-- Eruption charts -->
-				<file name = "4.2e.cht" type = "data" source = "iso/chart/eruption-easy.json.cht"/>
-				<file name = "4.2n.cht" type = "data" source = "iso/chart/eruption.json.cht"/>
-				<file name = "4.2h.cht" type = "data" source = "iso/chart/eruption-hard.json.cht"/>
-				<!-- Kaio-Ken charts -->
-				<file name = "4.3e.cht" type = "data" source = "iso/chart/kaio-ken-easy.json.cht"/>
-				<file name = "4.3n.cht" type = "data" source = "iso/chart/kaio-ken.json.cht"/>
-				<file name = "4.3h.cht" type = "data" source = "iso/chart/kaio-ken-hard.json.cht"/>
-				<!-- Ferocious charts -->
-				<file name = "4.4e.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
-				<file name = "4.4n.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
-				<file name = "4.4h.cht" type = "data" source = "iso/chart/ferocious.json.cht"/>
-				<!-- Monochrome charts -->
-				<file name = "4.5e.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
-				<file name = "4.5n.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
-				<file name = "4.5h.cht" type = "data" source = "iso/chart/monochrome-hard.json.cht"/>
-				<!-- Triple Trouble charts -->
-				<file name = "4.6e.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
-				<file name = "4.6n.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
-				<file name = "4.6h.cht" type = "data" source = "iso/chart/triple-trouble-hard.json.cht"/>
-				<!-- Unbeatable charts -->
-				<file name = "4.7e.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
-				<file name = "4.7n.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
-				<file name = "4.7h.cht" type = "data" source = "iso/chart/unbeatable.json.cht"/>
+				<dir name = "small">
+					<!-- Where Are You charts -->
+					<file name = "4.1e.chs" type = "data" source = "iso/chart/small/where-are-you.json.chs"/>
+					<file name = "4.1n.chs" type = "data" source = "iso/chart/small/where-are-you.json.chs"/>
+					<file name = "4.1h.chs" type = "data" source = "iso/chart/small/where-are-you-hard.json.chs"/>
+					<!-- Eruption charts -->
+					<file name = "4.2e.chs" type = "data" source = "iso/chart/small/eruption-easy.json.chs"/>
+					<file name = "4.2n.chs" type = "data" source = "iso/chart/small/eruption.json.chs"/>
+					<file name = "4.2h.chs" type = "data" source = "iso/chart/small/eruption-hard.json.chs"/>
+					<!-- Kaio-Ken charts -->
+					<file name = "4.3e.chs" type = "data" source = "iso/chart/small/kaio-ken-easy.json.chs"/>
+					<file name = "4.3n.chs" type = "data" source = "iso/chart/small/kaio-ken.json.chs"/>
+					<file name = "4.3h.chs" type = "data" source = "iso/chart/small/kaio-ken-hard.json.chs"/>
+					<!-- Monochrome charts -->
+					<file name = "4.5e.chs" type = "data" source = "iso/chart/small/monochrome-hard.json.chs"/>
+					<file name = "4.5n.chs" type = "data" source = "iso/chart/small/monochrome-hard.json.chs"/>
+					<file name = "4.5h.chs" type = "data" source = "iso/chart/small/monochrome-hard.json.chs"/>
+					<!-- Triple Trouble charts -->
+					<file name = "4.6e.chs" type = "data" source = "iso/chart/small/triple-trouble-hard.json.chs"/>
+					<file name = "4.6n.chs" type = "data" source = "iso/chart/small/triple-trouble-hard.json.chs"/>
+					<file name = "4.6h.chs" type = "data" source = "iso/chart/small/triple-trouble-hard.json.chs"/>
+				</dir>
+				<dir name = "big">
+					<!-- Ferocious charts -->
+					<file name = "4.4e.cht" type = "data" source = "iso/chart/big/ferocious.json.cht"/>
+					<file name = "4.4n.cht" type = "data" source = "iso/chart/big/ferocious.json.cht"/>
+					<file name = "4.4h.cht" type = "data" source = "iso/chart/big/ferocious.json.cht"/>
+					<!-- Unbeatable charts -->
+					<file name = "4.7e.cht" type = "data" source = "iso/chart/big/unbeatable.json.cht"/>
+					<file name = "4.7n.cht" type = "data" source = "iso/chart/big/unbeatable.json.cht"/>
+					<file name = "4.7h.cht" type = "data" source = "iso/chart/big/unbeatable.json.cht"/>
+				</dir>
 			</dir>
 			
 			<!-- Player Character assets -->

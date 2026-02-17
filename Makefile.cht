@@ -1,21 +1,18 @@
-CHART_JSON := $(wildcard iso/chart/*.json)
-CHART_NAMES := $(basename $(notdir $(CHART_JSON)))
+BIG_JSON   := $(wildcard iso/chart/big/*.json)
+SMALL_JSON := $(wildcard iso/chart/small/*.json)
 
-BIG_CHART_NAMES := ferocious unbeatable
-SMALL_CHART_NAMES := $(filter-out $(BIG_CHART_NAMES),$(CHART_NAMES))
+BIG_OUT   := $(addsuffix .cht,$(BIG_JSON))   # produces *.json.cht
+SMALL_OUT := $(addsuffix .chs,$(SMALL_JSON)) # produces *.json.chs
 
-CHART_BIG_OUT := $(addprefix iso/chart/big/,$(addsuffix .cht,$(BIG_CHART_NAMES)))
-CHART_SMALL_OUT := $(addprefix iso/chart/small/,$(addsuffix .chs,$(SMALL_CHART_NAMES)))
+all: $(BIG_OUT) $(SMALL_OUT)
 
-all: $(CHART_BIG_OUT) $(CHART_SMALL_OUT)
-
-iso/chart/big/%.cht: iso/chart/%.json
-	mkdir -p $(@D)
+# big: iso/chart/big/name.json -> iso/chart/big/name.json.cht
+iso/chart/big/%.json.cht: iso/chart/big/%.json
 	tools/funkinchartpak/funkinchartpak $<
 	mv -f $<.cht $@
 
-iso/chart/small/%.chs: iso/chart/%.json
-	mkdir -p $(@D)
+# small: iso/chart/small/name.json -> iso/chart/small/name.json.chs
+iso/chart/small/%.json.chs: iso/chart/small/%.json
 	tools/funkinsmallchartpak/funkinsmallchartpak $<
 	mv -f $<.chs $@
 
