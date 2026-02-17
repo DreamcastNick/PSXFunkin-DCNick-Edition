@@ -157,6 +157,12 @@ typedef struct
 	u16 flag;
 } Section;
 
+typedef struct
+{
+	u16 end; //1/12 steps (small chart)
+	u16 flag;
+} SectionSmall;
+
 #define NOTE_FLAG_SUSTAIN     (1 << 5) //Note is a sustain note
 #define NOTE_FLAG_SUSTAIN_END (1 << 6) //Is either end of sustain
 #define NOTE_FLAG_ALT_ANIM    (1 << 7) //Note plays alt animation
@@ -174,6 +180,13 @@ typedef struct
 	u16 type;
 	u16 is_opponent;
 } Note;
+
+typedef struct
+{
+	u16 pos; //1/12 steps (small chart)
+	u16 type;
+	u16 is_opponent;
+} NoteSmall;
 
 typedef struct
 {
