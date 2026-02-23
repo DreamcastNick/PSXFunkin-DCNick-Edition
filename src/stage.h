@@ -330,7 +330,7 @@ typedef struct
 		u16 size;
 	} note;
 	
-	u16 last_bpm;
+	u32 last_bpm;
 
 	int timerlength, timermin, timersec, timepassed;
 	
