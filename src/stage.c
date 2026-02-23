@@ -634,7 +634,7 @@ static void Stage_DrawStartScreen(void)
 }
 
 //Stage section functions
-static u16 Stage_NormalizeBPM(u16 bpm)
+static u32 Stage_NormalizeBPM(u32 bpm)
 {
 	// Charts are expected to store BPM in 1/24 units.
 	// Some legacy/JSON conversion pipelines may leave raw BPM values.
@@ -647,7 +647,7 @@ static u16 Stage_NormalizeBPM(u16 bpm)
 	return bpm;
 }
 
-static void Stage_ChangeBPM(u16 bpm, u32 step)
+static void Stage_ChangeBPM(u32 bpm, u32 step)
 {
 	bpm = Stage_NormalizeBPM(bpm);
 
@@ -698,44 +698,16 @@ typedef struct
 	fixed_t size; //Note height
 } SectionScroll;
 
-typedef struct
-{
-	fixed_t start;    //Seconds
-	fixed_t length;   //Seconds
-	u16 start_step;   //Sub-steps (small chart)
-	u16 length_step;  //Sub-steps (small chart)
-	
-	fixed_t size; //Note height
-} SectionScrollSmall;
-
 static void Stage_GetSectionScroll(SectionScroll *scroll, Section *section)
 {
 	//Get BPM
-	u16 bpm = Stage_NormalizeBPM(section->flag & SECTION_FLAG_BPM_MASK);
+	u32 bpm = Stage_NormalizeBPM(section->flag & SECTION_FLAG_BPM_MASK);
 	if (bpm == 0)
 		bpm = stage.last_bpm ? stage.last_bpm : 2400;
 	
 	//Get section step info
 	scroll->start_step = Stage_GetSectionStart(section);
 	scroll->length_step = section->end - scroll->start_step;
-	
-	//Get section time length
-	scroll->length = ((fixed_t)scroll->length_step * FIXED_DEC(15,1) / 12) * 24 / bpm;
-	
-	//Get note height
-	scroll->size = FIXED_MUL(stage.speed, scroll->length * (12 * 150) / (fixed_t)scroll->length_step) + FIXED_UNIT;
-}
-
-static void Stage_GetSectionScrollSmall(SectionScrollSmall *scroll, Section *section)
-{
-	//Get BPM
-	u16 bpm = Stage_NormalizeBPM(section->flag & SECTION_FLAG_BPM_MASK);
-	if (bpm == 0)
-		bpm = stage.last_bpm ? stage.last_bpm : 2400;
-	
-	//Get section step info
-	scroll->start_step = (u16)Stage_GetSectionStart(section);
-	scroll->length_step = (u16)(section->end - scroll->start_step);
 	
 	//Get section time length
 	scroll->length = ((fixed_t)scroll->length_step * FIXED_DEC(15,1) / 12) * 24 / bpm;
@@ -1798,22 +1770,15 @@ static void Stage_DrawHUDNotes(boolean back)
 
 static void Stage_DrawNotes(boolean back)
 {
-	const boolean use_small_chart_steps = (stage.stage_def->chart_format == STAGE_CHART_FORMAT_SMALL);
-
 	//Initialize scroll state
 	SectionScroll scroll;
-	SectionScrollSmall scroll_small;
 	scroll.start = stage.time_base;
-	scroll_small.start = stage.time_base;
 	
 	Section *scroll_section = stage.section_base;
-	if (use_small_chart_steps)
-		Stage_GetSectionScrollSmall(&scroll_small, scroll_section);
-	else
-		Stage_GetSectionScroll(&scroll, scroll_section);
+	Stage_GetSectionScroll(&scroll, scroll_section);
 	
 	//Push scroll back until cur_note is properly contained
-	while ((use_small_chart_steps ? scroll_small.start_step : scroll.start_step) > (use_small_chart_steps ? (u16)stage.cur_note->pos : stage.cur_note->pos))
+	while (scroll.start_step > stage.cur_note->pos)
 	{
 		//Look for previous section
 		Section *prev_section = Stage_GetPrevSection(scroll_section);
@@ -1822,35 +1787,19 @@ static void Stage_DrawNotes(boolean back)
 		
 		//Push scroll back
 		scroll_section = prev_section;
-		if (use_small_chart_steps)
-		{
-			Stage_GetSectionScrollSmall(&scroll_small, scroll_section);
-			scroll_small.start -= scroll_small.length;
-		}
-		else
-		{
-			Stage_GetSectionScroll(&scroll, scroll_section);
-			scroll.start -= scroll.length;
-		}
+		Stage_GetSectionScroll(&scroll, scroll_section);
+		scroll.start -= scroll.length;
 	}
 	
 	//Draw notes
 	for (Note *note = stage.cur_note; note->pos != 0xFFFFFFFF; note++)
 	{
 		//Update scroll
-		while ((use_small_chart_steps ? (u16)note->pos : note->pos) >= (use_small_chart_steps ? (u16)scroll_section->end : scroll_section->end))
+		while (note->pos >= scroll_section->end)
 		{
 			//Push scroll forward
-			if (use_small_chart_steps)
-			{
-				scroll_small.start += scroll_small.length;
-				Stage_GetSectionScrollSmall(&scroll_small, ++scroll_section);
-			}
-			else
-			{
-				scroll.start += scroll.length;
-				Stage_GetSectionScroll(&scroll, ++scroll_section);
-			}
+			scroll.start += scroll.length;
+			Stage_GetSectionScroll(&scroll, ++scroll_section);
 		}
 		
 		//Check if opponent should draw as bot
@@ -1861,16 +1810,7 @@ static void Stage_DrawNotes(boolean back)
 		PlayerState *this = &stage.player_state[i];
 		
 		fixed_t note_fp = (fixed_t)note->pos << FIXED_SHIFT;
-		fixed_t time;
-		if (use_small_chart_steps)
-		{
-			u16 note_pos = (u16)note->pos;
-		time = (scroll_small.start - stage.song_time) + (scroll_small.length * (note_pos - scroll_small.start_step) / scroll_small.length_step);
-		}
-		else
-		{
-			time = (scroll.start - stage.song_time) + (scroll.length * (note->pos - scroll.start_step) / scroll.length_step);
-		}
+		fixed_t time = (scroll.start - stage.song_time) + (scroll.length * (note->pos - scroll.start_step) / scroll.length_step);
 		fixed_t y;
 		fixed_t size;
 		fixed_t offset;
@@ -1878,7 +1818,7 @@ static void Stage_DrawNotes(boolean back)
 		if (!back)
 		{
 			y = FIXED_MUL(FIXED_DEC(5,3), time * 150);
-			size = FIXED_MUL(FIXED_DEC(5,3), use_small_chart_steps ? scroll_small.size : scroll.size) + FIXED_UNIT;
+			size = FIXED_MUL(FIXED_DEC(5,3), scroll.size) + FIXED_UNIT;
 			offset = (FIXED_DEC(MUtil_Smooth(time), 256) * 32);
 		}
 		else if (back)
@@ -1888,7 +1828,7 @@ static void Stage_DrawNotes(boolean back)
 				note_index += stage.keys;
 			}
 			y = stage.note.y[note_index] + FIXED_MUL(stage.speed, time * 150);
-			size = FIXED_MUL(stage.speed, use_small_chart_steps ? scroll_small.size : scroll.size) + FIXED_UNIT;
+			size = FIXED_MUL(stage.speed, scroll.size) + FIXED_UNIT;
 			offset = 0;
 		}
 		
@@ -1938,7 +1878,7 @@ static void Stage_DrawNotes(boolean back)
 			{
 				break;
 			}
-			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + (use_small_chart_steps ? scroll_small.size : scroll.size)) || note->pos == 0xFFFFFFFF))
+			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || note->pos == 0xFFFFFFFF))
 			{
 				break;
 			}
@@ -1966,7 +1906,7 @@ static void Stage_DrawNotes(boolean back)
 				}
 				else if (back)
 				{
-					y -= (use_small_chart_steps ? scroll_small.size : scroll.size);
+					y -= scroll.size;
 					if ((note->type & (NOTE_FLAG_HIT)) || (bot) || ((this->pad_held & note_key[Stage_GetNoteType(note) % stage.keys]) && (note_fp + stage.late_sus_safe >= stage.note_scroll)))
 					{
 						clip = FIXED_DEC(32 - SCREEN_HEIGHT2, 1) - y;
@@ -2020,16 +1960,7 @@ static void Stage_DrawNotes(boolean back)
 				else
 				{
 					//Get note height
-					fixed_t next_time;
-					if (use_small_chart_steps)
-					{
-						u16 note_pos = (u16)note->pos;
-						next_time = (scroll_small.start - stage.song_time) + (scroll_small.length * (note_pos + 12 - scroll_small.start_step) / scroll_small.length_step);
-					}
-					else
-					{
-						next_time = (scroll.start - stage.song_time) + (scroll.length * (note->pos + 12 - scroll.start_step) / scroll.length_step);
-					}
+					fixed_t next_time = (scroll.start - stage.song_time) + (scroll.length * (note->pos + 12 - scroll.start_step) / scroll.length_step);
 					fixed_t next_y = 0;
 					
 					if (!back)
@@ -2042,7 +1973,7 @@ static void Stage_DrawNotes(boolean back)
 						if (note->is_opponent) {
 							note_index += stage.keys;
 						}
-						next_y = stage.note.y[note_index] + FIXED_MUL(stage.speed, next_time * 150) - (use_small_chart_steps ? scroll_small.size : scroll.size);
+						next_y = stage.note.y[note_index] + FIXED_MUL(stage.speed, next_time * 150) - scroll.size;
 					}
 					
 					fixed_t next_size = next_y - y;
@@ -3099,7 +3030,7 @@ static void Stage_LoadSmallChart(void)
 	section_pp = section_p;
 	for (size_t i = 0; i < sections; i++, section_pp += 4, nsection_p++)
 	{
-		u16 section_end = section_pp[0] | (section_pp[1] << 8);
+		u32 section_end = section_pp[0] | (section_pp[1] << 8);
 		nsection_p->end = (section_end == 0xFFFF) ? 0xFFFFFFFF : section_end;
 		nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
 	}
@@ -3108,7 +3039,7 @@ static void Stage_LoadSmallChart(void)
 	note_pp = note_p;
 	for (size_t i = 0; i < notes; i++, note_pp += 6, nnote_p++)
 	{
-		u16 note_pos = note_pp[0] | (note_pp[1] << 8);
+		u32 note_pos = note_pp[0] | (note_pp[1] << 8);
 		nnote_p->pos = (note_pos == 0xFFFF) ? 0xFFFFFFFF : note_pos;
 		nnote_p->type = note_pp[2] | (note_pp[3] << 8);
 		nnote_p->is_opponent = note_pp[4] | (note_pp[5] << 8);
@@ -4993,16 +4924,14 @@ void Stage_Tick(void)
 				if (stage.note_scroll >= 0)
 				{
 					//Check if current section has ended
-					u32 end = (stage.stage_def->chart_format == STAGE_CHART_FORMAT_SMALL)
-						? (u16)stage.cur_section->end
-						: stage.cur_section->end;
+					u32 end = stage.cur_section->end;
 					if ((stage.note_scroll >> FIXED_SHIFT) >= end)
 					{
 						//Increment section pointer
 						stage.cur_section++;
 						
 						//Update BPM
-						u16 next_bpm = stage.cur_section->flag & SECTION_FLAG_BPM_MASK;
+						u32 next_bpm = stage.cur_section->flag & SECTION_FLAG_BPM_MASK;
 						Stage_ChangeBPM(next_bpm, end);
 						stage.section_base = stage.cur_section;
 						
