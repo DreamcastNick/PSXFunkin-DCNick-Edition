@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <cmath>
 #include <unordered_set>
+#include <string>
+#include <cctype>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -82,6 +84,29 @@ void WriteDWord(std::ostream &out, uint32_t dword)
     out.put(dword >> 24);
 }
 
+
+
+static std::string BaseNameLower(const std::string &path)
+{
+    size_t slash = path.find_last_of("/\\");
+    std::string name = (slash == std::string::npos) ? path : path.substr(slash + 1);
+    std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) {
+        return (char)std::tolower(c);
+    });
+    return name;
+}
+
+static bool ChartUsesU32(const std::string &path)
+{
+    // By default, charts are written in legacy u16 format.
+    // Add lowercase json file names here to force u32 output.
+    static const std::unordered_set<std::string> u32_chart_names = {
+        "ferocious.json",
+        "unbeatable.json",
+    };
+
+    return u32_chart_names.count(BaseNameLower(path)) != 0;
+}
 static uint16_t EncodeBpm(double bpm)
 {
     if (bpm < 1.0)
@@ -260,25 +285,81 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write headers
-    WriteDWord(out, keys);
-    WriteDWord(out, 8 + (uint32_t)(sections.size() * sizeof(Section)));
-
-    // Write sections
-    for (auto &i : sections)
+    bool write_u32 = ChartUsesU32(argv[1]);
+    if (!write_u32)
     {
-        WriteDWord(out, i.end);
-        WriteWord(out, i.flag);
-        WriteWord(out, 0);
+        for (const auto &sec : sections)
+        {
+            if (sec.end > 0xFFFEu && sec.end != 0xFFFFFFFFu)
+            {
+                std::cout << "forcing u32 output (section exceeds u16 range): " << sec.end << std::endl;
+                write_u32 = true;
+                break;
+            }
+        }
+
+        if (!write_u32)
+        {
+            for (const auto &note : notes)
+            {
+                if (note.pos > 0xFFFEu && note.pos != 0xFFFFFFFFu)
+                {
+                    std::cout << "forcing u32 output (note exceeds u16 range): " << note.pos << std::endl;
+                    write_u32 = true;
+                    break;
+                }
+            }
+        }
     }
 
-    // Write notes
-    for (auto &i : notes)
+    std::cout << "output format: " << (write_u32 ? "u32" : "u16") << std::endl;
+
+    if (write_u32)
     {
-        WriteDWord(out, i.pos);
-        WriteWord(out, i.type);
-        out.put(i.is_opponent);
-        out.put(0);
+        // Write u32 header
+        WriteDWord(out, keys);
+        WriteDWord(out, 8 + (uint32_t)(sections.size() * sizeof(Section)));
+
+        // Write u32 sections
+        for (const auto &sec : sections)
+        {
+            WriteDWord(out, sec.end);
+            WriteWord(out, sec.flag);
+            WriteWord(out, 0);
+        }
+
+        // Write u32 notes (8 bytes each)
+        for (const auto &note : notes)
+        {
+            WriteDWord(out, note.pos);
+            WriteWord(out, note.type);
+            out.put(note.is_opponent);
+            out.put(0);
+        }
     }
+    else
+    {
+        // Write u16 header
+        WriteWord(out, keys);
+        WriteWord(out, 4 + (uint16_t)(sections.size() * 4));
+
+        // Write u16 sections (4 bytes each)
+        for (const auto &sec : sections)
+        {
+            uint16_t end = (sec.end == 0xFFFFFFFFu) ? 0xFFFFu : (uint16_t)sec.end;
+            WriteWord(out, end);
+            WriteWord(out, sec.flag);
+        }
+
+        // Write u16 notes (5 bytes each)
+        for (const auto &note : notes)
+        {
+            uint16_t pos = (note.pos == 0xFFFFFFFFu) ? 0xFFFFu : (uint16_t)note.pos;
+            WriteWord(out, pos);
+            WriteWord(out, note.type);
+            out.put(note.is_opponent);
+        }
+    }
+
     return 0;
 }
