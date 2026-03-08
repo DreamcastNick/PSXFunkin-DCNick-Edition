@@ -1343,29 +1343,39 @@ void Stage_DrawTexCol_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
 
 void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode, u8 opacity)
 {
-    RECT sdst;
+	fixed_t xz = dst->x;
+	fixed_t yz = dst->y;
+	fixed_t wz = dst->w;
+	fixed_t hz = dst->h;
 
-    sdst.x = (dst->x >> FIXED_SHIFT) + SCREEN_WIDEADD2;
-    sdst.y = dst->y >> FIXED_SHIFT;
-    sdst.w = dst->w >> FIXED_SHIFT;
-    sdst.h = dst->h >> FIXED_SHIFT;
+	//Don't draw if HUD and is disabled
+	if (tex == &stage.tex_hud0 || tex == &stage.tex_hud1)
+	{
+		#ifdef STAGE_NOHUD
+			return;
+		#endif
+		
+		if (hudEnabled == 0)
+			return;
+	}
 
-    sdst.x -= SCREEN_WIDEADD2;
-    sdst.x = (sdst.x * zoom) >> FIXED_SHIFT;
-    sdst.y = (sdst.y * zoom) >> FIXED_SHIFT;
-    sdst.w = (sdst.w * zoom) >> FIXED_SHIFT;
-    sdst.h = (sdst.h * zoom) >> FIXED_SHIFT;
-    sdst.x += SCREEN_WIDEADD2;
+	fixed_t l = (SCREEN_WIDTH2  << FIXED_SHIFT) + FIXED_MUL(xz, zoom);// + FIXED_DEC(1,2);
+	fixed_t t = (SCREEN_HEIGHT2 << FIXED_SHIFT) + FIXED_MUL(yz, zoom);// + FIXED_DEC(1,2);
+	fixed_t r = l + FIXED_MUL(wz, zoom);
+	fixed_t b = t + FIXED_MUL(hz, zoom);
 
-    sdst.x -= SCREEN_WIDEADD2;
-    sdst.x -= SCREEN_WIDTH2;
-    sdst.y -= SCREEN_HEIGHT2;
-    MUtil_RotatePointXY(&sdst.x, &sdst.y, rotation);
-    sdst.x += SCREEN_WIDTH2;
-    sdst.y += SCREEN_HEIGHT2;
-    sdst.x += SCREEN_WIDEADD2;
+	l >>= FIXED_SHIFT;
+	t >>= FIXED_SHIFT;
+	r >>= FIXED_SHIFT;
+	b >>= FIXED_SHIFT;
 
-    Gfx_BlendTexV2(tex, src, &sdst, mode, opacity);
+	RECT sdst = {
+		l,
+		t,
+		r - l,
+		b - t,
+	};
+	Gfx_BlendTexV2(tex, src, &sdst, mode, opacity);
 }
 
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation)
@@ -1456,7 +1466,7 @@ void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, con
     Stage_BlendTexArbCol(tex, src, p0, p1, p2, p3, zoom, rotation, 0x80, 0x80, 0x80, mode);
 }
 
-void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode)
+void Stage_BlendTexOLD(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode)
 {
 	fixed_t xz = dst->x;
 	fixed_t yz = dst->y;
@@ -1712,7 +1722,7 @@ static void Stage_DrawNote(const RECT *src, RECT_FIXED *dst, boolean hud, Gfx_Te
 	if (hud)
 		Stage_DrawTex(texture, src, &sdst, zoom, stage.camera.hudangle);
 	else
-		Stage_BlendTex(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
+		Stage_BlendTexOLD(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
 }
 
 static void Stage_DrawPhantomNote(const RECT *src, RECT_FIXED *dst, boolean hud, Gfx_Tex *texture)
@@ -1742,9 +1752,9 @@ static void Stage_DrawPhantomNote(const RECT *src, RECT_FIXED *dst, boolean hud,
     }
     
 	if (hud)
-		Stage_BlendTex(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
+		Stage_BlendTexOLD(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
 	else
-		Stage_BlendTex(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
+		Stage_BlendTexOLD(texture, src, &sdst, zoom, stage.camera.hudangle, 0);
 }
 
 static void Stage_DrawHUDNotes(boolean back)

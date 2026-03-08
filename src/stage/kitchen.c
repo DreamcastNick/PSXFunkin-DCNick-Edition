@@ -434,7 +434,7 @@ void Back_Kitchen_DrawFG(StageBack *back)
 	
 	if (stage.song_step >= 1816 && stage.song_step <= 5500)
 	{
-		Stage_BlendTex(&this->tex_cut0, &fire_src, &fire_dst, stage.camera.bzoom, stage.camera.angle, 0);
+		Stage_BlendTexOLD(&this->tex_cut0, &fire_src, &fire_dst, stage.camera.bzoom, stage.camera.angle, 0);
 	}
 }
 
