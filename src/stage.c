@@ -1341,6 +1341,33 @@ void Stage_DrawTexCol_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
     Gfx_DrawTexRotateColFlipped(tex, src, &sdst, rotationAngle, 0, 0, cr, cg, cb);
 }
 
+void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode, u8 opacity)
+{
+    RECT sdst;
+
+    sdst.x = (dst->x >> FIXED_SHIFT) + SCREEN_WIDEADD2;
+    sdst.y = dst->y >> FIXED_SHIFT;
+    sdst.w = dst->w >> FIXED_SHIFT;
+    sdst.h = dst->h >> FIXED_SHIFT;
+
+    sdst.x -= SCREEN_WIDEADD2;
+    sdst.x = (sdst.x * zoom) >> FIXED_SHIFT;
+    sdst.y = (sdst.y * zoom) >> FIXED_SHIFT;
+    sdst.w = (sdst.w * zoom) >> FIXED_SHIFT;
+    sdst.h = (sdst.h * zoom) >> FIXED_SHIFT;
+    sdst.x += SCREEN_WIDEADD2;
+
+    sdst.x -= SCREEN_WIDEADD2;
+    sdst.x -= SCREEN_WIDTH2;
+    sdst.y -= SCREEN_HEIGHT2;
+    MUtil_RotatePointXY(&sdst.x, &sdst.y, rotation);
+    sdst.x += SCREEN_WIDTH2;
+    sdst.y += SCREEN_HEIGHT2;
+    sdst.x += SCREEN_WIDEADD2;
+
+    Gfx_BlendTexV2(tex, src, &sdst, mode, opacity);
+}
+
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation)
 {
     Stage_DrawTexCol(tex, src, dst, zoom, rotation, 0x80, 0x80, 0x80);
@@ -2754,10 +2781,14 @@ static void Stage_LoadChart(void)
 	//Use standard path convention
 	sprintf(chart_path, "\\CHART\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
 	
+	CdlFILE chart_file;
+	IO_FindFile(&chart_file, chart_path);
+
 	if (stage.chart_data != NULL)
 		Mem_Free(stage.chart_data);
-	stage.chart_data = IO_Read(chart_path);
+	stage.chart_data = IO_ReadFile(&chart_file);
 	u8 *chart_byte = (u8*)stage.chart_data;
+	size_t chart_size = chart_file.size;
 
 	if (chart_byte[2] == 0 && chart_byte[3] == 0)
 	{
@@ -2774,6 +2805,27 @@ static void Stage_LoadChart(void)
 		u16 note_off = chart_byte[2] | (chart_byte[3] << 8);
 		u8 *section_p = chart_byte + 4;
 		u8 *note_p = chart_byte + note_off;
+		u8 *chart_end = chart_byte + chart_size;
+
+		u8 note_stride = 6;
+		if ((note_p + 2) <= chart_end)
+		{
+			boolean found_sentinel = false;
+			for (u8 *note_pp = note_p; (note_pp + 2) <= chart_end; note_pp += 6)
+			{
+				u16 pos = note_pp[0] | (note_pp[1] << 8);
+				if (pos == 0xFFFF)
+				{
+					found_sentinel = true;
+					break;
+				}
+				if ((note_pp + 8) > chart_end)
+					break;
+			}
+
+			if (!found_sentinel)
+				note_stride = 5;
+		}
 
 		size_t sections = 0;
 		for (u8 *section_pp = section_p;; section_pp += 4)
@@ -2785,7 +2837,7 @@ static void Stage_LoadChart(void)
 		}
 
 		size_t notes = 0;
-		for (u8 *note_pp = note_p;; note_pp += 6)
+		for (u8 *note_pp = note_p;; note_pp += note_stride)
 		{
 			notes++;
 			u16 pos = note_pp[0] | (note_pp[1] << 8);
@@ -2810,7 +2862,7 @@ static void Stage_LoadChart(void)
 		Note *nnote_p = (Note*)(nchart + notes_off);
 		for (size_t i = 0; i < notes; i++, nnote_p++)
 		{
-			u8 *note_pp = note_p + (i * 6);
+			u8 *note_pp = note_p + (i * note_stride);
 			u16 pos = note_pp[0] | (note_pp[1] << 8);
 			nnote_p->pos = (pos == 0xFFFF) ? 0xFFFFFFFF : pos;
 			nnote_p->type = note_pp[2] | (note_pp[3] << 8);

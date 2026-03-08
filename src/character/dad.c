@@ -138,6 +138,7 @@ Character *Char_Dad_New(fixed_t x, fixed_t y)
 	
 	Animatable_Init(&this->character.animatable, char_dad_anim);
 	Character_Init((Character*)this, x, y);
+	Character_SetGhostTrail((Character*)this, true);
 	
 	//Set character information
 	this->character.spec = 0;
