@@ -8,8 +8,8 @@
 #include <vector>
 #include <cstdint>
 #include <algorithm>
+#include <cmath>
 #include <unordered_set>
-#include <string>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -38,7 +38,7 @@ struct Note
 {
     uint32_t pos; // 1/12 steps
     uint16_t type;
-    uint16_t is_opponent;
+    uint8_t is_opponent, pad = 0;
 };
 
 uint16_t ChartKey(json &j)
@@ -63,34 +63,9 @@ uint16_t ChartKey(json &j)
     return 4;
 }
 
-uint64_t PosRound(double pos, double crochet)
+uint32_t PosRound(double pos, double crochet)
 {
-    return static_cast<uint64_t>(std::floor(pos / crochet + 0.5));
-}
-
-double ReadJsonNumber(const json &obj, const char *key, double fallback)
-{
-    auto it = obj.find(key);
-    if (it == obj.end() || it->is_null())
-        return fallback;
-
-    if (it->is_number())
-        return it->get<double>();
-
-    if (it->is_string())
-    {
-        const std::string str = it->get<std::string>();
-        try
-        {
-            return std::stod(str);
-        }
-        catch (...)
-        {
-            return fallback;
-        }
-    }
-
-    return fallback;
+    return static_cast<uint32_t>(std::floor(pos / crochet + 0.5));
 }
 
 void WriteWord(std::ostream &out, uint16_t word)
@@ -99,12 +74,27 @@ void WriteWord(std::ostream &out, uint16_t word)
     out.put(word >> 8);
 }
 
-void WriteDword(std::ostream &out, uint32_t dword)
+void WriteDWord(std::ostream &out, uint32_t dword)
 {
     out.put(dword >> 0);
     out.put(dword >> 8);
     out.put(dword >> 16);
     out.put(dword >> 24);
+}
+
+static uint16_t EncodeBpm(double bpm)
+{
+    if (bpm < 1.0)
+        bpm = 1.0;
+    else if (bpm > 999.9)
+        bpm = 999.9;
+
+    uint16_t encoded = PosRound(bpm, 1.0 / 24.0);
+    if (encoded < 24)
+        encoded = 24;
+    else if (encoded > SECTION_FLAG_BPM_MASK)
+        encoded = SECTION_FLAG_BPM_MASK;
+    return encoded;
 }
 
 int main(int argc, char *argv[])
@@ -127,25 +117,23 @@ int main(int argc, char *argv[])
 
     auto song_info = j["song"];
 
-    double bpm = ReadJsonNumber(song_info, "bpm", 100.0);
-    if (bpm <= 0.0)
-        bpm = 100.0;
+    double bpm = song_info["bpm"];
     double crochet = (60.0 / bpm) * 1000.0;
     double step_crochet = crochet / 4;
 
-    double speed = ReadJsonNumber(song_info, "speed", 1.0);
+    double speed = song_info["speed"];
     uint16_t keys = ChartKey(song_info);
     uint16_t max_keys = keys * 2;
 
     std::cout << argv[1] << " speed: " << speed << " ini bpm: " << bpm << " step_crochet: " << step_crochet << " keys: " << keys << std::endl;
 
-    uint64_t milli_base = 0;
-    uint64_t step_base = 0;
+    double milli_base = 0;
+    uint32_t step_base = 0;
 
     std::vector<Section> sections;
     std::vector<Note> notes;
 
-    uint64_t section_end = 0;
+    uint32_t section_end = 0;
     int score = 0, dups = 0;
     std::unordered_set<uint64_t> note_fudge;
     for (auto &i : song_info["notes"]) // Iterate through sections
@@ -160,16 +148,14 @@ int main(int argc, char *argv[])
             milli_base += step_crochet * (section_end - step_base);
             step_base = section_end;
 
-            bpm = ReadJsonNumber(i, "bpm", bpm);
-            if (bpm <= 0.0)
-                bpm = 100.0;
+            bpm = i["bpm"];
             crochet = (60.0 / bpm) * 1000.0;
             step_crochet = crochet / 4;
 
             std::cout << "chg bpm: " << bpm << " step_crochet: " << step_crochet << " milli_base: " << milli_base << " step_base: " << step_base << std::endl;
         }
         new_section.end = (section_end += 16) * 12; //(uint64_t)i["lengthInSteps"]) * 12; // I had to do this for compatibility
-        new_section.flag = PosRound(bpm, 1.0 / 24.0) & SECTION_FLAG_BPM_MASK;
+        new_section.flag = EncodeBpm(bpm) & SECTION_FLAG_BPM_MASK;
         bool is_alt = i["altAnim"] == true;
         if (is_opponent)
             new_section.flag |= SECTION_FLAG_OPPFOCUS;
@@ -181,13 +167,13 @@ int main(int argc, char *argv[])
             // Push main note
             Note new_note;
             int sustain = static_cast<int>(PosRound(j[2], step_crochet)) - 1;
-            new_note.pos = (step_base * 12) + PosRound(((uint64_t)j[0] - milli_base) * 12.0, step_crochet);
+            new_note.pos = (step_base * 12) + PosRound(((double)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;
 
-            new_note.is_opponent = 0;
+            new_note.is_opponent = false;
 
             if ((!is_opponent && new_note.type >= keys) || (is_opponent && new_note.type < keys))
-                new_note.is_opponent = 1;
+                new_note.is_opponent = true;
 
             if (is_opponent)
                 new_note.type = (new_note.type + keys) % max_keys;
@@ -256,14 +242,14 @@ int main(int argc, char *argv[])
 
     // Push dummy section and note
     Section dum_section;
-    dum_section.end = 0xFFFFFFFF;
+    dum_section.end = 0xFFFFFFFFU;
     dum_section.flag = sections[sections.size() - 1].flag;
     sections.push_back(dum_section);
 
     Note dum_note;
-    dum_note.pos = 0xFFFFFFFF;
+    dum_note.pos = 0xFFFFFFFFU;
     dum_note.type = NOTE_FLAG_HIT;
-    dum_note.is_opponent = 0;
+    dum_note.is_opponent = false;
     notes.push_back(dum_note);
 
     // Write to output
@@ -275,15 +261,13 @@ int main(int argc, char *argv[])
     }
 
     // Write headers
-    const uint32_t note_offset = static_cast<uint32_t>(8 + (sections.size() << 3));
-    WriteWord(out, keys);
-    WriteWord(out, 0);
-    WriteDword(out, note_offset);
+    WriteDWord(out, keys);
+    WriteDWord(out, 8 + (uint32_t)(sections.size() * sizeof(Section)));
 
     // Write sections
     for (auto &i : sections)
     {
-        WriteDword(out, i.end);
+        WriteDWord(out, i.end);
         WriteWord(out, i.flag);
         WriteWord(out, 0);
     }
@@ -291,9 +275,10 @@ int main(int argc, char *argv[])
     // Write notes
     for (auto &i : notes)
     {
-        WriteDword(out, i.pos);
+        WriteDWord(out, i.pos);
         WriteWord(out, i.type);
-        WriteWord(out, i.is_opponent);
+        out.put(i.is_opponent);
+        out.put(0);
     }
     return 0;
 }
