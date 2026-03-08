@@ -9,7 +9,7 @@
 #include "mem.h"
 #include "stage.h"
 
-#define AFTERIMAGE_MODE 1
+#define AFTERIMAGE_MODE 0
 
 static void Character_DrawGhosts(Character *this, Gfx_Tex *tex)
 {
