@@ -4715,19 +4715,35 @@ void Stage_Tick(void)
 				}
                 else
                 {
-                    // XA not playing; continue local timing for botplay/scroll until chart ends
-                    u32 last_note_pos = 0;
+                    // XA not playing; continue local timing for botplay/scroll until chart ends.
+                    // Use both notes and sections to determine chart end so charts with sparse/empty
+                    // note data don't terminate right after countdown.
+                    u32 chart_end_pos = 0;
+
                     for (Note *n = stage.notes; n->pos != 0xFFFFFFFF; n++)
-                        last_note_pos = n->pos;
+                    {
+                        if (n->pos > chart_end_pos)
+                            chart_end_pos = n->pos;
+                    }
 
-                    // Keep playing true while chart hasn't ended yet
-                    playing = ((stage.note_scroll >> FIXED_SHIFT) < last_note_pos);
+                    for (Section *sec = stage.sections; sec->end != 0xFFFFFFFF; sec++)
+                    {
+                        if (sec->end > chart_end_pos)
+                            chart_end_pos = sec->end;
+                    }
 
-                    // Advance local song_time using timer to keep scroll going
+                    // Keep a small safety floor so a malformed chart can't end immediately.
+                    if (chart_end_pos == 0)
+                        chart_end_pos = 12 * 16;
+
+                    // Keep playing true while chart hasn't ended yet.
+                    playing = ((stage.note_scroll >> FIXED_SHIFT) < chart_end_pos);
+
+                    // Advance local song_time using timer to keep scroll going.
                     stage.song_time += timer_dt;
                     next_scroll = ((fixed_t)stage.step_base << FIXED_SHIFT) + FIXED_MUL(stage.song_time - stage.time_base, stage.step_crochet);
 
-                    // If chart has ended now, perform transition
+                    // If chart has ended now, perform transition.
                     if (!playing)
                     {
                         if (stage.story && stage.stage_def->next_stage != stage.stage_id)
