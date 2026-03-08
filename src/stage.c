@@ -36,6 +36,9 @@
 int hudEnabled = 1;
 int noteEnabled = 1;
 
+static boolean Stage_IsSectionEnd(const Section *section);
+static boolean Stage_IsNoteEnd(const Note *note);
+
 //4K
 int note_x4k_normal[8] = {
 	// BF - normal
@@ -1813,7 +1816,7 @@ static void Stage_DrawNotes(boolean back)
 	}
 	
 	//Draw notes
-	for (Note *note = stage.cur_note; note->pos != 0xFFFFFFFF; note++)
+	for (Note *note = stage.cur_note; !Stage_IsNoteEnd(note); note++)
 	{
 		//Update scroll
 		while (note->pos >= scroll_section->end)
@@ -1895,11 +1898,11 @@ static void Stage_DrawNotes(boolean back)
 			//Don't draw if below screen
 			RECT note_src;
 			RECT_FIXED note_dst;
-			if (!back && (y > (FIXED_DEC(480,2) + size) || note->pos == 0xFFFFFFFF))
+			if (!back && (y > (FIXED_DEC(480,2) + size) || Stage_IsNoteEnd(note)))
 			{
 				break;
 			}
-			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || note->pos == 0xFFFFFFFF))
+			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || Stage_IsNoteEnd(note)))
 			{
 				break;
 			}
@@ -2721,6 +2724,41 @@ static void Stage_CountDown(void)
 	Stage_DrawTex(&stage.tex_hude, &sequence_src, &sequence_dst, stage.bump, stage.camera.hudangle);
 }
 
+
+
+typedef enum
+{
+	ChartFormat_Auto,
+	ChartFormat_U16,
+	ChartFormat_U32,
+} ChartFormat;
+
+static ChartFormat Stage_GetChartFormat(StageId stage_id)
+{
+	//Per-song chart format overrides.
+	//Edit this switch to force songs to use the legacy (u16) or new (u32) chart parser.
+	switch (stage_id)
+	{
+		case StageId_1_1: //Bopeebo
+		case StageId_1_4: //Tutorial
+		case StageId_2_1: //Spookeez
+		case StageId_2_3: //Monster
+			return ChartFormat_U16;
+		default:
+			return ChartFormat_Auto;
+	}
+}
+
+static boolean Stage_IsSectionEnd(const Section *section)
+{
+	return section->end == 0xFFFFFFFF || section->end == 0xFFFF;
+}
+
+static boolean Stage_IsNoteEnd(const Note *note)
+{
+	return note->pos == 0xFFFFFFFF || note->pos == 0xFFFF;
+}
+
 //Stage loads
 static void Stage_LoadPlayer(void)
 {
@@ -2800,7 +2838,15 @@ static void Stage_LoadChart(void)
 	u8 *chart_byte = (u8*)stage.chart_data;
 	size_t chart_size = chart_file.size;
 
-	if (chart_byte[2] == 0 && chart_byte[3] == 0)
+	ChartFormat chart_format = Stage_GetChartFormat(stage.stage_id);
+	boolean chart_is_u32 = (chart_byte[2] == 0 && chart_byte[3] == 0);
+
+	if (chart_format == ChartFormat_U16)
+		chart_is_u32 = false;
+	else if (chart_format == ChartFormat_U32)
+		chart_is_u32 = true;
+
+	if (chart_is_u32)
 	{
 		u32 keys = (u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24);
 		u32 note_off = (u32)chart_byte[4] | ((u32)chart_byte[5] << 8) | ((u32)chart_byte[6] << 16) | ((u32)chart_byte[7] << 24);
@@ -2835,6 +2881,25 @@ static void Stage_LoadChart(void)
 
 			if (!found_sentinel)
 				note_stride = 5;
+
+			if (note_stride == 5)
+			{
+				found_sentinel = false;
+				for (u8 *note_pp = note_p; (note_pp + 2) <= chart_end; note_pp += 5)
+				{
+					u16 pos = note_pp[0] | (note_pp[1] << 8);
+					if (pos == 0xFFFF)
+					{
+						found_sentinel = true;
+						break;
+					}
+					if ((note_pp + 7) > chart_end)
+						break;
+				}
+
+				if (!found_sentinel)
+					note_stride = 4;
+			}
 		}
 
 		size_t sections = 0;
@@ -2876,7 +2941,10 @@ static void Stage_LoadChart(void)
 			u16 pos = note_pp[0] | (note_pp[1] << 8);
 			nnote_p->pos = (pos == 0xFFFF) ? 0xFFFFFFFF : pos;
 			nnote_p->type = note_pp[2] | (note_pp[3] << 8);
-			nnote_p->is_opponent = note_pp[4];
+			if (note_stride >= 5)
+				nnote_p->is_opponent = note_pp[4];
+			else
+				nnote_p->is_opponent = ((nnote_p->type % (keys * 2)) >= keys);
 		}
 
 		Mem_Free(stage.chart_data);
@@ -2887,20 +2955,20 @@ static void Stage_LoadChart(void)
 	}
 
 	stage.num_notes = 0;
-	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+	for (Note *note = stage.notes; !Stage_IsNoteEnd(note); note++)
 		stage.num_notes++;
 	
 	// Swap chart
 	if (stage.prefs.mode == StageMode_Swap)
 	{
-		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+		for (Note *note = stage.notes; !Stage_IsNoteEnd(note); note++)
 			note->is_opponent = !note->is_opponent;
 	}
 	
 	// Count max scores
 	stage.player_state[0].max_score = 0;
 	stage.player_state[1].max_score = 0;
-	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+	for (Note *note = stage.notes; !Stage_IsNoteEnd(note); note++)
 	{
 		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
 			continue;
@@ -4720,13 +4788,13 @@ void Stage_Tick(void)
                     // note data don't terminate right after countdown.
                     u32 chart_end_pos = 0;
 
-                    for (Note *n = stage.notes; n->pos != 0xFFFFFFFF; n++)
+                    for (Note *n = stage.notes; !Stage_IsNoteEnd(n); n++)
                     {
                         if (n->pos > chart_end_pos)
                             chart_end_pos = n->pos;
                     }
 
-                    for (Section *sec = stage.sections; sec->end != 0xFFFFFFFF; sec++)
+                    for (Section *sec = stage.sections; !Stage_IsSectionEnd(sec); sec++)
                     {
                         if (sec->end > chart_end_pos)
                             chart_end_pos = sec->end;
