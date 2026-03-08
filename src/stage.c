@@ -634,9 +634,11 @@ static void Stage_DrawStartScreen(void)
 }
 
 //Stage section functions
-static void Stage_ChangeBPM(u16 bpm, u16 step)
+static void Stage_ChangeBPM(u16 bpm, u32 step)
 {
 	//Update last BPM
+	if (bpm < 24)
+		bpm = 24;
 	stage.last_bpm = bpm;
 	
 	//Update timing base
@@ -661,7 +663,7 @@ static Section *Stage_GetPrevSection(Section *section)
 	return NULL;
 }
 
-static u16 Stage_GetSectionStart(Section *section)
+static u32 Stage_GetSectionStart(Section *section)
 {
 	Section *prev = Stage_GetPrevSection(section);
 	if (prev == NULL)
@@ -674,8 +676,8 @@ typedef struct
 {
 	fixed_t start;   //Seconds
 	fixed_t length;  //Seconds
-	u16 start_step;  //Sub-steps
-	u16 length_step; //Sub-steps
+	u32 start_step;  //Sub-steps
+	u32 length_step; //Sub-steps
 	
 	fixed_t size; //Note height
 } SectionScroll;
@@ -684,6 +686,8 @@ static void Stage_GetSectionScroll(SectionScroll *scroll, Section *section)
 {
 	//Get BPM
 	u16 bpm = section->flag & SECTION_FLAG_BPM_MASK;
+	if (bpm < 24)
+		bpm = 24;
 	
 	//Get section step info
 	scroll->start_step = Stage_GetSectionStart(section);
@@ -1772,7 +1776,7 @@ static void Stage_DrawNotes(boolean back)
 	}
 	
 	//Draw notes
-	for (Note *note = stage.cur_note; note->pos != 0xFFFF; note++)
+	for (Note *note = stage.cur_note; note->pos != 0xFFFFFFFF; note++)
 	{
 		//Update scroll
 		while (note->pos >= scroll_section->end)
@@ -1854,11 +1858,11 @@ static void Stage_DrawNotes(boolean back)
 			//Don't draw if below screen
 			RECT note_src;
 			RECT_FIXED note_dst;
-			if (!back && (y > (FIXED_DEC(480,2) + size) || note->pos == 0xFFFF))
+			if (!back && (y > (FIXED_DEC(480,2) + size) || note->pos == 0xFFFFFFFF))
 			{
 				break;
 			}
-			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || note->pos == 0xFFFF))
+			else if (back && (y > (FIXED_DEC(SCREEN_HEIGHT,2) + scroll.size) || note->pos == 0xFFFFFFFF))
 			{
 				break;
 			}
@@ -2754,104 +2758,111 @@ static void Stage_LoadChart(void)
 		Mem_Free(stage.chart_data);
 	stage.chart_data = IO_Read(chart_path);
 	u8 *chart_byte = (u8*)stage.chart_data;
-	
-	#ifdef PSXF_PC
-		//Get lengths
-		u16 note_off = chart_byte[0] | (chart_byte[1] << 8);
-		
-		u8 *section_p = chart_byte + 2;
+
+	if (chart_byte[2] == 0 && chart_byte[3] == 0)
+	{
+		u32 keys = (u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24);
+		u32 note_off = (u32)chart_byte[4] | ((u32)chart_byte[5] << 8) | ((u32)chart_byte[6] << 16) | ((u32)chart_byte[7] << 24);
+
+		stage.sections = (Section*)(chart_byte + 8);
+		stage.notes = (Note*)(chart_byte + note_off);
+		stage.keys = (u16)keys;
+	}
+	else
+	{
+		u16 keys = chart_byte[0] | (chart_byte[1] << 8);
+		u16 note_off = chart_byte[2] | (chart_byte[3] << 8);
+		u8 *section_p = chart_byte + 4;
 		u8 *note_p = chart_byte + note_off;
-		
-		u8 *section_pp;
-		u8 *note_pp;
-		
-		size_t sections = (note_off - 2) >> 2;
+
+		size_t sections = 0;
+		for (u8 *section_pp = section_p;; section_pp += 4)
+		{
+			sections++;
+			u16 end = section_pp[0] | (section_pp[1] << 8);
+			if (end == 0xFFFF)
+				break;
+		}
+
 		size_t notes = 0;
-		
-		for (note_pp = note_p;; note_pp += 4)
+		for (u8 *note_pp = note_p;; note_pp += 6)
 		{
 			notes++;
 			u16 pos = note_pp[0] | (note_pp[1] << 8);
 			if (pos == 0xFFFF)
 				break;
 		}
-		
- 		if (notes)
- 			stage.num_notes = (notes - 1) * 2; // Double the number of notes
- 		else
- 			stage.num_notes = 0;
- 		
- 		//Realloc for separate structs
- 		size_t sections_size = sections * sizeof(Section);
- 		size_t notes_size = stage.num_notes * sizeof(Note); // Adjusted for double notes
- 		size_t notes_off = MEM_ALIGN(sections_size);
- 		
- 		u8 *nchart = Mem_Alloc(notes_off + notes_size);
- 		
- 		Section *nsection_p = stage.sections = (Section*)nchart;
- 		section_pp = section_p;
- 		for (size_t i = 0; i < sections; i++, section_pp += 4, nsection_p++)
- 		{
- 			nsection_p->end = section_pp[0] | (section_pp[1] << 8);
- 			nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
- 		}
- 		
- 		Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
- 		note_pp = note_p;
- 		for (size_t i = 0; i < notes; i++, note_pp += 4, nnote_p++)
- 		{
- 			nnote_p->pos = note_pp[0] | (note_pp[1] << 8);
- 			nnote_p->type = note_pp[2] | (note_pp[3] << 8);
- 		}
- 		
- 		// Use reformatted chart
- 		Mem_Free(stage.chart_data);
- 		stage.chart_data = (IO_Data)nchart;
- 	#else
- 		// Directly use section and notes pointers
- 		stage.sections = (Section*)(chart_byte + 4);
- 		stage.notes = (Note*)(chart_byte + ((u16*)stage.chart_data)[1]);
- 		
- 		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
- 			stage.num_notes++;
- 	#endif
- 	
- 	// Swap chart
- 	if (stage.prefs.mode == StageMode_Swap)
- 	{
- 		for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
- 			note->is_opponent = !note->is_opponent;
- 	}
- 	
- 	// Count max scores
- 	stage.player_state[0].max_score = 0;
- 	stage.player_state[1].max_score = 0;
- 	for (Note *note = stage.notes; note->pos != 0xFFFF; note++)
- 	{
- 		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
- 			continue;
- 		if (note->is_opponent)
- 			stage.player_state[1].max_score += 35;
- 		else
- 			stage.player_state[0].max_score += 35;
- 	}
- 	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
- 		stage.max_score = stage.player_state[1].max_score;
- 	else
- 		stage.max_score = stage.player_state[0].max_score;
- 	
- 	stage.cur_section = stage.sections;
- 	stage.cur_note = stage.notes;
- 	
- 	stage.speed = stage.stage_def->speed[stage.stage_diff];
- 	stage.keys = *((u16*)stage.chart_data);
- 	stage.max_keys = stage.keys * 2;
- 	
- 	stage.step_crochet = 0;
- 	stage.time_base = 0;
- 	stage.step_base = 0;
- 	stage.section_base = stage.cur_section;
- 	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, 0);
+
+		size_t sections_size = sections * sizeof(Section);
+		size_t notes_size = notes * sizeof(Note);
+		size_t notes_off = MEM_ALIGN(sections_size);
+
+		u8 *nchart = Mem_Alloc(notes_off + notes_size);
+		Section *nsection_p = (Section*)nchart;
+		for (size_t i = 0; i < sections; i++, nsection_p++)
+		{
+			u8 *section_pp = section_p + (i * 4);
+			u16 end = section_pp[0] | (section_pp[1] << 8);
+			nsection_p->end = (end == 0xFFFF) ? 0xFFFFFFFF : end;
+			nsection_p->flag = section_pp[2] | (section_pp[3] << 8);
+		}
+
+		Note *nnote_p = (Note*)(nchart + notes_off);
+		for (size_t i = 0; i < notes; i++, nnote_p++)
+		{
+			u8 *note_pp = note_p + (i * 6);
+			u16 pos = note_pp[0] | (note_pp[1] << 8);
+			nnote_p->pos = (pos == 0xFFFF) ? 0xFFFFFFFF : pos;
+			nnote_p->type = note_pp[2] | (note_pp[3] << 8);
+			nnote_p->is_opponent = note_pp[4];
+		}
+
+		Mem_Free(stage.chart_data);
+		stage.chart_data = (IO_Data)nchart;
+		stage.sections = (Section*)nchart;
+		stage.notes = (Note*)(nchart + notes_off);
+		stage.keys = keys;
+	}
+
+	stage.num_notes = 0;
+	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+		stage.num_notes++;
+	
+	// Swap chart
+	if (stage.prefs.mode == StageMode_Swap)
+	{
+		for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+			note->is_opponent = !note->is_opponent;
+	}
+	
+	// Count max scores
+	stage.player_state[0].max_score = 0;
+	stage.player_state[1].max_score = 0;
+	for (Note *note = stage.notes; note->pos != 0xFFFFFFFF; note++)
+	{
+		if (note->type & (NOTE_FLAG_SUSTAIN | NOTE_FLAG_MINE | NOTE_FLAG_DANGER | NOTE_FLAG_STATIC | NOTE_FLAG_PHANTOM | NOTE_FLAG_POLICE | NOTE_FLAG_MAGIC))
+			continue;
+		if (note->is_opponent)
+			stage.player_state[1].max_score += 35;
+		else
+			stage.player_state[0].max_score += 35;
+	}
+	if (stage.prefs.mode >= StageMode_2P && stage.player_state[1].max_score > stage.player_state[0].max_score)
+		stage.max_score = stage.player_state[1].max_score;
+	else
+		stage.max_score = stage.player_state[0].max_score;
+	
+	stage.cur_section = stage.sections;
+	stage.cur_note = stage.notes;
+	
+	stage.speed = stage.stage_def->speed[stage.stage_diff];
+	stage.max_keys = stage.keys * 2;
+	
+	stage.step_crochet = 0;
+	stage.time_base = 0;
+	stage.step_base = 0;
+	stage.section_base = stage.cur_section;
+	Stage_ChangeBPM(stage.cur_section->flag & SECTION_FLAG_BPM_MASK, 0);
 }
 
 static void Stage_LoadSFX(void)
@@ -4643,8 +4654,8 @@ void Stage_Tick(void)
                 else
                 {
                     // XA not playing; continue local timing for botplay/scroll until chart ends
-                    u16 last_note_pos = 0;
-                    for (Note *n = stage.notes; n->pos != 0xFFFF; n++)
+                    u32 last_note_pos = 0;
+                    for (Note *n = stage.notes; n->pos != 0xFFFFFFFF; n++)
                         last_note_pos = n->pos;
 
                     // Keep playing true while chart hasn't ended yet
@@ -4696,7 +4707,7 @@ void Stage_Tick(void)
 				if (stage.note_scroll >= 0)
 				{
 					//Check if current section has ended
-					u16 end = stage.cur_section->end;
+					u32 end = stage.cur_section->end;
 					if ((stage.note_scroll >> FIXED_SHIFT) >= end)
 					{
 						//Increment section pointer
