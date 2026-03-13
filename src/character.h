@@ -39,9 +39,6 @@ typedef struct
 	s16 off[2];
 } CharFrame;
 
-
-#define CHARACTER_AFTERIMAGE_COUNT 7
-
 typedef struct Character
 {
 	//Character functions
@@ -65,17 +62,11 @@ typedef struct Character
 	Animatable animatable2;
 	fixed_t sing_end;
 	u16 pad_held;
-	boolean ghost_trail;
-
-	RECT ghost_src[CHARACTER_AFTERIMAGE_COUNT];
-	RECT_FIXED ghost_dst[CHARACTER_AFTERIMAGE_COUNT];
-	u8 ghost_count;
 } Character;
 
 //Character functions
 void Character_Free(Character *this);
 void Character_Init(Character *this, fixed_t x, fixed_t y);
-void Character_SetGhostTrail(Character *this, boolean enabled);
 void Character_DrawParallax(Character *this, Gfx_Tex *tex, const CharFrame *cframe, fixed_t parallax);
 void Character_DrawParallaxFlipped(Character *this, Gfx_Tex *tex, const CharFrame *cframe, fixed_t parallax);
 void Character_Draw(Character *this, Gfx_Tex *tex, const CharFrame *cframe);

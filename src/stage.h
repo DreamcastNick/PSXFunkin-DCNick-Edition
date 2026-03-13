@@ -153,12 +153,6 @@ typedef struct
 	u16 flag;
 } Section;
 
-typedef struct
-{
-	u16 end; //1/12 steps (small chart)
-	u16 flag;
-} SectionSmall;
-
 #define NOTE_FLAG_SUSTAIN     (1 << 5) //Note is a sustain note
 #define NOTE_FLAG_SUSTAIN_END (1 << 6) //Is either end of sustain
 #define NOTE_FLAG_ALT_ANIM    (1 << 7) //Note plays alt animation
@@ -176,13 +170,6 @@ typedef struct
 	u16 type;
 	u16 is_opponent;
 } Note;
-
-typedef struct
-{
-	u16 pos; //1/12 steps (small chart)
-	u16 type;
-	u16 is_opponent;
-} NoteSmall;
 
 typedef struct
 {
@@ -326,7 +313,7 @@ typedef struct
 		u16 size;
 	} note;
 	
-	u32 last_bpm;
+	u16 last_bpm;
 
 	int timerlength, timermin, timersec, timepassed;
 	
@@ -361,7 +348,6 @@ typedef struct
 	} state;
 	
 	u8 note_swap;
-	u8 strum_layout;
 	
 	//Object lists
 	ObjectList objlist_splash, objlist_fg, objlist_bg;
@@ -379,14 +365,13 @@ void Stage_DrawTexRotateCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst
 void Stage_DrawTexRotate(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, u8 angle, fixed_t hx, fixed_t hy, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexCol(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
 void Stage_DrawTexCol_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b);
-void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode, u8 opacity);
 void Stage_DrawTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTex_FlipX(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, u8 r, u8 g, u8 b, fixed_t zoom, fixed_t rotation);
 void Stage_DrawTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation);
 void Stage_BlendTexArbCol(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 r, u8 g, u8 b, u8 mode);
 void Stage_BlendTexArb(Gfx_Tex *tex, const RECT *src, const POINT_FIXED *p0, const POINT_FIXED *p1, const POINT_FIXED *p2, const POINT_FIXED *p3, fixed_t zoom, fixed_t rotation, u8 mode);
-void Stage_BlendTexOLD(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
+void Stage_BlendTex(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, fixed_t rotation, u8 mode);
 void Stage_BlendTexV2(Gfx_Tex *tex, const RECT *src, const RECT_FIXED *dst, fixed_t zoom, u8 mode, u8 opacity);
 
 

@@ -9,28 +9,6 @@
 #include "mem.h"
 #include "stage.h"
 
-#define AFTERIMAGE_MODE 0
-
-static void Character_DrawGhosts(Character *this, Gfx_Tex *tex)
-{
-	static const u16 ghost_opacity[CHARACTER_AFTERIMAGE_COUNT] = {40, 70, 95, 120, 150, 190, 240};
-	for (u8 i = 0; i < this->ghost_count; i++)
-		Stage_BlendTex(tex, &this->ghost_src[i], &this->ghost_dst[i], stage.camera.bzoom, stage.camera.angle, AFTERIMAGE_MODE, ghost_opacity[i]);
-}
-
-static void Character_PushGhost(Character *this, const RECT *src, const RECT_FIXED *dst)
-{
-	for (s8 i = CHARACTER_AFTERIMAGE_COUNT - 1; i > 0; i--)
-	{
-		this->ghost_src[i] = this->ghost_src[i - 1];
-		this->ghost_dst[i] = this->ghost_dst[i - 1];
-	}
-	this->ghost_src[0] = *src;
-	this->ghost_dst[0] = *dst;
-	if (this->ghost_count < CHARACTER_AFTERIMAGE_COUNT)
-		this->ghost_count++;
-}
-
 //Character functions
 void Character_Free(Character *this)
 {
@@ -53,15 +31,6 @@ void Character_Init(Character *this, fixed_t x, fixed_t y)
 	this->pad_held = 0;
 
 	this->sing_end = 0;
-	this->ghost_trail = false;
-	this->ghost_count = 0;
-}
-
-void Character_SetGhostTrail(Character *this, boolean enabled)
-{
-	this->ghost_trail = enabled;
-	if (!enabled)
-		this->ghost_count = 0;
 }
 
 void Character_DrawParallax(Character *this, Gfx_Tex *tex, const CharFrame *cframe, fixed_t parallax)
@@ -76,15 +45,6 @@ void Character_DrawParallax(Character *this, Gfx_Tex *tex, const CharFrame *cfra
 	dst.w = FIXED_MUL(dst.w, this->size);
 	dst.h = FIXED_MUL(dst.h, this->size);
 
-	if (this->ghost_trail)
-	{
-		Character_DrawGhosts(this, tex);
-		Character_PushGhost(this, &src, &dst);
-	}
-	else
-	{
-		this->ghost_count = 0;
-	}
 	Stage_DrawTex(tex, &src, &dst, stage.camera.bzoom, stage.camera.angle);
 }
 
@@ -100,15 +60,6 @@ void Character_DrawParallaxFlipped(Character *this, Gfx_Tex *tex, const CharFram
 	dst.w = FIXED_MUL(dst.w, this->size);
 	dst.h = FIXED_MUL(dst.h, this->size);
 
-	if (this->ghost_trail)
-	{
-		Character_DrawGhosts(this, tex);
-		Character_PushGhost(this, &src, &dst);
-	}
-	else
-	{
-		this->ghost_count = 0;
-	}
 	Stage_DrawTex(tex, &src, &dst, stage.camera.bzoom, stage.camera.angle);
 }
 

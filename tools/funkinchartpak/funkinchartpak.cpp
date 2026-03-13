@@ -8,10 +8,8 @@
 #include <vector>
 #include <cstdint>
 #include <algorithm>
-#include <cmath>
 #include <unordered_set>
-#include <string>
-#include <cctype>
+#include <cmath>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -78,48 +76,10 @@ void WriteWord(std::ostream &out, uint16_t word)
 
 void WriteDWord(std::ostream &out, uint32_t dword)
 {
-    out.put(dword >> 0);
-    out.put(dword >> 8);
-    out.put(dword >> 16);
-    out.put(dword >> 24);
-}
-
-
-
-static std::string BaseNameLower(const std::string &path)
-{
-    size_t slash = path.find_last_of("/\\");
-    std::string name = (slash == std::string::npos) ? path : path.substr(slash + 1);
-    std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) {
-        return (char)std::tolower(c);
-    });
-    return name;
-}
-
-static bool ChartUsesU32(const std::string &path)
-{
-    // By default, charts are written in legacy u16 format.
-    // Add lowercase json file names here to force u32 output.
-    static const std::unordered_set<std::string> u32_chart_names = {
-        "ferocious.json",
-        "unbeatable.json",
-    };
-
-    return u32_chart_names.count(BaseNameLower(path)) != 0;
-}
-static uint16_t EncodeBpm(double bpm)
-{
-    if (bpm < 1.0)
-        bpm = 1.0;
-    else if (bpm > 999.9)
-        bpm = 999.9;
-
-    uint16_t encoded = PosRound(bpm, 1.0 / 24.0);
-    if (encoded < 24)
-        encoded = 24;
-    else if (encoded > SECTION_FLAG_BPM_MASK)
-        encoded = SECTION_FLAG_BPM_MASK;
-    return encoded;
+    out.put(static_cast<char>(dword >> 0));
+    out.put(static_cast<char>(dword >> 8));
+    out.put(static_cast<char>(dword >> 16));
+    out.put(static_cast<char>(dword >> 24));
 }
 
 int main(int argc, char *argv[])
@@ -152,7 +112,7 @@ int main(int argc, char *argv[])
 
     std::cout << argv[1] << " speed: " << speed << " ini bpm: " << bpm << " step_crochet: " << step_crochet << " keys: " << keys << std::endl;
 
-    double milli_base = 0;
+    uint32_t milli_base = 0;
     uint32_t step_base = 0;
 
     std::vector<Section> sections;
@@ -160,7 +120,7 @@ int main(int argc, char *argv[])
 
     uint32_t section_end = 0;
     int score = 0, dups = 0;
-    std::unordered_set<uint64_t> note_fudge;
+    std::unordered_set<uint32_t> note_fudge;
     for (auto &i : song_info["notes"]) // Iterate through sections
     {
         bool is_opponent = i["mustHitSection"] != true; // Note: swapped
@@ -179,8 +139,8 @@ int main(int argc, char *argv[])
 
             std::cout << "chg bpm: " << bpm << " step_crochet: " << step_crochet << " milli_base: " << milli_base << " step_base: " << step_base << std::endl;
         }
-        new_section.end = (section_end += 16) * 12; //(uint64_t)i["lengthInSteps"]) * 12; // I had to do this for compatibility
-        new_section.flag = EncodeBpm(bpm) & SECTION_FLAG_BPM_MASK;
+        new_section.end = (section_end += 16) * 12; //(uint32_t)i["lengthInSteps"]) * 12; // I had to do this for compatibility
+        new_section.flag = PosRound(bpm, 1.0 / 24.0) & SECTION_FLAG_BPM_MASK;
         bool is_alt = i["altAnim"] == true;
         if (is_opponent)
             new_section.flag |= SECTION_FLAG_OPPFOCUS;
@@ -191,8 +151,13 @@ int main(int argc, char *argv[])
         {
             // Push main note
             Note new_note;
+			
+			//Event type
+			if (j[1] == -1)
+				continue;
+			
             int sustain = static_cast<int>(PosRound(j[2], step_crochet)) - 1;
-            new_note.pos = (step_base * 12) + PosRound(((double)j[0] - milli_base) * 12.0, step_crochet);
+            new_note.pos = (step_base * 12) + PosRound(((uint32_t)j[0] - milli_base) * 12.0, step_crochet);
             new_note.type = static_cast<uint16_t>(j[1]) % max_keys;
 
             new_note.is_opponent = false;
@@ -230,12 +195,12 @@ int main(int argc, char *argv[])
             if (j[3] == "magic")
                 new_note.type |= NOTE_FLAG_MAGIC;
 
-            // if (note_fudge.count(*((uint64_t*)&new_note)))
+            // if (note_fudge.count(*((uint32_t*)&new_note)))
             //{
             //    dups += 1;
             //    continue;
             //}
-            //note_fudge.insert(*((uint64_t*)&new_note));
+            //note_fudge.insert(*((uint32_t*)&new_note));
 
             notes.push_back(new_note);
             if (!new_note.is_opponent)
@@ -267,12 +232,12 @@ int main(int argc, char *argv[])
 
     // Push dummy section and note
     Section dum_section;
-    dum_section.end = 0xFFFFFFFFU;
+    dum_section.end = 0xFFFFFFFF; // Changed to use a larger value
     dum_section.flag = sections[sections.size() - 1].flag;
     sections.push_back(dum_section);
 
     Note dum_note;
-    dum_note.pos = 0xFFFFFFFFU;
+    dum_note.pos = 0xFFFFFFFF; // Changed to use a larger value
     dum_note.type = NOTE_FLAG_HIT;
     dum_note.is_opponent = false;
     notes.push_back(dum_note);
@@ -285,81 +250,24 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    bool write_u32 = ChartUsesU32(argv[1]);
-    if (!write_u32)
-    {
-        for (const auto &sec : sections)
-        {
-            if (sec.end > 0xFFFEu && sec.end != 0xFFFFFFFFu)
-            {
-                std::cout << "forcing u32 output (section exceeds u16 range): " << sec.end << std::endl;
-                write_u32 = true;
-                break;
-            }
-        }
+    // Write headers (u16 keys, u32 note offset)
+    // note_offset = header(6) + sections_count * section_size(6)
+    WriteWord(out, keys);
+    WriteDWord(out, 6 + static_cast<uint32_t>(sections.size()) * 6);
 
-        if (!write_u32)
-        {
-            for (const auto &note : notes)
-            {
-                if (note.pos > 0xFFFEu && note.pos != 0xFFFFFFFFu)
-                {
-                    std::cout << "forcing u32 output (note exceeds u16 range): " << note.pos << std::endl;
-                    write_u32 = true;
-                    break;
-                }
-            }
-        }
+    // Write sections (u32 end, u16 flag)
+    for (auto &i : sections)
+    {
+        WriteDWord(out, i.end);
+        WriteWord(out, i.flag);
     }
 
-    std::cout << "output format: " << (write_u32 ? "u32" : "u16") << std::endl;
-
-    if (write_u32)
+    // Write notes (u32 pos, u16 type, u16 is_opponent)
+    for (auto &i : notes)
     {
-        // Write u32 header
-        WriteDWord(out, keys);
-        WriteDWord(out, 8 + (uint32_t)(sections.size() * sizeof(Section)));
-
-        // Write u32 sections
-        for (const auto &sec : sections)
-        {
-            WriteDWord(out, sec.end);
-            WriteWord(out, sec.flag);
-            WriteWord(out, 0);
-        }
-
-        // Write u32 notes (8 bytes each)
-        for (const auto &note : notes)
-        {
-            WriteDWord(out, note.pos);
-            WriteWord(out, note.type);
-            out.put(note.is_opponent);
-            out.put(0);
-        }
+        WriteDWord(out, i.pos);
+        WriteWord(out, i.type);
+        WriteWord(out, static_cast<uint16_t>(i.is_opponent ? 1 : 0));
     }
-    else
-    {
-        // Write u16 header
-        WriteWord(out, keys);
-        WriteWord(out, 4 + (uint16_t)(sections.size() * 4));
-
-        // Write u16 sections (4 bytes each)
-        for (const auto &sec : sections)
-        {
-            uint16_t end = (sec.end == 0xFFFFFFFFu) ? 0xFFFFu : (uint16_t)sec.end;
-            WriteWord(out, end);
-            WriteWord(out, sec.flag);
-        }
-
-        // Write u16 notes (5 bytes each)
-        for (const auto &note : notes)
-        {
-            uint16_t pos = (note.pos == 0xFFFFFFFFu) ? 0xFFFFu : (uint16_t)note.pos;
-            WriteWord(out, pos);
-            WriteWord(out, note.type);
-            out.put(note.is_opponent);
-        }
-    }
-
     return 0;
 }
