@@ -2773,55 +2773,27 @@ static void Stage_LoadChart(void)
 	if (chart_size < 4)
 		chart_size = 4;
 	
-	boolean chart_is_u32 = false;
+	boolean chart_is_u32 = (chart_size >= 8) && (chart_byte[2] == 0) && (chart_byte[3] == 0);
 	u16 keys;
 	u32 note_off;
 	u8 *section_p;
 	u8 *note_p;
 	size_t section_stride;
 	size_t note_stride;
-	size_t section_off;
 	
-	// Preferred modern format used by this repo's chart packer:
-	// header = u16 keys + u32 note_off (6 bytes), section = 6 bytes, note = 8 bytes
-	if (chart_size >= 6)
+	if (chart_is_u32)
 	{
-		u32 note_off6 = (u32)chart_byte[2] | ((u32)chart_byte[3] << 8) | ((u32)chart_byte[4] << 16) | ((u32)chart_byte[5] << 24);
-		if (note_off6 >= 6 && note_off6 <= chart_size && ((note_off6 - 6) % 6) == 0)
-		{
-			chart_is_u32 = true;
-			keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
-			note_off = note_off6;
-			section_p = chart_byte + 6;
-			section_off = 6;
-			section_stride = 6;
-			note_stride = 8;
-		}
+		keys = (u16)((u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24));
+		note_off = (u32)chart_byte[4] | ((u32)chart_byte[5] << 8) | ((u32)chart_byte[6] << 16) | ((u32)chart_byte[7] << 24);
+		section_p = chart_byte + 8;
+		section_stride = 6;
+		note_stride = 8;
 	}
-	
-	// Compatibility fallback: older 8-byte u32 header
-	if (!chart_is_u32 && chart_size >= 8)
-	{
-		u32 note_off8 = (u32)chart_byte[4] | ((u32)chart_byte[5] << 8) | ((u32)chart_byte[6] << 16) | ((u32)chart_byte[7] << 24);
-		if (note_off8 >= 8 && note_off8 <= chart_size && ((note_off8 - 8) % 6) == 0)
-		{
-			chart_is_u32 = true;
-			keys = (u16)((u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24));
-			note_off = note_off8;
-			section_p = chart_byte + 8;
-			section_off = 8;
-			section_stride = 6;
-			note_stride = 8;
-		}
-	}
-	
-	// Legacy fallback: u16 header + 4-byte sections + 4/5-byte notes
-	if (!chart_is_u32)
+	else
 	{
 		keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
 		note_off = (u32)(chart_byte[2] | (chart_byte[3] << 8));
 		section_p = chart_byte + 4;
-		section_off = 4;
 		section_stride = 4;
 		note_stride = 5;
 	}
@@ -2833,38 +2805,28 @@ static void Stage_LoadChart(void)
 		keys = 4;
 	
 	// Count sections and notes
+	size_t section_off = chart_is_u32 ? 8 : 4;
 	size_t sections = 0;
 	if (note_off > section_off)
 		sections = (note_off - section_off) / section_stride;
 	if (sections == 0)
 		sections = 1;
-	if (sections > 0xFFFF)
-		sections = 0xFFFF;
 
 	size_t notes = 0;
 	boolean found_note_end = false;
 	if (!chart_is_u32)
 	{
-		// Legacy u16 charts can use 6-byte notes (with pad), 5-byte notes, or 4-byte notes
+		// Legacy u16 charts may be 4-byte notes (no explicit is_opponent)
 		boolean found_end = false;
-		const size_t legacy_note_strides[] = {6, 5, 4};
-		for (size_t si = 0; si < COUNT_OF(legacy_note_strides); si++)
+		for (u8 *np = note_p; (size_t)(np - chart_byte + 2) <= chart_size; np += 5)
 		{
-			size_t try_stride = legacy_note_strides[si];
-			found_end = false;
-			for (u8 *np = note_p; (size_t)(np - chart_byte + 2) <= chart_size; np += try_stride)
+			u16 pos = (u16)(np[0] | (np[1] << 8));
+			if (pos == 0xFFFF)
 			{
-				u16 pos = (u16)(np[0] | (np[1] << 8));
-				if (pos == 0xFFFF)
-				{
-					found_end = true;
-					note_stride = try_stride;
-					break;
-				}
-				if ((size_t)(np - chart_byte + try_stride) > chart_size)
-					break;
+				found_end = true;
+				break;
 			}
-			if (found_end)
+			if ((size_t)(np - chart_byte + 5) > chart_size)
 				break;
 		}
 		if (!found_end)
