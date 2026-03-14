@@ -1789,6 +1789,8 @@ static void Stage_DrawNotes(boolean back)
 		while (note->pos >= scroll_section->end)
 		{
 			//Push scroll forward
+			if ((size_t)(scroll_section - stage.sections + 1) >= stage.num_sections)
+				break;
 			scroll.start += scroll.length;
 			Stage_GetSectionScroll(&scroll, ++scroll_section);
 		}
@@ -2937,6 +2939,7 @@ static void Stage_LoadChart(void)
  	
  	stage.cur_section = stage.sections;
  	stage.cur_note = stage.notes;
+	stage.num_sections = sections;
  	
  	stage.speed = stage.stage_def->speed[stage.stage_diff];
  	
@@ -4778,6 +4781,8 @@ void Stage_Tick(void)
 					if (note_pos >= end)
 					{
 						//Increment section pointer
+						if ((size_t)(stage.cur_section - stage.sections + 1) >= stage.num_sections)
+							break;
 						stage.cur_section++;
 						
 						//Update BPM
