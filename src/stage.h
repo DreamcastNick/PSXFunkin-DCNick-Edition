@@ -244,6 +244,7 @@ typedef struct
 	
 	IO_Data chart_data;
 	Section *sections;
+	size_t num_sections;
 	Note *notes;
 	size_t num_notes;
 	u16 keys;

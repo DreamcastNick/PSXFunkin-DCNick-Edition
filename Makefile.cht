@@ -1,8 +1,21 @@
-all: \
-  $(addsuffix .cht, $(wildcard iso/chart/*.json)) \
+CHART_JSON := $(wildcard iso/chart/*.json)
+U32_6BYTE_JSON := iso/chart/ferocious.json iso/chart/unbeatable.json
+LEGACY4_JSON := $(filter-out $(U32_6BYTE_JSON),$(CHART_JSON))
 
+all: \
+	$(addsuffix .cht,$(LEGACY4_JSON)) \
+	$(addsuffix .cht,$(U32_6BYTE_JSON))
+
+# Legacy 4-byte method for all charts by default
 iso/chart/%.json.cht: iso/chart/%.json
 	tools/funkinchartpak/funkinchartpak $<
+
+# Exceptions: use 6-byte/u32 method for ferocious and unbeatable
+iso/chart/ferocious.json.cht: iso/chart/ferocious.json
+	tools/funkinchartpak/funkinchartpak --u32-6byte $<
+
+iso/chart/unbeatable.json.cht: iso/chart/unbeatable.json
+	tools/funkinchartpak/funkinchartpak --u32-6byte $<
 	
 # Rule to clean all .cht files
 clean:

@@ -636,6 +636,9 @@ static void Stage_DrawStartScreen(void)
 //Stage section functions
 static void Stage_ChangeBPM(u16 bpm, u32 step)
 {
+	if (bpm == 0)
+		bpm = 1;
+
 	//Update last BPM
 	stage.last_bpm = bpm;
 	
@@ -646,7 +649,11 @@ static void Stage_ChangeBPM(u16 bpm, u32 step)
 	
 	//Get new crochet and times
 	stage.step_crochet = ((fixed_t)bpm << FIXED_SHIFT) * 8 / 240; //15/12/24
+	if (stage.step_crochet <= 0)
+		stage.step_crochet = 1;
 	stage.step_time = FIXED_DIV(FIXED_DEC(12,1), stage.step_crochet);
+	if (stage.step_time <= 0)
+		stage.step_time = 1;
 	
 	//Get new crochet based values
 	stage.early_safe = stage.late_safe = stage.step_crochet / 6; //10 frames
@@ -684,10 +691,14 @@ static void Stage_GetSectionScroll(SectionScroll *scroll, Section *section)
 {
 	//Get BPM
 	u16 bpm = section->flag & SECTION_FLAG_BPM_MASK;
-	
+	if (bpm == 0)
+		bpm = 1;
+
 	//Get section step info
 	scroll->start_step = Stage_GetSectionStart(section);
 	scroll->length_step = section->end - scroll->start_step;
+	if (scroll->length_step == 0)
+		scroll->length_step = 1;
 	
 	//Get section time length
 	scroll->length = (scroll->length_step * FIXED_DEC(15,1) / 12) * 24 / bpm;
@@ -1778,6 +1789,8 @@ static void Stage_DrawNotes(boolean back)
 		while (note->pos >= scroll_section->end)
 		{
 			//Push scroll forward
+			if ((size_t)(scroll_section - stage.sections + 1) >= stage.num_sections)
+				break;
 			scroll.start += scroll.length;
 			Stage_GetSectionScroll(&scroll, ++scroll_section);
 		}
@@ -2747,56 +2760,186 @@ static void Stage_LoadChart(void)
 {
 	//Load stage data
 	char chart_path[64];
+	CdlFILE chart_file;
 	//Use standard path convention
 	sprintf(chart_path, "\\CHART\\%d.%d%c.CHT;1", stage.stage_def->week, stage.stage_def->week_song, "ENH"[stage.stage_diff]);
 	
 	if (stage.chart_data != NULL)
 		Mem_Free(stage.chart_data);
-	stage.chart_data = IO_Read(chart_path);
+	IO_FindFile(&chart_file, chart_path);
+	stage.chart_data = IO_ReadFile(&chart_file);
 	u8 *chart_byte = (u8*)stage.chart_data;
-
-	// Parse 32-bit chart format: [u16 keys][u32 note_offset]
-	u16 keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
-	u32 note_off = (u32)chart_byte[2] | ((u32)chart_byte[3] << 8) | ((u32)chart_byte[4] << 16) | ((u32)chart_byte[5] << 24);
+	size_t chart_size = chart_file.size;
+	if (chart_size < 4)
+		chart_size = 4;
 	
-	//Get lengths
-	u8 *section_p = chart_byte + 6;
-	u8 *note_p = chart_byte + note_off;
+	boolean chart_is_u32 = false;
+	u16 keys;
+	u32 note_off;
+	u8 *section_p;
+	u8 *note_p;
+	size_t section_stride;
+	size_t note_stride;
+	size_t section_off;
+	
+	// Preferred modern format used by this repo's chart packer:
+	// header = u16 keys + u32 note_off (6 bytes), section = 6 bytes, note = 8 bytes
+	if (chart_size >= 6)
+	{
+		u32 note_off6 = (u32)chart_byte[2] | ((u32)chart_byte[3] << 8) | ((u32)chart_byte[4] << 16) | ((u32)chart_byte[5] << 24);
+		if (note_off6 >= 6 && note_off6 <= chart_size && ((note_off6 - 6) % 6) == 0)
+		{
+			chart_is_u32 = true;
+			keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
+			note_off = note_off6;
+			section_p = chart_byte + 6;
+			section_off = 6;
+			section_stride = 6;
+			note_stride = 8;
+		}
+	}
+	
+	// Compatibility fallback: older 8-byte u32 header
+	if (!chart_is_u32 && chart_size >= 8)
+	{
+		u32 note_off8 = (u32)chart_byte[4] | ((u32)chart_byte[5] << 8) | ((u32)chart_byte[6] << 16) | ((u32)chart_byte[7] << 24);
+		if (note_off8 >= 8 && note_off8 <= chart_size && ((note_off8 - 8) % 6) == 0)
+		{
+			chart_is_u32 = true;
+			keys = (u16)((u32)chart_byte[0] | ((u32)chart_byte[1] << 8) | ((u32)chart_byte[2] << 16) | ((u32)chart_byte[3] << 24));
+			note_off = note_off8;
+			section_p = chart_byte + 8;
+			section_off = 8;
+			section_stride = 6;
+			note_stride = 8;
+		}
+	}
+	
+	// Legacy fallback: u16 header + 4-byte sections + 4/5-byte notes
+	if (!chart_is_u32)
+	{
+		keys = (u16)(chart_byte[0] | (chart_byte[1] << 8));
+		note_off = (u32)(chart_byte[2] | (chart_byte[3] << 8));
+		section_p = chart_byte + 4;
+		section_off = 4;
+		section_stride = 4;
+		note_stride = 5;
+	}
+	
+	if (note_off > chart_size)
+		note_off = (u32)chart_size;
+	note_p = chart_byte + note_off;
+	if (keys == 0)
+		keys = 4;
 	
 	// Count sections and notes
-	size_t sections = (note_off - 6) / 6; // each section is 6 bytes (u32 end, u16 flag)
-		size_t notes = 0;
-	for (u8 *np = note_p;; np += 8) // each note is 8 bytes (u32 pos, u16 type, u16 is_opponent)
+	size_t sections = 0;
+	if (note_off > section_off)
+		sections = (note_off - section_off) / section_stride;
+	if (sections == 0)
+		sections = 1;
+	if (sections > 0xFFFF)
+		sections = 0xFFFF;
+
+	size_t notes = 0;
+	boolean found_note_end = false;
+	if (!chart_is_u32)
+	{
+		// Legacy u16 charts can use 6-byte notes (with pad), 5-byte notes, or 4-byte notes
+		boolean found_end = false;
+		const size_t legacy_note_strides[] = {6, 5, 4};
+		for (size_t si = 0; si < COUNT_OF(legacy_note_strides); si++)
 		{
-		u32 pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
-			notes++;
-		if (pos == 0xFFFFFFFF)
+			size_t try_stride = legacy_note_strides[si];
+			found_end = false;
+			for (u8 *np = note_p; (size_t)(np - chart_byte + 2) <= chart_size; np += try_stride)
+			{
+				u16 pos = (u16)(np[0] | (np[1] << 8));
+				if (pos == 0xFFFF)
+				{
+					found_end = true;
+					note_stride = try_stride;
+					break;
+				}
+				if ((size_t)(np - chart_byte + try_stride) > chart_size)
+					break;
+			}
+			if (found_end)
 				break;
 		}
-		
+		if (!found_end)
+			note_stride = 4;
+	}
+	
+	for (u8 *np = note_p; (size_t)(np - chart_byte + note_stride) <= chart_size; np += note_stride)
+	{
+		u32 pos;
+		if (chart_is_u32)
+			pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
+		else
+			pos = (u32)(np[0] | (np[1] << 8));
+		notes++;
+		if ((chart_is_u32 && pos == 0xFFFFFFFF) || (!chart_is_u32 && pos == 0xFFFF))
+		{
+			found_note_end = true;
+			break;
+		}
+	}
+	if (notes == 0)
+		notes = 1;
+	if (!found_note_end)
+		notes++;
+	
 	// Allocate tightly packed arrays for sections and notes
 	size_t sections_size = sections * sizeof(Section);
 	size_t notes_size = notes * sizeof(Note);
 	size_t notes_off = MEM_ALIGN(sections_size);
 	u8 *nchart = Mem_Alloc(notes_off + notes_size);
-		
+	
 	// Copy sections
 	Section *nsection_p = stage.sections = (Section*)nchart;
 	for (size_t i = 0; i < sections; i++, nsection_p++)
 	{
-		u8 *sp = section_p + i * 6;
-		nsection_p->end = (u32)sp[0] | ((u32)sp[1] << 8) | ((u32)sp[2] << 16) | ((u32)sp[3] << 24);
-		nsection_p->flag = (u16)(sp[4] | (sp[5] << 8));
+		u8 *sp = section_p + i * section_stride;
+		if (sections == 1 && note_off <= section_off)
+			nsection_p->end = 0xFFFFFFFF;
+		else if (chart_is_u32)
+			nsection_p->end = (u32)sp[0] | ((u32)sp[1] << 8) | ((u32)sp[2] << 16) | ((u32)sp[3] << 24);
+		else
+			nsection_p->end = (u32)(sp[0] | (sp[1] << 8));
+		if (sections == 1 && note_off <= section_off)
+			nsection_p->flag = 120;
+		else
+			nsection_p->flag = (u16)(sp[section_stride - 2] | (sp[section_stride - 1] << 8));
 	}
-		
+	
 	// Copy notes
 	Note *nnote_p = stage.notes = (Note*)(nchart + notes_off);
 	for (size_t i = 0; i < notes; i++, nnote_p++)
 	{
-		u8 *np = note_p + i * 8;
-		nnote_p->pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
-		nnote_p->type = (u16)(np[4] | (np[5] << 8));
-		nnote_p->is_opponent = (u16)(np[6] | (np[7] << 8));
+		if (!found_note_end && i == notes - 1)
+		{
+			nnote_p->pos = 0xFFFFFFFF;
+			nnote_p->type = 0;
+			nnote_p->is_opponent = 0;
+			continue;
+		}
+
+		u8 *np = note_p + i * note_stride;
+		if (chart_is_u32)
+			nnote_p->pos = (u32)np[0] | ((u32)np[1] << 8) | ((u32)np[2] << 16) | ((u32)np[3] << 24);
+		else
+		{
+			u16 pos = (u16)(np[0] | (np[1] << 8));
+			nnote_p->pos = (pos == 0xFFFF) ? 0xFFFFFFFF : pos;
+		}
+		nnote_p->type = (u16)(np[2] | (np[3] << 8));
+		if (chart_is_u32)
+			nnote_p->is_opponent = (u16)(np[6] | (np[7] << 8));
+		else if (note_stride >= 5)
+			nnote_p->is_opponent = np[4];
+		else
+			nnote_p->is_opponent = ((nnote_p->type % (keys * 2)) >= keys);
 	}
 	
 	// Finalize
@@ -2834,6 +2977,7 @@ static void Stage_LoadChart(void)
  	
  	stage.cur_section = stage.sections;
  	stage.cur_note = stage.notes;
+	stage.num_sections = sections;
  	
  	stage.speed = stage.stage_def->speed[stage.stage_diff];
  	
@@ -4670,10 +4814,13 @@ void Stage_Tick(void)
 				if (stage.note_scroll >= 0)
 				{
 					//Check if current section has ended
-					u16 end = stage.cur_section->end;
-					if ((stage.note_scroll >> FIXED_SHIFT) >= end)
+					u32 end = stage.cur_section->end;
+					u32 note_pos = (u32)(stage.note_scroll >> FIXED_SHIFT);
+					if (note_pos >= end)
 					{
 						//Increment section pointer
+						if ((size_t)(stage.cur_section - stage.sections + 1) >= stage.num_sections)
+							break;
 						stage.cur_section++;
 						
 						//Update BPM

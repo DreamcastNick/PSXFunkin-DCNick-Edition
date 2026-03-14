@@ -86,15 +86,30 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        std::cout << "usage: funkinchartpak in_json" << std::endl;
+        std::cout << "usage: funkinchartpak [--u32-6byte] in_json" << std::endl;
         return 0;
     }
 
+    bool force_u32_6byte = false;
+    const char *input_path = nullptr;
+    for (int iarg = 1; iarg < argc; iarg++)
+    {
+        if (std::string(argv[iarg]) == "--u32-6byte")
+            force_u32_6byte = true;
+        else
+            input_path = argv[iarg];
+    }
+    if (input_path == nullptr)
+    {
+        std::cout << "usage: funkinchartpak [--u32-6byte] in_json" << std::endl;
+        return 1;
+    }
+
     // Read json
-    std::ifstream i(argv[1]);
+    std::ifstream i(input_path);
     if (!i.is_open())
     {
-        std::cout << "Failed to open " << argv[1] << std::endl;
+        std::cout << "Failed to open " << input_path << std::endl;
         return 1;
     }
     json j;
@@ -110,7 +125,7 @@ int main(int argc, char *argv[])
     uint16_t keys = ChartKey(song_info);
     uint16_t max_keys = keys * 2;
 
-    std::cout << argv[1] << " speed: " << speed << " ini bpm: " << bpm << " step_crochet: " << step_crochet << " keys: " << keys << std::endl;
+    std::cout << input_path << " speed: " << speed << " ini bpm: " << bpm << " step_crochet: " << step_crochet << " keys: " << keys << std::endl;
 
     uint32_t milli_base = 0;
     uint32_t step_base = 0;
@@ -243,31 +258,51 @@ int main(int argc, char *argv[])
     notes.push_back(dum_note);
 
     // Write to output
-    std::ofstream out(std::string(argv[1]) + ".cht", std::ostream::binary);
+    std::ofstream out(std::string(input_path) + ".cht", std::ostream::binary);
     if (!out.is_open())
     {
-        std::cout << "Failed to open " << argv[1] << ".cht" << std::endl;
+        std::cout << "Failed to open " << input_path << ".cht" << std::endl;
         return 1;
     }
 
-    // Write headers (u16 keys, u32 note offset)
-    // note_offset = header(6) + sections_count * section_size(6)
-    WriteWord(out, keys);
-    WriteDWord(out, 6 + static_cast<uint32_t>(sections.size()) * 6);
-
-    // Write sections (u32 end, u16 flag)
-    for (auto &i : sections)
+    if (force_u32_6byte)
     {
-        WriteDWord(out, i.end);
-        WriteWord(out, i.flag);
+        // 6-byte u32 header format (u16 keys + u32 note offset)
+        WriteWord(out, keys);
+        WriteDWord(out, 6 + static_cast<uint32_t>(sections.size()) * 6);
+
+        for (auto &i : sections)
+        {
+            WriteDWord(out, i.end);
+            WriteWord(out, i.flag);
+        }
+
+        for (auto &i : notes)
+        {
+            WriteDWord(out, i.pos);
+            WriteWord(out, i.type);
+            WriteWord(out, static_cast<uint16_t>(i.is_opponent ? 1 : 0));
+        }
     }
-
-    // Write notes (u32 pos, u16 type, u16 is_opponent)
-    for (auto &i : notes)
+    else
     {
-        WriteDWord(out, i.pos);
-        WriteWord(out, i.type);
-        WriteWord(out, static_cast<uint16_t>(i.is_opponent ? 1 : 0));
+        // 4-byte legacy header/sections with 6-byte notes (u16 pos/type + opponent + pad)
+        WriteWord(out, keys);
+        WriteWord(out, 4 + static_cast<uint16_t>(sections.size() << 2));
+
+        for (auto &i : sections)
+        {
+            WriteWord(out, static_cast<uint16_t>(i.end));
+            WriteWord(out, i.flag);
+        }
+
+        for (auto &i : notes)
+        {
+            WriteWord(out, static_cast<uint16_t>(i.pos));
+            WriteWord(out, i.type);
+            out.put(static_cast<char>(i.is_opponent));
+            out.put(0);
+        }
     }
     return 0;
 }
